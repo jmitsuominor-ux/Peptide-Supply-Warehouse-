@@ -771,7 +771,11 @@ let activeCategory='All';
 // CATEGORY NAV
 // ════════════════════════════════════════
 function buildCatNav(){
-  const cats=['All',...CAT_ORDER.filter(c=>PRODUCTS.some(p=>p.cat===c))];
+  const inv=getInventory();
+  const hasInventory=Object.keys(inv).length>0;
+  const availableCodes=hasInventory?Object.keys(inv).filter(code=>inv[code].stock>0):PRODUCTS.map(p=>p.code);
+  const availableProducts=PRODUCTS.filter(p=>availableCodes.includes(p.code));
+  const cats=['All',...CAT_ORDER.filter(c=>availableProducts.some(p=>p.cat===c))];
   document.getElementById('catNav').innerHTML=cats.map(c=>
     `<div class="cat-pill ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</div>`
   ).join('');
@@ -783,9 +787,17 @@ function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();}
 // ════════════════════════════════════════
 function filterProducts(){renderProducts();}
 
+function getInventory(){return JSON.parse(localStorage.getItem('psw_inventory')||'{}');}
+
 function renderProducts(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
+  const inv=getInventory();
+  const hasInventory=Object.keys(inv).length>0;
   const filtered=PRODUCTS.filter(p=>{
+    // If inventory has been set up, only show items with stock > 0
+    if(hasInventory){
+      if(!inv[p.code]||inv[p.code].stock<=0) return false;
+    }
     const matchCat=activeCategory==='All'||p.cat===activeCategory;
     const matchQ=!q||p.name.toLowerCase().includes(q)||p.code.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)||p.spec.toLowerCase().includes(q);
     return matchCat&&matchQ;
@@ -794,6 +806,7 @@ function renderProducts(){
   const noRes=document.getElementById('noResults');
   if(!filtered.length){grid.innerHTML='';noRes.style.display='block';document.getElementById('noResultsQuery').textContent=q||activeCategory;return;}
   noRes.style.display='none';
+  const inv=getInventory();
   grid.innerHTML=filtered.map(p=>{
     const inCart=!!cart[p.code];
     const qty=inCart?cart[p.code]:0;
@@ -804,6 +817,7 @@ function renderProducts(){
       <div class="pc-name">${p.name}</div>
       <div class="pc-spec">${p.spec}</div>
       <div class="pc-price">$${p.price.toFixed(2)}</div>
+      <div style="font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:2px;">${inv[p.code]?inv[p.code].stock+' in stock':''}</div>
       <button class="pc-add ${inCart?'in-cart':''}" onclick="addToCart('${p.code}')">
         ${inCart
           ?`✓ IN ORDER ×${qty}`
@@ -1017,6 +1031,10 @@ function showSuccess(name,email,phone,address,notes,cartSnapshot,totalSnapshot){
 // ════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════
+// Listen for inventory changes from admin panel
+window.addEventListener('storage', (e) => {
+  if(e.key==='psw_inventory'){buildCatNav();renderProducts();}
+});
 buildCatNav();
 renderProducts();
 </script>

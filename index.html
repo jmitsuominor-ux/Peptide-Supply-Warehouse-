@@ -662,8 +662,12 @@ function logoTapped() {
   logoTapCount++;
   clearTimeout(logoTapTimer);
   if (logoTapCount >= 3) { logoTapCount = 0; window.location.href = 'admin.html'; }
-  else logoTapTimer = setTimeout(() => logoTapCount = 0, 600);
+  else logoTapTimer = setTimeout(() => logoTapCount = 0, 800);
 }
+// Also support keyboard shortcut: Ctrl+Shift+A
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') window.location.href = 'admin.html';
+});
  
 // ════════════════════════════════════════
 // PRODUCT CATALOG
@@ -790,7 +794,7 @@ function renderProducts(){
   const inv=getInventory();
   const hasInventory=Object.keys(inv).length>0;
   const filtered=PRODUCTS.filter(p=>{
-    // If inventory has been set up, only show items with stock > 0
+    // Only filter by inventory if at least one item has been stocked
     if(hasInventory){
       if(!inv[p.code]||inv[p.code].stock<=0) return false;
     }

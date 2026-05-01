@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Peptide Supply Warehouse</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -650,13 +650,9 @@ body::after{
 
 <script>
 // ════════════════════════════════════════
-// EMAILJS — REPLACE THESE VALUES
+// EMAIL — Configure when ready
 // ════════════════════════════════════════
-const EMAILJS_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID  = 'YOUR_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
-const FULFILLER_EMAIL     = 'your@email.com';
-emailjs.init(EMAILJS_PUBLIC_KEY);
+const FULFILLER_EMAIL = 'your@email.com';
 
 // ════════════════════════════════════════
 // HIDDEN ADMIN TRIGGER — Triple tap logo
@@ -971,22 +967,9 @@ function submitOrder(){
   const orderSummary=orderLines+`\n\n─────────────────\nORDER TOTAL: $${total.toFixed(2)}`;
   const cartSnapshot={...cart};
   const totalSnapshot=total;
-  const params={
-    to_email:FULFILLER_EMAIL,customer_email:email,
-    from_name:name,from_email:email,from_phone:phone,
-    shipping_address:address||'Not provided',
-    customer_notes:notes||'None',
-    order_summary:orderSummary,
-    order_total:'$'+total.toFixed(2),
-    reply_to:email,
-  };
-  emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,params)
-    .then(()=>showSuccess(name,email,phone,address,notes,cartSnapshot,totalSnapshot))
-    .catch(err=>{
-      console.error(err);
-      btn.disabled=false;btn.innerHTML='PLACE ORDER →';
-      alert('Error sending order. Please try again or contact us directly.');
-    });
+  // Email params will go here when EmailJS is configured
+  // Email will be configured later — save order locally
+  showSuccess(name,email,phone,address,notes,cartSnapshot,totalSnapshot);
 }
 
 function flash(id,msg){

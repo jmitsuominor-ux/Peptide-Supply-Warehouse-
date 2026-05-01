@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,13 +18,13 @@
   --text:#e8edf5;--text2:#8ba3c7;--text3:#4a6080;
   --mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;
 }
-
+ 
 html{scroll-behavior:smooth;}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-
+ 
 /* ── NOISE OVERLAY ── */
 body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:200px;pointer-events:none;z-index:0;}
-
+ 
 /* ═══════════════════════════════════════
    PIN LOGIN SCREEN
    ═══════════════════════════════════════ */
@@ -35,14 +34,14 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
   background:var(--bg);
   flex-direction:column;gap:0;
 }
-
+ 
 .login-glow{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);
   width:400px;height:400px;
   background:radial-gradient(circle,rgba(59,130,246,0.08) 0%,transparent 70%);
   pointer-events:none;
 }
-
+ 
 .login-card{
   position:relative;z-index:1;
   background:var(--surface);
@@ -52,7 +51,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
   width:100%;max-width:340px;
   box-shadow:0 24px 80px rgba(0,0,0,0.4);
 }
-
+ 
 .login-logo{
   display:flex;align-items:center;gap:10px;justify-content:center;
   margin-bottom:28px;
@@ -70,12 +69,12 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
   letter-spacing:-0.02em;
 }
 .login-brand span{color:var(--blue);}
-
+ 
 .login-title{
   text-align:center;font-size:13px;color:var(--text2);
   margin-bottom:24px;font-family:var(--mono);letter-spacing:0.04em;
 }
-
+ 
 /* PIN dots */
 .pin-dots{
   display:flex;gap:12px;justify-content:center;margin-bottom:28px;
@@ -87,9 +86,9 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 }
 .pin-dot.filled{background:var(--blue);border-color:var(--blue);box-shadow:0 0 8px var(--blue-glow);}
 .pin-dot.error{background:var(--red);border-color:var(--red);animation:shake 0.3s ease;}
-
+ 
 @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}};
-
+ 
 /* Numpad */
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
 .num-btn{
@@ -103,18 +102,18 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .num-btn.zero{grid-column:2;}
 .num-btn.del{font-size:16px;color:var(--text2);background:transparent;border-color:transparent;}
 .num-btn.del:active{background:var(--red-dim);border-color:var(--red-border);color:var(--red);}
-
+ 
 .login-error{
   text-align:center;font-family:var(--mono);font-size:11px;
   color:var(--red);margin-top:16px;
   height:16px;transition:opacity 0.2s;
 }
-
+ 
 /* ═══════════════════════════════════════
    MAIN ADMIN APP
    ═══════════════════════════════════════ */
 #adminApp{display:none;position:relative;z-index:1;}
-
+ 
 /* Topbar */
 .admin-bar{
   background:rgba(11,15,23,0.95);
@@ -130,7 +129,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .admin-badge{font-family:var(--mono);font-size:9px;background:var(--blue-dim);color:var(--blue);border:1px solid rgba(59,130,246,0.2);border-radius:4px;padding:2px 7px;letter-spacing:0.06em;}
 .logout-btn{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text3);cursor:pointer;padding:6px 10px;border-radius:6px;transition:all 0.15s;border:1px solid transparent;}
 .logout-btn:hover{color:var(--red);border-color:var(--red-border);background:var(--red-dim);}
-
+ 
 /* Tab Nav */
 .admin-nav{
   background:rgba(11,15,23,0.9);border-bottom:1px solid var(--border);
@@ -149,18 +148,18 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .nav-count{font-family:var(--mono);font-size:9px;background:var(--blue-dim);color:var(--blue);border-radius:8px;padding:1px 6px;}
 .nav-count.amber{background:var(--amber-dim);color:var(--amber);}
 .nav-count.green{background:var(--green-dim);color:var(--green);}
-
+ 
 /* Pages */
 .admin-page{display:none;max-width:900px;margin:0 auto;padding:20px;}
 .admin-page.active{display:block;}
-
+ 
 /* Section headers */
 .section-hdr{
   display:flex;align-items:center;gap:10px;margin-bottom:14px;
 }
 .section-hdr h2{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.01em;}
 .section-hdr-meta{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:auto;}
-
+ 
 /* Stat cards */
 .stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
 .stat-card{
@@ -179,7 +178,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .stat-val.amber{color:var(--amber);}
 .stat-val.purple{color:var(--purple);}
 .stat-sub{font-family:var(--mono);font-size:9px;color:var(--text3);}
-
+ 
 /* ═══════════════════════════════════════
    ORDERS
    ═══════════════════════════════════════ */
@@ -190,14 +189,14 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
   background:var(--surface);color:var(--text3);font-family:var(--sans);
 }
 .filter-btn.active{background:var(--blue-dim);border-color:rgba(59,130,246,0.3);color:var(--blue);}
-
+ 
 .order-card{
   background:var(--surface);border:1px solid var(--border);border-radius:12px;
   margin-bottom:10px;overflow:hidden;transition:border-color 0.15s;
 }
 .order-card:hover{border-color:var(--border2);}
 .order-card.fulfilled{opacity:0.6;}
-
+ 
 .order-head{
   padding:14px 16px;display:flex;align-items:flex-start;gap:12px;cursor:pointer;
 }
@@ -207,22 +206,22 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .order-status.pending{background:var(--amber);box-shadow:0 0 6px rgba(245,158,11,0.4);}
 .order-status.fulfilled{background:var(--green);box-shadow:0 0 6px rgba(16,185,129,0.4);}
 .order-status.cancelled{background:var(--red);}
-
+ 
 .order-info{flex:1;min-width:0;}
 .order-name{font-size:14px;font-weight:600;color:var(--text);}
 .order-meta{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:3px;display:flex;gap:12px;flex-wrap:wrap;}
 .order-total-badge{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--blue);flex-shrink:0;}
-
+ 
 .order-body{
   border-top:1px solid var(--border);padding:14px 16px;display:none;
 }
 .order-body.open{display:block;}
-
+ 
 .order-items-table{width:100%;border-collapse:collapse;margin-bottom:14px;}
 .order-items-table th{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;padding:6px 10px;border:1px solid var(--border);background:var(--surface2);}
 .order-items-table td{padding:8px 10px;border:1px solid var(--border);font-size:12px;color:var(--text2);}
 .order-items-table tr:hover td{background:var(--surface2);}
-
+ 
 .order-customer{
   background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:14px;
   font-size:12px;color:var(--text2);display:grid;grid-template-columns:1fr 1fr;gap:6px;
@@ -230,7 +229,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .oc-row{display:flex;flex-direction:column;gap:2px;}
 .oc-label{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.06em;}
 .oc-val{font-size:12px;color:var(--text);}
-
+ 
 .order-actions{display:flex;gap:8px;flex-wrap:wrap;}
 .action-btn{
   padding:8px 14px;border-radius:8px;font-size:12px;font-weight:600;
@@ -242,10 +241,10 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .action-btn.cancel:hover{background:var(--red);color:#fff;}
 .action-btn.pending-btn{background:var(--amber-dim);border-color:rgba(245,158,11,0.3);color:var(--amber);}
 .action-btn:active{transform:scale(0.97);}
-
+ 
 .order-notes{background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:8px 11px;font-size:11px;color:var(--amber);margin-bottom:10px;}
 .order-notes strong{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.06em;margin-bottom:2px;}
-
+ 
 /* ═══════════════════════════════════════
    INVENTORY
    ═══════════════════════════════════════ */
@@ -267,16 +266,16 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
   white-space:nowrap;font-family:var(--sans);
 }
 .add-stock-btn:hover{background:var(--blue);color:#fff;}
-
+ 
 .low-stock-banner{
   background:var(--amber-dim);border:1px solid rgba(245,158,11,0.25);
   border-radius:10px;padding:11px 14px;margin-bottom:14px;
   font-size:12px;color:var(--amber);display:none;
 }
 .low-stock-banner.show{display:flex;align-items:center;gap:8px;}
-
+ 
 .inv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;}
-
+ 
 .inv-card{
   background:var(--surface);border:1px solid var(--border);border-radius:10px;
   padding:14px;transition:all 0.15s;position:relative;overflow:hidden;
@@ -286,11 +285,11 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .inv-card.low::before{background:var(--amber);}
 .inv-card.out::before{background:var(--red);}
 .inv-card:hover{border-color:var(--border2);}
-
+ 
 .inv-code{font-family:var(--mono);font-size:9px;color:var(--text3);margin-bottom:3px;letter-spacing:0.06em;}
 .inv-name{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px;}
 .inv-spec{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:10px;}
-
+ 
 .inv-stock-row{display:flex;align-items:center;gap:8px;}
 .stock-minus,.stock-plus{
   width:28px;height:28px;border-radius:7px;border:1px solid var(--border2);
@@ -309,7 +308,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 }
 .stock-input:focus{border-color:var(--blue);}
 .stock-label{font-family:var(--mono);font-size:9px;color:var(--text3);text-align:center;margin-top:4px;letter-spacing:0.04em;}
-
+ 
 .stock-badge{
   position:absolute;top:12px;right:12px;
   font-family:var(--mono);font-size:9px;font-weight:600;
@@ -318,7 +317,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .stock-badge.ok{background:var(--green-dim);color:var(--green);}
 .stock-badge.low{background:var(--amber-dim);color:var(--amber);}
 .stock-badge.out{background:var(--red-dim);color:var(--red);}
-
+ 
 /* ── ADD STOCK MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
 .modal-overlay.open{display:flex;}
@@ -335,11 +334,11 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .mf select option{background:#111827;}
 .modal-save-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:9px;padding:12px;font-size:14px;font-weight:700;font-family:var(--sans);cursor:pointer;transition:all 0.15s;}
 .modal-save-btn:active{transform:scale(0.98);}
-
+ 
 /* Empty state */
 .empty-state{text-align:center;padding:50px 20px;color:var(--text3);}
 .empty-state p{font-family:var(--mono);font-size:12px;margin-top:8px;}
-
+ 
 /* Toast */
 .toast{
   position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
@@ -352,19 +351,19 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.green{border-color:var(--green-border);color:var(--green);}
 .toast.red{border-color:var(--red-border);color:var(--red);}
-
+ 
 /* Scrollbar */
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-
+ 
 /* Animations */
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 .order-card{animation:fadeUp 0.2s ease both;}
 </style>
 </head>
 <body>
-
+ 
 <!-- ═══════════════════════════════════════
      PIN LOGIN SCREEN
      ═══════════════════════════════════════ -->
@@ -398,28 +397,29 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     <div class="login-error" id="loginError"></div>
   </div>
 </div>
-
+ 
 <!-- ═══════════════════════════════════════
      ADMIN APP
      ═══════════════════════════════════════ -->
 <div id="adminApp">
-
+ 
   <div class="admin-bar">
     <div class="admin-brand">
       <div class="admin-mark">PSW</div>
       <div class="admin-title">Peptide Supply Warehouse</div>
       <div class="admin-badge">ADMIN</div>
     </div>
+    <a href="index.html" style="font-family:var(--mono);font-size:10px;color:var(--text3);text-decoration:none;padding:6px 10px;border-radius:6px;border:1px solid transparent;transition:all 0.15s;margin-right:4px;" onmouseover="this.style.color='var(--blue)';this.style.borderColor='rgba(59,130,246,0.3)'" onmouseout="this.style.color='var(--text3)';this.style.borderColor='transparent'">← Store</a>
     <div class="logout-btn" onclick="logout()">Lock →</div>
   </div>
-
+ 
   <div class="admin-nav">
     <div class="nav-tab active" onclick="switchTab('dashboard',this)">Dashboard</div>
     <div class="nav-tab" onclick="switchTab('orders',this)">Orders <span class="nav-count amber" id="pendingCount">0</span></div>
     <div class="nav-tab" onclick="switchTab('fulfilled',this)">Fulfilled <span class="nav-count green" id="fulfilledCount">0</span></div>
     <div class="nav-tab" onclick="switchTab('inventory',this)">Inventory <span class="nav-count" id="invCount">0</span></div>
   </div>
-
+ 
   <!-- DASHBOARD -->
   <div class="admin-page active" id="page-dashboard">
     <div class="stat-row">
@@ -444,14 +444,14 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
         <div class="stat-sub">≤ 5 vials remaining</div>
       </div>
     </div>
-
+ 
     <div class="section-hdr">
       <h2>Recent Orders</h2>
       <div class="section-hdr-meta" id="dashRecentMeta"></div>
     </div>
     <div id="dashRecentOrders"></div>
   </div>
-
+ 
   <!-- PENDING ORDERS -->
   <div class="admin-page" id="page-orders">
     <div class="section-hdr">
@@ -460,7 +460,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     </div>
     <div id="pendingOrdersList"></div>
   </div>
-
+ 
   <!-- FULFILLED ORDERS -->
   <div class="admin-page" id="page-fulfilled">
     <div class="section-hdr">
@@ -469,7 +469,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     </div>
     <div id="fulfilledOrdersList"></div>
   </div>
-
+ 
   <!-- INVENTORY -->
   <div class="admin-page" id="page-inventory">
     <div class="inv-toolbar">
@@ -481,9 +481,9 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     </div>
     <div class="inv-grid" id="invGrid"></div>
   </div>
-
+ 
 </div>
-
+ 
 <!-- ADD STOCK MODAL -->
 <div class="modal-overlay" id="addStockModal">
   <div class="modal-box">
@@ -510,17 +510,17 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     </div>
   </div>
 </div>
-
+ 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
-
+ 
 <script>
 // ═══════════════════════════════════════════════════════
 // AUTH — DUAL PIN
 // ═══════════════════════════════════════════════════════
 const PINS = ['5642', '0049'];
 let pinBuffer = '';
-
+ 
 function pinPress(digit) {
   if (pinBuffer.length >= 4) return;
   pinBuffer += digit;
@@ -529,13 +529,13 @@ function pinPress(digit) {
     setTimeout(checkPin, 100);
   }
 }
-
+ 
 function pinDelete() {
   pinBuffer = pinBuffer.slice(0, -1);
   updateDots();
   document.getElementById('loginError').textContent = '';
 }
-
+ 
 function updateDots() {
   for (let i = 0; i < 4; i++) {
     const dot = document.getElementById('dot' + i);
@@ -543,7 +543,7 @@ function updateDots() {
     dot.classList.remove('error');
   }
 }
-
+ 
 function checkPin() {
   if (PINS.includes(pinBuffer)) {
     sessionStorage.setItem('psw_auth', '1');
@@ -561,7 +561,7 @@ function checkPin() {
     }, 800);
   }
 }
-
+ 
 function logout() {
   sessionStorage.removeItem('psw_auth');
   pinBuffer = '';
@@ -569,13 +569,13 @@ function logout() {
   document.getElementById('adminApp').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
 }
-
+ 
 // Check if already authed this session
 if (sessionStorage.getItem('psw_auth') === '1') {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('adminApp').style.display = 'block';
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // PRODUCT CATALOG (for inventory lookup)
 // ═══════════════════════════════════════════════════════
@@ -669,7 +669,7 @@ const PRODUCTS = [
   {code:'WA10',name:'BAC Water',cat:'Reconstitution',spec:'10ml/vial',price:3.00},
   {code:'AA',name:'Acetic Acid Water',cat:'Reconstitution',spec:'3ml/vial',price:1.50},
 ];
-
+ 
 // ═══════════════════════════════════════════════════════
 // STORAGE HELPERS
 // ═══════════════════════════════════════════════════════
@@ -677,7 +677,7 @@ function getOrders() { return JSON.parse(localStorage.getItem('psw_orders') || '
 function saveOrders(o) { localStorage.setItem('psw_orders', JSON.stringify(o)); }
 function getInventory() { return JSON.parse(localStorage.getItem('psw_inventory') || '{}'); }
 function saveInventory(inv) { localStorage.setItem('psw_inventory', JSON.stringify(inv)); }
-
+ 
 // ═══════════════════════════════════════════════════════
 // TAB SWITCHING
 // ═══════════════════════════════════════════════════════
@@ -692,7 +692,7 @@ function switchTab(tab, el) {
   if (tab === 'dashboard') renderDashboard();
   window.scrollTo(0, 0);
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════
@@ -701,26 +701,26 @@ function initApp() {
   renderDashboard();
   updateCounts();
 }
-
+ 
 function updateCounts() {
   const orders = getOrders();
   const pending = orders.filter(o => o.status === 'pending').length;
   const fulfilled = orders.filter(o => o.status === 'fulfilled').length;
   const inv = getInventory();
   const lowStock = Object.values(inv).filter(i => i.stock <= i.threshold).length;
-
+ 
   document.getElementById('pendingCount').textContent = pending;
   document.getElementById('fulfilledCount').textContent = fulfilled;
   document.getElementById('invCount').textContent = Object.keys(inv).length;
-
+ 
   document.getElementById('statPending').textContent = pending;
   document.getElementById('statFulfilled').textContent = fulfilled;
   document.getElementById('statLowStock').textContent = lowStock;
-
+ 
   const pendingRev = orders.filter(o => o.status === 'pending').reduce((s, o) => s + o.total, 0);
   document.getElementById('statRevPending').textContent = '$' + pendingRev.toFixed(2);
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // DASHBOARD
 // ═══════════════════════════════════════════════════════
@@ -735,14 +735,14 @@ function renderDashboard() {
   }
   el.innerHTML = orders.map(o => orderCardHTML(o, true)).join('');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // ORDER CARDS
 // ═══════════════════════════════════════════════════════
 function orderCardHTML(order, compact = false) {
   const statusLabel = order.status === 'pending' ? 'PENDING' : order.status === 'fulfilled' ? 'FULFILLED' : 'CANCELLED';
   const dateStr = new Date(order.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-
+ 
   const itemRows = order.items.map(item => {
     const p = PRODUCTS.find(p => p.code === item.code);
     return `<tr>
@@ -753,16 +753,16 @@ function orderCardHTML(order, compact = false) {
       <td style="font-family:var(--mono);color:var(--blue);">$${(item.price * item.qty).toFixed(2)}</td>
     </tr>`;
   }).join('');
-
+ 
   const notesHtml = order.notes ? `<div class="order-notes"><strong>NOTES</strong>${order.notes}</div>` : '';
-
+ 
   const actionsHtml = order.status === 'pending'
     ? `<button class="action-btn fulfill" onclick="fulfillOrder('${order.id}')">✓ Mark Fulfilled</button>
        <button class="action-btn cancel" onclick="cancelOrder('${order.id}')">✗ Cancel</button>`
     : order.status === 'fulfilled'
     ? `<button class="action-btn pending-btn" onclick="setPendingOrder('${order.id}')">↩ Revert to Pending</button>`
     : `<button class="action-btn pending-btn" onclick="setPendingOrder('${order.id}')">↩ Restore</button>`;
-
+ 
   return `<div class="order-card ${order.status}" id="ocard-${order.id}" style="animation-delay:0.05s">
     <div class="order-head" onclick="toggleOrder('${order.id}')">
       <div class="order-status ${order.status}"></div>
@@ -793,12 +793,12 @@ function orderCardHTML(order, compact = false) {
     </div>
   </div>`;
 }
-
+ 
 function toggleOrder(id) {
   const body = document.getElementById('obody-' + id);
   if (body) body.classList.toggle('open');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // RENDER ORDER LISTS
 // ═══════════════════════════════════════════════════════
@@ -810,7 +810,7 @@ function renderPendingOrders() {
     ? orders.map(o => orderCardHTML(o)).join('')
     : '<div class="empty-state"><p>No pending orders 🎉</p></div>';
 }
-
+ 
 function renderFulfilledOrders() {
   const orders = getOrders().filter(o => o.status !== 'pending').slice().reverse();
   const el = document.getElementById('fulfilledOrdersList');
@@ -819,7 +819,7 @@ function renderFulfilledOrders() {
     ? orders.map(o => orderCardHTML(o)).join('')
     : '<div class="empty-state"><p>No fulfilled orders yet</p></div>';
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // ORDER ACTIONS
 // ═══════════════════════════════════════════════════════
@@ -827,7 +827,7 @@ function fulfillOrder(id) {
   const orders = getOrders();
   const order = orders.find(o => o.id === id);
   if (!order) return;
-
+ 
   // Deduct inventory
   const inv = getInventory();
   order.items.forEach(item => {
@@ -836,7 +836,7 @@ function fulfillOrder(id) {
     }
   });
   saveInventory(inv);
-
+ 
   order.status = 'fulfilled';
   order.fulfilledAt = Date.now();
   saveOrders(orders);
@@ -844,7 +844,7 @@ function fulfillOrder(id) {
   renderPendingOrders();
   showToast('✓ Order fulfilled — inventory updated', 'green');
 }
-
+ 
 function cancelOrder(id) {
   const orders = getOrders();
   const order = orders.find(o => o.id === id);
@@ -855,7 +855,7 @@ function cancelOrder(id) {
   renderPendingOrders();
   showToast('Order cancelled', 'red');
 }
-
+ 
 function setPendingOrder(id) {
   const orders = getOrders();
   const order = orders.find(o => o.id === id);
@@ -867,7 +867,7 @@ function setPendingOrder(id) {
   renderFulfilledOrders();
   showToast('Order restored to pending', '');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // INVENTORY
 // ═══════════════════════════════════════════════════════
@@ -878,7 +878,7 @@ function renderInventory() {
     const item = inv[code];
     return !q || item.name.toLowerCase().includes(q) || code.toLowerCase().includes(q) || (item.spec || '').toLowerCase().includes(q);
   });
-
+ 
   // Low stock banner
   const lowItems = Object.values(inv).filter(i => i.stock <= i.threshold && i.stock > 0);
   const outItems = Object.values(inv).filter(i => i.stock === 0);
@@ -888,20 +888,20 @@ function renderInventory() {
   if (lowItems.length) msgs.push(`${lowItems.length} item${lowItems.length!==1?'s':''} low`);
   if (msgs.length) { banner.classList.add('show'); document.getElementById('lowStockMsg').textContent = msgs.join(' · '); }
   else banner.classList.remove('show');
-
+ 
   const grid = document.getElementById('invGrid');
   if (!keys.length) {
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><p>No inventory items yet — click + Add Item to get started</p></div>';
     return;
   }
-
+ 
   grid.innerHTML = keys.map(code => {
     const item = inv[code];
     const stock = item.stock || 0;
     const threshold = item.threshold || 5;
     const status = stock === 0 ? 'out' : stock <= threshold ? 'low' : 'ok';
     const badgeLabel = status === 'out' ? 'OUT OF STOCK' : status === 'low' ? 'LOW STOCK' : 'IN STOCK';
-
+ 
     return `<div class="inv-card ${status}">
       <div class="stock-badge ${status}">${badgeLabel}</div>
       <div class="inv-code">${code}</div>
@@ -920,7 +920,7 @@ function renderInventory() {
     </div>`;
   }).join('');
 }
-
+ 
 function adjustStock(code, delta) {
   const inv = getInventory();
   if (!inv[code]) return;
@@ -929,7 +929,7 @@ function adjustStock(code, delta) {
   renderInventory();
   updateCounts();
 }
-
+ 
 function setStock(code, val) {
   const inv = getInventory();
   if (!inv[code]) return;
@@ -939,7 +939,7 @@ function setStock(code, val) {
   saveInventory(inv);
   updateCounts();
 }
-
+ 
 // Add new inventory item
 function populateProductSelect() {
   const sel = document.getElementById('addStockProduct');
@@ -950,24 +950,24 @@ function populateProductSelect() {
     sel.appendChild(o);
   });
 }
-
+ 
 function openAddStock() {
   document.getElementById('addStockModal').classList.add('open');
 }
-
+ 
 function closeAddStock() {
   document.getElementById('addStockModal').classList.remove('open');
 }
-
+ 
 function saveNewInventoryItem() {
   const code = document.getElementById('addStockProduct').value;
   const qty = parseInt(document.getElementById('addStockQty').value) || 0;
   const threshold = parseInt(document.getElementById('addStockThreshold').value) || 5;
   if (!code) { showToast('Please select a product', 'red'); return; }
-
+ 
   const product = PRODUCTS.find(p => p.code === code);
   const inv = getInventory();
-
+ 
   if (inv[code]) {
     inv[code].stock += qty;
   } else {
@@ -984,7 +984,7 @@ function saveNewInventoryItem() {
   updateCounts();
   showToast('✓ Inventory updated', 'green');
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // TOAST
 // ═══════════════════════════════════════════════════════
@@ -996,7 +996,7 @@ function showToast(msg, type = '') {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => t.className = 'toast', 2800);
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 // RECEIVE ORDERS FROM STOREFRONT
 // Called when store.html submits — inject orders via localStorage
@@ -1012,7 +1012,7 @@ window.addEventListener('storage', (e) => {
     } catch {}
   }
 });
-
+ 
 function receiveOrder(order) {
   const orders = getOrders();
   orders.push(order);
@@ -1021,7 +1021,7 @@ function receiveOrder(order) {
   renderDashboard();
   showToast('🔔 New order received!', 'green');
 }
-
+ 
 // Auto-init if already authed
 if (sessionStorage.getItem('psw_auth') === '1') {
   initApp();

@@ -395,8 +395,13 @@ document.addEventListener('keydown',(e)=>{
 // ════════════════════════════════════════
 async function loadInventory(){
   try{
-    const res=await fetch(API+'?action=getInventory&t='+Date.now(),{cache:'no-store'});
-    const data=await res.json();
+    const data = await new Promise((resolve) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', API+'?action=getInventory&t='+Date.now(), true);
+      xhr.onload = () => { try { resolve(JSON.parse(xhr.responseText)); } catch(e) { resolve({}); } };
+      xhr.onerror = () => resolve({});
+      xhr.send();
+    });
     inventory=data;
     // Filter products to only those in stock
     if(inventory&&Object.keys(inventory).length>0){
@@ -595,10 +600,10 @@ async function submitOrder(){
       order:encodeURIComponent(JSON.stringify(order))
     });
     await new Promise((resolve) => {
-      const img = new Image();
-      img.onload = img.onerror = () => resolve();
-      img.src = API+'?'+params.toString();
-      fetch(API+'?'+params.toString(), {mode:'no-cors'}).catch(()=>{});
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', API+'?'+params.toString(), true);
+      xhr.onload = xhr.onerror = () => resolve();
+      xhr.send();
     });
   }catch(e){
     console.warn('Could not save to sheets:',e);

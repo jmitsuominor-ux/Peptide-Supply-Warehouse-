@@ -525,7 +525,7 @@ function orderCardHTML(order){
        <button class="action-btn cancel" onclick="cancelOrder('${safeId}')">✗ Cancel</button>`
     :`<button class="action-btn pending-btn" onclick="setPendingOrder('${safeId}')">↩ Revert to Pending</button>`;
   const cust=order.customer||{};
-  return `<div class="order-card" id="ocard-${safeId}">
+  return `<div class="order-card" id="ocard-${safeId}" data-order-id="${order.id}">
     <div class="order-head" onclick="toggleOrder('${safeId}')">
       <div class="order-status ${order.status}"></div>
       <div class="order-info">
@@ -574,7 +574,9 @@ function renderFulfilledOrders(){
 // ORDER ACTIONS
 // ════════════════════════════════════════
 async function fulfillOrder(safeId){
-  const order=orders.find(o=>o.id.replace(/[^a-zA-Z0-9]/g,'_')===safeId);
+  const card=document.getElementById('ocard-'+safeId);
+  const originalId=card?card.dataset.orderId:safeId;
+  const order=orders.find(o=>o.id===originalId);
   if(!order)return;
   order.status='fulfilled';
   await apiPost({action:'updateOrderStatus',id,status:'fulfilled'});
@@ -608,7 +610,9 @@ async function fulfillOrder(safeId){
 }
 
 async function cancelOrder(safeId){
-  const order=orders.find(o=>o.id.replace(/[^a-zA-Z0-9]/g,'_')===safeId);
+  const card=document.getElementById('ocard-'+safeId);
+  const originalId=card?card.dataset.orderId:safeId;
+  const order=orders.find(o=>o.id===originalId);
   if(!order)return;
   order.status='cancelled';
   await apiPost({action:'updateOrderStatus',id,status:'cancelled'});
@@ -618,7 +622,9 @@ async function cancelOrder(safeId){
 }
 
 async function setPendingOrder(safeId){
-  const order=orders.find(o=>o.id.replace(/[^a-zA-Z0-9]/g,'_')===safeId);
+  const card=document.getElementById('ocard-'+safeId);
+  const originalId=card?card.dataset.orderId:safeId;
+  const order=orders.find(o=>o.id===originalId);
   if(!order)return;
   order.status='pending';
   await apiPost({action:'updateOrderStatus',id,status:'pending'});

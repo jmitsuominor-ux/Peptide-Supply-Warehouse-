@@ -579,7 +579,7 @@ async function fulfillOrder(safeId){
   const order=orders.find(o=>o.id===originalId);
   if(!order)return;
   order.status='fulfilled';
-  await apiPost({action:'updateOrderStatus',id,status:'fulfilled'});
+  await apiPost({action:'updateOrderStatus',id:order.id,status:'fulfilled'});
 
   // Send fulfillment confirmation email to customer
   try{
@@ -615,7 +615,7 @@ async function cancelOrder(safeId){
   const order=orders.find(o=>o.id===originalId);
   if(!order)return;
   order.status='cancelled';
-  await apiPost({action:'updateOrderStatus',id,status:'cancelled'});
+  await apiPost({action:'updateOrderStatus',id:order.id,status:'cancelled'});
   updateCounts();
   renderPendingOrders();
   showToast('Order cancelled','red');
@@ -627,7 +627,7 @@ async function setPendingOrder(safeId){
   const order=orders.find(o=>o.id===originalId);
   if(!order)return;
   order.status='pending';
-  await apiPost({action:'updateOrderStatus',id,status:'pending'});
+  await apiPost({action:'updateOrderStatus',id:order.id,status:'pending'});
   updateCounts();
   renderFulfilledOrders();
   showToast('Order restored to pending','');

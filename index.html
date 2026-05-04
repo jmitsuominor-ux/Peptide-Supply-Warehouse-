@@ -1,3 +1,6 @@
+Index · HTML
+Copy
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -592,9 +595,9 @@ async function submitOrder(){
   try{
     const params=new URLSearchParams({
       action:'saveOrder',
-      order:JSON.stringify(order)
+      order:encodeURIComponent(JSON.stringify(order))
     });
-    await fetch(API+'?'+params.toString());
+    await fetch(API+'?'+params.toString(), {mode:'no-cors'});
   }catch(e){
     console.warn('Could not save to sheets:',e);
   }

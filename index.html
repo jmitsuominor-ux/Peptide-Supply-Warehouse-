@@ -1,6 +1,3 @@
-Index · HTML
-Copy
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -597,7 +594,12 @@ async function submitOrder(){
       action:'saveOrder',
       order:encodeURIComponent(JSON.stringify(order))
     });
-    await fetch(API+'?'+params.toString(), {mode:'no-cors'});
+    await new Promise((resolve) => {
+      const img = new Image();
+      img.onload = img.onerror = () => resolve();
+      img.src = API+'?'+params.toString();
+      fetch(API+'?'+params.toString(), {mode:'no-cors'}).catch(()=>{});
+    });
   }catch(e){
     console.warn('Could not save to sheets:',e);
   }

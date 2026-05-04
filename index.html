@@ -206,9 +206,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand">
-      <div class="brand-logo" id="logoTap" onclick="logoTapped()">PSW<span>·</span></div>
+      <div class="brand-logo" onclick="window.location.href='index.html'" style="cursor:pointer;">PSW<span>·</span></div>
       <div class="brand-divider"></div>
-      <div class="brand-sub">Research Compounds</div>
+      <div class="brand-sub" id="adminTrigger" onclick="adminTapped()" style="cursor:default;">Research Compounds</div>
     </div>
     <div class="topbar-search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -379,12 +379,12 @@ let PRODUCTS=[]; // filtered by inventory
 // ════════════════════════════════════════
 // HIDDEN ADMIN TRIGGER
 // ════════════════════════════════════════
-let logoTapCount=0,logoTapTimer;
-function logoTapped(){
-  logoTapCount++;
-  clearTimeout(logoTapTimer);
-  if(logoTapCount>=3){logoTapCount=0;window.location.href='admin.html';}
-  else logoTapTimer=setTimeout(()=>logoTapCount=0,800);
+let adminTapCount=0,adminTapTimer;
+function adminTapped(){
+  adminTapCount++;
+  clearTimeout(adminTapTimer);
+  if(adminTapCount>=3){adminTapCount=0;window.location.href='admin.html';}
+  else adminTapTimer=setTimeout(()=>adminTapCount=0,800);
 }
 document.addEventListener('keydown',(e)=>{
   if(e.ctrlKey&&e.shiftKey&&e.key==='A') window.location.href='admin.html';
@@ -395,14 +395,14 @@ document.addEventListener('keydown',(e)=>{
 // ════════════════════════════════════════
 async function loadInventory(){
   try{
-    const res=await fetch(API+'?action=getInventory');
+    const res=await fetch(API+'?action=getInventory&t='+Date.now(),{cache:'no-store'});
     const data=await res.json();
     inventory=data;
     // Filter products to only those in stock
-    if(Object.keys(inventory).length>0){
+    if(inventory&&Object.keys(inventory).length>0){
       PRODUCTS=ALL_PRODUCTS.filter(p=>inventory[p.code]&&inventory[p.code].stock>0);
     } else {
-      PRODUCTS=[...ALL_PRODUCTS]; // show all if no inventory set up
+      PRODUCTS=[...ALL_PRODUCTS]; // show all if no inventory set up yet
     }
   }catch(e){
     console.warn('Could not load inventory, showing all products');

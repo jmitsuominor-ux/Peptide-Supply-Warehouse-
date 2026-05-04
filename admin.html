@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>PSW Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -151,7 +152,6 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .stock-badge.ok{background:var(--green-dim);color:var(--green);}
 .stock-badge.low{background:var(--amber-dim);color:var(--amber);}
 .stock-badge.out{background:var(--red-dim);color:var(--red);}
-.save-indicator{font-family:var(--mono);font-size:9px;color:var(--green);margin-top:4px;text-align:center;height:12px;transition:opacity 0.3s;}
 .delete-item-btn{width:100%;margin-top:8px;background:transparent;border:1px solid var(--red-border);color:var(--red);border-radius:7px;padding:6px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;letter-spacing:0.04em;}
 .delete-item-btn:hover{background:var(--red);color:#fff;}
 .delete-item-btn:active{transform:scale(0.97);}
@@ -278,6 +278,15 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 const API = 'https://script.google.com/macros/s/AKfycbysDrAtNrZlL1PumGXh6q_hLo1dQyqeujjaNJvexgfuOeISdP1Vslv_3YN2dWCSgPeFfw/exec';
 const PINS = ['5642', '0049'];
 
+// EmailJS — for fulfillment confirmation emails to customers
+const EMAILJS_PUBLIC_KEY  = 'BLEcAY-zs_dwN4UuI';
+const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
+const EMAILJS_TEMPLATE_ID = 'template_bd3i3oh';
+
+window.addEventListener('load', () => {
+  if(typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
+});
+
 const PRODUCTS = [
   {code:'TR5',name:'Tirzepatide',cat:'Weight Loss',spec:'5mg/vial',price:12.61},
   {code:'TR10',name:'Tirzepatide',cat:'Weight Loss',spec:'10mg/vial',price:18.02},
@@ -386,10 +395,10 @@ function pinPress(d){
 }
 function pinDelete(){pinBuffer=pinBuffer.slice(0,-1);updateDots();document.getElementById('loginError').textContent='';}
 function updateDots(){
-  const dots = document.querySelectorAll('.pin-dot');
-  dots.forEach((dot, i) => {
-    if(i < pinBuffer.length){ dot.classList.add('filled'); } 
-    else { dot.classList.remove('filled'); }
+  const dots=document.querySelectorAll('.pin-dot');
+  dots.forEach((dot,i)=>{
+    if(i<pinBuffer.length)dot.classList.add('filled');
+    else dot.classList.remove('filled');
     dot.classList.remove('error');
   });
 }
@@ -408,12 +417,11 @@ function checkPin(){
 function logout(){sessionStorage.removeItem('psw_auth');pinBuffer='';updateDots();document.getElementById('adminApp').style.display='none';document.getElementById('loginScreen').style.display='flex';}
 if(sessionStorage.getItem('psw_auth')==='1'){document.getElementById('loginScreen').style.display='none';document.getElementById('adminApp').style.display='block';}
 
-// Keyboard support for PIN pad
-document.addEventListener('keydown', function(e){
-  const loginVisible = document.getElementById('loginScreen').style.display !== 'none';
+document.addEventListener('keydown',function(e){
+  const loginVisible=document.getElementById('loginScreen').style.display!=='none';
   if(loginVisible){
-    if(e.key >= '0' && e.key <= '9') pinPress(e.key);
-    if(e.key === 'Backspace') pinDelete();
+    if(e.key>='0'&&e.key<='9')pinPress(e.key);
+    if(e.key==='Backspace')pinDelete();
   }
 });
 
@@ -421,27 +429,25 @@ document.addEventListener('keydown', function(e){
 // API CALLS
 // ════════════════════════════════════════
 async function apiGet(action){
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', API+'?action='+action+'&t='+Date.now(), true);
-    xhr.onload = () => {
-      try { resolve(JSON.parse(xhr.responseText)); }
-      catch(e) { resolve({}); }
-    };
-    xhr.onerror = () => resolve({});
+  return new Promise((resolve)=>{
+    const xhr=new XMLHttpRequest();
+    xhr.open('GET',API+'?action='+action+'&t='+Date.now(),true);
+    xhr.onload=()=>{try{resolve(JSON.parse(xhr.responseText));}catch(e){resolve({});}};
+    xhr.onerror=()=>resolve({});
     xhr.send();
+    setTimeout(()=>resolve({}),10000);
   });
 }
 async function apiPost(data){
-  return new Promise((resolve) => {
-    const params = new URLSearchParams();
-    Object.entries(data).forEach(([k,v]) => {
-      params.append(k, typeof v === 'object' ? encodeURIComponent(JSON.stringify(v)) : v);
+  return new Promise((resolve)=>{
+    const params=new URLSearchParams();
+    Object.entries(data).forEach(([k,v])=>{
+      params.append(k,typeof v==='object'?encodeURIComponent(JSON.stringify(v)):v);
     });
-    const url = API + '?' + params.toString();
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onload = xhr.onerror = () => resolve();
+    const url=API+'?'+params.toString();
+    const xhr=new XMLHttpRequest();
+    xhr.open('GET',url,true);
+    xhr.onload=xhr.onerror=()=>resolve();
     xhr.send();
   });
 }
@@ -449,10 +455,7 @@ async function apiPost(data){
 // ════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════
-function initApp(){
-  populateProductSelect();
-  loadAll();
-}
+function initApp(){populateProductSelect();loadAll();}
 
 async function loadAll(){
   try{
@@ -462,7 +465,6 @@ async function loadAll(){
     updateCounts();
     renderDashboard();
   }catch(e){
-    console.error('Failed to load:',e);
     showToast('Could not connect to Google Sheets','red');
   }
 }
@@ -554,13 +556,11 @@ function renderDashboard(){
   document.getElementById('dashRecentMeta').textContent='Last 5 orders';
   document.getElementById('dashRecentOrders').innerHTML=recent.length?recent.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No orders yet</p></div>';
 }
-
 function renderPendingOrders(){
   const pending=orders.filter(o=>o.status==='pending').slice().reverse();
   document.getElementById('pendingMeta').textContent=pending.length+' order'+(pending.length!==1?'s':'');
   document.getElementById('pendingOrdersList').innerHTML=pending.length?pending.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No pending orders 🎉</p></div>';
 }
-
 function renderFulfilledOrders(){
   const done=orders.filter(o=>o.status!=='pending').slice().reverse();
   document.getElementById('fulfilledMeta').textContent=done.length+' order'+(done.length!==1?'s':'');
@@ -574,15 +574,34 @@ async function fulfillOrder(id){
   const order=orders.find(o=>o.id===id);
   if(!order)return;
   order.status='fulfilled';
-  // Deduct inventory
-  await apiPost({action:'deductInventory',items:order.items});
   await apiPost({action:'updateOrderStatus',id,status:'fulfilled'});
-  // Update local inventory
-  const inv=await apiGet('getInventory');
-  inventory=inv||{};
+
+  // Send fulfillment confirmation email to customer
+  try{
+    if(typeof emailjs!=='undefined'&&order.customer&&order.customer.email){
+      const items=Array.isArray(order.items)?order.items:[];
+      const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${((i.price||0)*(i.qty||0)).toFixed(2)}`).join('\n');
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        to_email:         order.customer.email,
+        from_name:        order.customer.name||'Customer',
+        from_email:       order.customer.email,
+        from_phone:       order.customer.phone||'',
+        shipping_address: order.customer.address||'Not provided',
+        customer_notes:   'Your order has been fulfilled and is on its way!',
+        order_summary:    orderSummary,
+        order_total:      '$'+parseFloat(order.total||0).toFixed(2),
+      });
+      showToast('✓ Order fulfilled — confirmation email sent to customer','green');
+    } else {
+      showToast('✓ Order fulfilled','green');
+    }
+  }catch(e){
+    console.warn('Fulfillment email failed:',e);
+    showToast('✓ Order fulfilled (email failed)','green');
+  }
+
   updateCounts();
   renderPendingOrders();
-  showToast('✓ Order fulfilled — inventory updated','green');
 }
 
 async function cancelOrder(id){
@@ -614,7 +633,6 @@ function renderInventory(){
     const item=inventory[code];
     return !q||item.name.toLowerCase().includes(q)||code.toLowerCase().includes(q)||(item.spec||'').toLowerCase().includes(q);
   });
-
   const lowItems=Object.values(inventory).filter(i=>i.stock<=i.threshold&&i.stock>0);
   const outItems=Object.values(inventory).filter(i=>i.stock===0);
   const banner=document.getElementById('lowStockBanner');
@@ -623,10 +641,8 @@ function renderInventory(){
   if(lowItems.length)msgs.push(lowItems.length+' item'+(lowItems.length!==1?'s':'')+' low');
   if(msgs.length){banner.classList.add('show');document.getElementById('lowStockMsg').textContent=msgs.join(' · ');}
   else banner.classList.remove('show');
-
   const grid=document.getElementById('invGrid');
   if(!keys.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No inventory items yet — click + Add Item to get started</p></div>';return;}
-
   grid.innerHTML=keys.map(code=>{
     const item=inventory[code];
     const stock=item.stock||0;
@@ -646,7 +662,7 @@ function renderInventory(){
         </div>
         <button class="stock-plus" onclick="adjustStock('${code}',1)">+</button>
       </div>
-      <button class="delete-item-btn" onclick="deleteInventoryItem('${code}', '${item.name}')">✕ Remove from inventory</button>
+      <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${item.name}')">✕ Remove from inventory</button>
     </div>`;
   }).join('');
 }
@@ -680,20 +696,18 @@ function populateProductSelect(){
 function openAddStock(){document.getElementById('addStockModal').classList.add('open');}
 function closeAddStock(){document.getElementById('addStockModal').classList.remove('open');}
 
-async function deleteInventoryItem(code, name){
-  if(!confirm('Remove ' + name + ' from inventory? This will also remove it from the storefront.')) return;
+async function deleteInventoryItem(code,name){
+  if(!confirm('Remove '+name+' from inventory?'))return;
   delete inventory[code];
-  await apiPost({action:'deleteInventory', code});
+  await apiPost({action:'deleteInventory',code});
   renderInventory();
   updateCounts();
-  showToast('✓ ' + name + ' removed', 'green');
+  showToast('✓ '+name+' removed','green');
 }
 
-// Enter key triggers Add to Inventory
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Enter' && document.getElementById('addStockModal').classList.contains('open')){
-    e.preventDefault();
-    saveNewInventoryItem();
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&document.getElementById('addStockModal').classList.contains('open')){
+    e.preventDefault();saveNewInventoryItem();
   }
 });
 
@@ -703,11 +717,8 @@ async function saveNewInventoryItem(){
   const threshold=parseInt(document.getElementById('addStockThreshold').value)||5;
   if(!code){showToast('Please select a product','red');return;}
   const product=PRODUCTS.find(p=>p.code===code);
-  if(!inventory[code]){
-    inventory[code]={name:product.name,spec:product.spec,stock:qty,threshold};
-  } else {
-    inventory[code].stock+=qty;
-  }
+  if(!inventory[code]){inventory[code]={name:product.name,spec:product.spec,stock:qty,threshold};}
+  else{inventory[code].stock+=qty;}
   await apiPost({action:'updateInventory',code,stock:inventory[code].stock,threshold,name:product.name,spec:product.spec});
   closeAddStock();
   renderInventory();
@@ -726,7 +737,6 @@ function showToast(msg,type=''){
   toastTimer=setTimeout(()=>t.className='toast',2800);
 }
 
-// Auto-init if already authed
 if(sessionStorage.getItem('psw_auth')==='1'){initApp();}
 </script>
 </body>

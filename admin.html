@@ -404,8 +404,16 @@ if(sessionStorage.getItem('psw_auth')==='1'){document.getElementById('loginScree
 // API CALLS
 // ════════════════════════════════════════
 async function apiGet(action){
-  const res=await fetch(API+'?action='+action+'&t='+Date.now(), {redirect:'follow'});
-  return res.json();
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', API+'?action='+action+'&t='+Date.now(), true);
+    xhr.onload = () => {
+      try { resolve(JSON.parse(xhr.responseText)); }
+      catch(e) { resolve({}); }
+    };
+    xhr.onerror = () => resolve({});
+    xhr.send();
+  });
 }
 async function apiPost(data){
   return new Promise((resolve) => {
@@ -413,11 +421,11 @@ async function apiPost(data){
     Object.entries(data).forEach(([k,v]) => {
       params.append(k, typeof v === 'object' ? encodeURIComponent(JSON.stringify(v)) : v);
     });
-    const img = new Image();
-    img.onload = img.onerror = () => resolve();
-    img.src = API + '?' + params.toString();
-    // Also try fetch as backup
-    fetch(API+'?'+params.toString(), {mode:'no-cors'}).catch(()=>{});
+    const url = API + '?' + params.toString();
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = xhr.onerror = () => resolve();
+    xhr.send();
   });
 }
  

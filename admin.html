@@ -404,15 +404,16 @@ if(sessionStorage.getItem('psw_auth')==='1'){document.getElementById('loginScree
 // API CALLS
 // ════════════════════════════════════════
 async function apiGet(action){
-  const res=await fetch(API+'?action='+action);
+  const res=await fetch(API+'?action='+action+'&t='+Date.now(), {redirect:'follow'});
   return res.json();
 }
 async function apiPost(data){
   const params = new URLSearchParams();
   Object.entries(data).forEach(([k,v]) => {
-    params.append(k, typeof v === 'object' ? JSON.stringify(v) : v);
+    params.append(k, typeof v === 'object' ? encodeURIComponent(JSON.stringify(v)) : v);
   });
-  await fetch(API+'?'+params.toString());
+  // Use no-cors to avoid redirect issues with Apps Script
+  await fetch(API+'?'+params.toString(), {mode:'no-cors'});
 }
  
 // ════════════════════════════════════════

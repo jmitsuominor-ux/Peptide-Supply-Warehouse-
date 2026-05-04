@@ -417,6 +417,8 @@ async function loadInventory(){
       xhr.onload = () => { try { resolve(JSON.parse(xhr.responseText)); } catch(e) { resolve({}); } };
       xhr.onerror = () => resolve({});
       xhr.send();
+      // 8 second timeout — show all products if Sheets is slow
+      setTimeout(() => resolve({}), 8000);
     });
     inventory=data;
     if(inventory&&Object.keys(inventory).length>0){
@@ -628,6 +630,18 @@ async function submitOrder(){
   }catch(e){
     console.warn('Could not save to sheets:',e);
   }
+
+  // Deduct inventory immediately
+  try{
+    const deductURL = API + '?action=deductInventory&items=' + encodeURIComponent(JSON.stringify(items)) + '&t=' + Date.now();
+    await new Promise((resolve)=>{
+      const xhr=new XMLHttpRequest();
+      xhr.open('GET', deductURL, true);
+      xhr.onload=xhr.onerror=()=>resolve();
+      xhr.send();
+      setTimeout(()=>resolve(),8000);
+    });
+  }catch(e){console.warn('Inventory deduct failed:',e);}
 
   // Send email via EmailJS
   try{

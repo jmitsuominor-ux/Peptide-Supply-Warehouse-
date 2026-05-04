@@ -21,7 +21,7 @@
 html{scroll-behavior:smooth;}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-size:200px;pointer-events:none;z-index:0;}
- 
+
 /* PIN LOGIN */
 #loginScreen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:var(--bg);flex-direction:column;}
 .login-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:400px;height:400px;background:radial-gradient(circle,rgba(59,130,246,0.08) 0%,transparent 70%);pointer-events:none;}
@@ -43,7 +43,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .num-btn.del{font-size:16px;color:var(--text2);background:transparent;border-color:transparent;}
 .num-btn.del:active{background:var(--red-dim);border-color:var(--red-border);color:var(--red);}
 .login-error{text-align:center;font-family:var(--mono);font-size:11px;color:var(--red);margin-top:16px;height:16px;}
- 
+
 /* ADMIN APP */
 #adminApp{display:none;position:relative;z-index:1;}
 .admin-bar{background:rgba(11,15,23,0.95);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;padding:0 20px;height:54px;display:flex;align-items:center;gap:12px;}
@@ -64,12 +64,12 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .nav-count.green{background:var(--green-dim);color:var(--green);}
 .admin-page{display:none;max-width:900px;margin:0 auto;padding:20px;}
 .admin-page.active{display:block;}
- 
+
 /* LOADING */
 .loading-bar{text-align:center;padding:40px;font-family:var(--mono);font-size:11px;color:var(--text3);}
 .loading-spin{width:30px;height:30px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
 @keyframes spin{to{transform:rotate(360deg);}}
- 
+
 /* STAT CARDS */
 .section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
 .section-hdr h2{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.01em;}
@@ -88,7 +88,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .stat-val.amber{color:var(--amber);}
 .stat-val.purple{color:var(--purple);}
 .stat-sub{font-family:var(--mono);font-size:9px;color:var(--text3);}
- 
+
 /* ORDERS */
 .order-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color 0.15s;}
 .order-card:hover{border-color:var(--border2);}
@@ -120,7 +120,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .action-btn:active{transform:scale(0.97);}
 .order-notes{background:var(--amber-dim);border:1px solid rgba(245,158,11,0.2);border-radius:6px;padding:8px 11px;font-size:11px;color:var(--amber);margin-bottom:10px;}
 .order-notes strong{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.06em;margin-bottom:2px;}
- 
+
 /* INVENTORY */
 .inv-toolbar{display:flex;gap:10px;margin-bottom:14px;align-items:center;flex-wrap:wrap;}
 .inv-search{flex:1;min-width:180px;background:var(--surface);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:13px;padding:9px 13px;outline:none;transition:border-color 0.15s;}
@@ -155,7 +155,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .delete-item-btn{width:100%;margin-top:8px;background:transparent;border:1px solid var(--red-border);color:var(--red);border-radius:7px;padding:6px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;letter-spacing:0.04em;}
 .delete-item-btn:hover{background:var(--red);color:#fff;}
 .delete-item-btn:active{transform:scale(0.97);}
- 
+
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
 .modal-overlay.open{display:flex;}
@@ -172,24 +172,24 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .mf select option{background:#111827;}
 .modal-save-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:9px;padding:12px;font-size:14px;font-weight:700;font-family:var(--sans);cursor:pointer;transition:all 0.15s;}
 .modal-save-btn:active{transform:scale(0.98);}
- 
+
 /* EMPTY STATE */
 .empty-state{text-align:center;padding:50px 20px;color:var(--text3);}
 .empty-state p{font-family:var(--mono);font-size:12px;margin-top:8px;}
- 
+
 /* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:11px 18px;font-size:13px;font-weight:500;color:var(--text);box-shadow:0 8px 30px rgba(0,0,0,0.4);z-index:9999;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;gap:8px;white-space:nowrap;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast.green{border-color:var(--green-border);color:var(--green);}
 .toast.red{border-color:var(--red-border);color:var(--red);}
- 
+
 ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 .order-card{animation:fadeUp 0.2s ease both;}
 </style>
 </head>
 <body>
- 
+
 <div id="loginScreen">
   <div class="login-glow"></div>
   <div class="login-card">
@@ -208,7 +208,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     <div class="login-error" id="loginError"></div>
   </div>
 </div>
- 
+
 <div id="adminApp">
   <div class="admin-bar">
     <div class="admin-brand">
@@ -225,7 +225,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     <div class="nav-tab" onclick="switchTab('fulfilled',this)">Fulfilled <span class="nav-count green" id="fulfilledCount">0</span></div>
     <div class="nav-tab" onclick="switchTab('inventory',this)">Inventory <span class="nav-count" id="invCount">0</span></div>
   </div>
- 
+
   <div class="admin-page active" id="page-dashboard">
     <div class="stat-row">
       <div class="stat-card blue"><div class="stat-label">PENDING ORDERS</div><div class="stat-val blue" id="statPending">—</div><div class="stat-sub">awaiting fulfillment</div></div>
@@ -236,17 +236,17 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     <div class="section-hdr"><h2>Recent Orders</h2><div class="section-hdr-meta" id="dashRecentMeta"></div></div>
     <div id="dashRecentOrders"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
   </div>
- 
+
   <div class="admin-page" id="page-orders">
     <div class="section-hdr"><h2>Pending Orders</h2><div class="section-hdr-meta" id="pendingMeta"></div></div>
     <div id="pendingOrdersList"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
   </div>
- 
+
   <div class="admin-page" id="page-fulfilled">
     <div class="section-hdr"><h2>Fulfilled Orders</h2><div class="section-hdr-meta" id="fulfilledMeta"></div></div>
     <div id="fulfilledOrdersList"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
   </div>
- 
+
   <div class="admin-page" id="page-inventory">
     <div class="inv-toolbar">
       <input type="text" class="inv-search" id="invSearch" placeholder="Search inventory…" oninput="renderInventory()">
@@ -256,7 +256,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     <div class="inv-grid" id="invGrid"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
   </div>
 </div>
- 
+
 <div class="modal-overlay" id="addStockModal">
   <div class="modal-box">
     <div class="modal-hdr"><h3>Add Inventory Item</h3><div class="modal-x" onclick="closeAddStock()">×</div></div>
@@ -268,16 +268,16 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
     </div>
   </div>
 </div>
- 
+
 <div class="toast" id="toast"></div>
- 
+
 <script>
 // ════════════════════════════════════════
 // CONFIG
 // ════════════════════════════════════════
 const API = 'https://script.google.com/macros/s/AKfycbysDrAtNrZlL1PumGXh6q_hLo1dQyqeujjaNJvexgfuOeISdP1Vslv_3YN2dWCSgPeFfw/exec';
 const PINS = ['5642', '0049'];
- 
+
 const PRODUCTS = [
   {code:'TR5',name:'Tirzepatide',cat:'Weight Loss',spec:'5mg/vial',price:12.61},
   {code:'TR10',name:'Tirzepatide',cat:'Weight Loss',spec:'10mg/vial',price:18.02},
@@ -368,14 +368,14 @@ const PRODUCTS = [
   {code:'WA10',name:'BAC Water',cat:'Reconstitution',spec:'10ml/vial',price:3.00},
   {code:'AA',name:'Acetic Acid Water',cat:'Reconstitution',spec:'3ml/vial',price:1.50},
 ];
- 
+
 // ════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════
 let orders=[];
 let inventory={};
 let pinBuffer='';
- 
+
 // ════════════════════════════════════════
 // PIN AUTH
 // ════════════════════════════════════════
@@ -386,7 +386,12 @@ function pinPress(d){
 }
 function pinDelete(){pinBuffer=pinBuffer.slice(0,-1);updateDots();document.getElementById('loginError').textContent='';}
 function updateDots(){
-  for(let i=0;i<4;i++){const dot=document.getElementById('dot'+i);dot.classList.toggle('filled',i<pinBuffer.length);dot.classList.remove('error');}
+  const dots = document.querySelectorAll('.pin-dot');
+  dots.forEach((dot, i) => {
+    if(i < pinBuffer.length){ dot.classList.add('filled'); } 
+    else { dot.classList.remove('filled'); }
+    dot.classList.remove('error');
+  });
 }
 function checkPin(){
   if(PINS.includes(pinBuffer)){
@@ -402,7 +407,7 @@ function checkPin(){
 }
 function logout(){sessionStorage.removeItem('psw_auth');pinBuffer='';updateDots();document.getElementById('adminApp').style.display='none';document.getElementById('loginScreen').style.display='flex';}
 if(sessionStorage.getItem('psw_auth')==='1'){document.getElementById('loginScreen').style.display='none';document.getElementById('adminApp').style.display='block';}
- 
+
 // ════════════════════════════════════════
 // API CALLS
 // ════════════════════════════════════════
@@ -431,7 +436,7 @@ async function apiPost(data){
     xhr.send();
   });
 }
- 
+
 // ════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════
@@ -439,7 +444,7 @@ function initApp(){
   populateProductSelect();
   loadAll();
 }
- 
+
 async function loadAll(){
   try{
     const [inv,ords]=await Promise.all([apiGet('getInventory'),apiGet('getOrders')]);
@@ -452,7 +457,7 @@ async function loadAll(){
     showToast('Could not connect to Google Sheets','red');
   }
 }
- 
+
 // ════════════════════════════════════════
 // TAB
 // ════════════════════════════════════════
@@ -467,7 +472,7 @@ function switchTab(tab,el){
   if(tab==='dashboard')renderDashboard();
   window.scrollTo(0,0);
 }
- 
+
 // ════════════════════════════════════════
 // COUNTS
 // ════════════════════════════════════════
@@ -485,7 +490,7 @@ function updateCounts(){
   const pendingRev=orders.filter(o=>o.status==='pending').reduce((s,o)=>s+(parseFloat(o.total)||0),0);
   document.getElementById('statRevPending').textContent='$'+pendingRev.toFixed(2);
 }
- 
+
 // ════════════════════════════════════════
 // ORDER CARD
 // ════════════════════════════════════════
@@ -528,9 +533,9 @@ function orderCardHTML(order){
     </div>
   </div>`;
 }
- 
+
 function toggleOrder(id){const b=document.getElementById('obody-'+id);if(b)b.classList.toggle('open');}
- 
+
 // ════════════════════════════════════════
 // RENDER ORDERS
 // ════════════════════════════════════════
@@ -540,19 +545,19 @@ function renderDashboard(){
   document.getElementById('dashRecentMeta').textContent='Last 5 orders';
   document.getElementById('dashRecentOrders').innerHTML=recent.length?recent.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No orders yet</p></div>';
 }
- 
+
 function renderPendingOrders(){
   const pending=orders.filter(o=>o.status==='pending').slice().reverse();
   document.getElementById('pendingMeta').textContent=pending.length+' order'+(pending.length!==1?'s':'');
   document.getElementById('pendingOrdersList').innerHTML=pending.length?pending.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No pending orders 🎉</p></div>';
 }
- 
+
 function renderFulfilledOrders(){
   const done=orders.filter(o=>o.status!=='pending').slice().reverse();
   document.getElementById('fulfilledMeta').textContent=done.length+' order'+(done.length!==1?'s':'');
   document.getElementById('fulfilledOrdersList').innerHTML=done.length?done.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No fulfilled orders yet</p></div>';
 }
- 
+
 // ════════════════════════════════════════
 // ORDER ACTIONS
 // ════════════════════════════════════════
@@ -570,7 +575,7 @@ async function fulfillOrder(id){
   renderPendingOrders();
   showToast('✓ Order fulfilled — inventory updated','green');
 }
- 
+
 async function cancelOrder(id){
   const order=orders.find(o=>o.id===id);
   if(!order)return;
@@ -580,7 +585,7 @@ async function cancelOrder(id){
   renderPendingOrders();
   showToast('Order cancelled','red');
 }
- 
+
 async function setPendingOrder(id){
   const order=orders.find(o=>o.id===id);
   if(!order)return;
@@ -590,7 +595,7 @@ async function setPendingOrder(id){
   renderFulfilledOrders();
   showToast('Order restored to pending','');
 }
- 
+
 // ════════════════════════════════════════
 // INVENTORY
 // ════════════════════════════════════════
@@ -600,7 +605,7 @@ function renderInventory(){
     const item=inventory[code];
     return !q||item.name.toLowerCase().includes(q)||code.toLowerCase().includes(q)||(item.spec||'').toLowerCase().includes(q);
   });
- 
+
   const lowItems=Object.values(inventory).filter(i=>i.stock<=i.threshold&&i.stock>0);
   const outItems=Object.values(inventory).filter(i=>i.stock===0);
   const banner=document.getElementById('lowStockBanner');
@@ -609,10 +614,10 @@ function renderInventory(){
   if(lowItems.length)msgs.push(lowItems.length+' item'+(lowItems.length!==1?'s':'')+' low');
   if(msgs.length){banner.classList.add('show');document.getElementById('lowStockMsg').textContent=msgs.join(' · ');}
   else banner.classList.remove('show');
- 
+
   const grid=document.getElementById('invGrid');
   if(!keys.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No inventory items yet — click + Add Item to get started</p></div>';return;}
- 
+
   grid.innerHTML=keys.map(code=>{
     const item=inventory[code];
     const stock=item.stock||0;
@@ -636,7 +641,7 @@ function renderInventory(){
     </div>`;
   }).join('');
 }
- 
+
 async function adjustStock(code,delta){
   if(!inventory[code])return;
   const newStock=Math.max(0,(inventory[code].stock||0)+delta);
@@ -647,7 +652,7 @@ async function adjustStock(code,delta){
   await apiPost({action:'updateInventory',code,stock:newStock,threshold:inventory[code].threshold||5,name:inventory[code].name,spec:inventory[code].spec});
   showToast('Stock updated','green');
 }
- 
+
 async function saveStock(code,val){
   if(!inventory[code])return;
   const n=parseInt(val);
@@ -657,15 +662,15 @@ async function saveStock(code,val){
   renderInventory();
   showToast('Stock saved','green');
 }
- 
+
 function populateProductSelect(){
   const sel=document.getElementById('addStockProduct');
   PRODUCTS.forEach(p=>{const o=document.createElement('option');o.value=p.code;o.textContent=p.code+' — '+p.name+' ('+p.spec+')';sel.appendChild(o);});
 }
- 
+
 function openAddStock(){document.getElementById('addStockModal').classList.add('open');}
 function closeAddStock(){document.getElementById('addStockModal').classList.remove('open');}
- 
+
 async function deleteInventoryItem(code, name){
   if(!confirm('Remove ' + name + ' from inventory? This will also remove it from the storefront.')) return;
   delete inventory[code];
@@ -674,16 +679,16 @@ async function deleteInventoryItem(code, name){
   updateCounts();
   showToast('✓ ' + name + ' removed', 'green');
 }
- 
-async // Enter key triggers Add to Inventory
+
+// Enter key triggers Add to Inventory
 document.addEventListener('keydown', function(e){
   if(e.key === 'Enter' && document.getElementById('addStockModal').classList.contains('open')){
     e.preventDefault();
     saveNewInventoryItem();
   }
 });
- 
-function saveNewInventoryItem(){
+
+async function saveNewInventoryItem(){
   const code=document.getElementById('addStockProduct').value;
   const qty=parseInt(document.getElementById('addStockQty').value)||0;
   const threshold=parseInt(document.getElementById('addStockThreshold').value)||5;
@@ -700,7 +705,7 @@ function saveNewInventoryItem(){
   updateCounts();
   showToast('✓ Inventory updated','green');
 }
- 
+
 // ════════════════════════════════════════
 // TOAST
 // ════════════════════════════════════════
@@ -711,7 +716,7 @@ function showToast(msg,type=''){
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>t.className='toast',2800);
 }
- 
+
 // Auto-init if already authed
 if(sessionStorage.getItem('psw_auth')==='1'){initApp();}
 </script>

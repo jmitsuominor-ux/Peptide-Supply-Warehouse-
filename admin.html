@@ -525,8 +525,8 @@ function orderCardHTML(order){
        <button class="action-btn cancel" onclick="cancelOrder('${safeId}')">✗ Cancel</button>`
     :`<button class="action-btn pending-btn" onclick="setPendingOrder('${safeId}')">↩ Revert to Pending</button>`;
   const cust=order.customer||{};
-  return `<div class="order-card" id="ocard-${safeId}" data-order-id="${order.id}">
-    <div class="order-head" onclick="toggleOrder('${safeId}')">
+  return `<div class="order-card" id="ocard-${safeId}" data-order-id="${order.id}" data-safe-id="${safeId}">
+    <div class="order-head" onclick="toggleOrder(this.closest('.order-card').dataset.safeId)">
       <div class="order-status ${order.status}"></div>
       <div class="order-info">
         <div class="order-name">${cust.name||'Unknown'}</div>
@@ -543,12 +543,21 @@ function orderCardHTML(order){
       </div>
       ${notesHtml}
       <table class="order-items-table"><thead><tr><th>CODE</th><th>PRODUCT</th><th>SPEC</th><th>QTY</th><th>TOTAL</th></tr></thead><tbody>${itemRows}</tbody></table>
-      <div class="order-actions">${actionsHtml}</div>
+      <div class="order-actions">
+        ${order.status==='pending'
+          ?`<button class="action-btn fulfill" onclick="fulfillOrder(this.closest('.order-card').dataset.safeId)">✓ Mark Fulfilled</button>
+             <button class="action-btn cancel" onclick="cancelOrder(this.closest('.order-card').dataset.safeId)">✗ Cancel</button>`
+          :`<button class="action-btn pending-btn" onclick="setPendingOrder(this.closest('.order-card').dataset.safeId)">↩ Revert to Pending</button>`
+        }
+      </div>
     </div>
   </div>`;
 }
 
-function toggleOrder(id){const b=document.getElementById('obody-'+id);if(b)b.classList.toggle('open');}
+function toggleOrder(safeId){
+  const body=document.getElementById('obody-'+safeId);
+  if(body)body.classList.toggle('open');
+}
 
 // ════════════════════════════════════════
 // RENDER ORDERS

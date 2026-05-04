@@ -76,7 +76,8 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .section-hdr h2{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-0.01em;}
 .section-hdr-meta{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:auto;}
 .stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;position:relative;overflow:hidden;transition:border-color 0.15s,transform 0.15s;}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-2px);}
 .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .stat-card.blue::before{background:linear-gradient(90deg,var(--blue),transparent);}
 .stat-card.green::before{background:linear-gradient(90deg,var(--green),transparent);}
@@ -228,10 +229,10 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 
   <div class="admin-page active" id="page-dashboard">
     <div class="stat-row">
-      <div class="stat-card blue"><div class="stat-label">PENDING ORDERS</div><div class="stat-val blue" id="statPending">—</div><div class="stat-sub">awaiting fulfillment</div></div>
-      <div class="stat-card green"><div class="stat-label">FULFILLED</div><div class="stat-val green" id="statFulfilled">—</div><div class="stat-sub">all time</div></div>
-      <div class="stat-card amber"><div class="stat-label">PENDING VALUE</div><div class="stat-val amber" id="statRevPending">—</div><div class="stat-sub">pending orders total</div></div>
-      <div class="stat-card purple"><div class="stat-label">LOW STOCK</div><div class="stat-val purple" id="statLowStock">—</div><div class="stat-sub">≤ threshold</div></div>
+      <div class="stat-card blue" onclick="switchTab('orders',document.querySelectorAll('.nav-tab')[1])" style="cursor:pointer;"><div class="stat-label">PENDING ORDERS</div><div class="stat-val blue" id="statPending">—</div><div class="stat-sub">tap to view →</div></div>
+      <div class="stat-card green" onclick="switchTab('fulfilled',document.querySelectorAll('.nav-tab')[2])" style="cursor:pointer;"><div class="stat-label">FULFILLED</div><div class="stat-val green" id="statFulfilled">—</div><div class="stat-sub">tap to view →</div></div>
+      <div class="stat-card amber" onclick="switchTab('orders',document.querySelectorAll('.nav-tab')[1])" style="cursor:pointer;"><div class="stat-label">PENDING VALUE</div><div class="stat-val amber" id="statRevPending">—</div><div class="stat-sub">tap to view →</div></div>
+      <div class="stat-card purple" onclick="switchTab('inventory',document.querySelectorAll('.nav-tab')[3])" style="cursor:pointer;"><div class="stat-label">LOW STOCK</div><div class="stat-val purple" id="statLowStock">—</div><div class="stat-sub">tap to view →</div></div>
     </div>
     <div class="section-hdr"><h2>Recent Orders</h2><div class="section-hdr-meta" id="dashRecentMeta"></div></div>
     <div id="dashRecentOrders"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>

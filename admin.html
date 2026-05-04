@@ -152,6 +152,9 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 .stock-badge.low{background:var(--amber-dim);color:var(--amber);}
 .stock-badge.out{background:var(--red-dim);color:var(--red);}
 .save-indicator{font-family:var(--mono);font-size:9px;color:var(--green);margin-top:4px;text-align:center;height:12px;transition:opacity 0.3s;}
+.delete-item-btn{width:100%;margin-top:8px;background:transparent;border:1px solid var(--red-border);color:var(--red);border-radius:7px;padding:6px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;letter-spacing:0.04em;}
+.delete-item-btn:hover{background:var(--red);color:#fff;}
+.delete-item-btn:active{transform:scale(0.97);}
  
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
@@ -272,7 +275,7 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 // ════════════════════════════════════════
 // CONFIG
 // ════════════════════════════════════════
-const API = 'https://script.google.com/macros/s/AKfycbzAzhcEG3jK4A8p5sUY450SMZeB1NMyQJGdGwBWktkwEJ43QdKvaHDJQa5AB43nsTry3A/exec';
+const API = 'https://script.google.com/macros/s/AKfycbysDrAtNrZlL1PumGXh6q_hLo1dQyqeujjaNJvexgfuOeISdP1Vslv_3YN2dWCSgPeFfw/exec';
 const PINS = ['5642', '0049'];
  
 const PRODUCTS = [
@@ -629,6 +632,7 @@ function renderInventory(){
         </div>
         <button class="stock-plus" onclick="adjustStock('${code}',1)">+</button>
       </div>
+      <button class="delete-item-btn" onclick="deleteInventoryItem('${code}', '${item.name}')">✕ Remove from inventory</button>
     </div>`;
   }).join('');
 }
@@ -662,7 +666,24 @@ function populateProductSelect(){
 function openAddStock(){document.getElementById('addStockModal').classList.add('open');}
 function closeAddStock(){document.getElementById('addStockModal').classList.remove('open');}
  
-async function saveNewInventoryItem(){
+async function deleteInventoryItem(code, name){
+  if(!confirm('Remove ' + name + ' from inventory? This will also remove it from the storefront.')) return;
+  delete inventory[code];
+  await apiPost({action:'deleteInventory', code});
+  renderInventory();
+  updateCounts();
+  showToast('✓ ' + name + ' removed', 'green');
+}
+ 
+async // Enter key triggers Add to Inventory
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Enter' && document.getElementById('addStockModal').classList.contains('open')){
+    e.preventDefault();
+    saveNewInventoryItem();
+  }
+});
+ 
+function saveNewInventoryItem(){
   const code=document.getElementById('addStockProduct').value;
   const qty=parseInt(document.getElementById('addStockQty').value)||0;
   const threshold=parseInt(document.getElementById('addStockThreshold').value)||5;

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Peptide Supply Warehouse</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -268,12 +269,25 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
 <script>
 // ════════════════════════════════════════
+// EMAILJS CONFIG
+// ════════════════════════════════════════
+const EMAILJS_PUBLIC_KEY  = 'BLEcAY-zs_dwN4UuI';
+const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
+const EMAILJS_TEMPLATE_ID = 's09gq7a';
+const FULFILLER_EMAIL     = 'pensidesupplywarehouse@gmail.com';
+
+// ════════════════════════════════════════
 // GOOGLE SHEETS API URL
 // ════════════════════════════════════════
 const API = 'https://script.google.com/macros/s/AKfycbysDrAtNrZlL1PumGXh6q_hLo1dQyqeujjaNJvexgfuOeISdP1Vslv_3YN2dWCSgPeFfw/exec';
 
 // ════════════════════════════════════════
-// FULL PRODUCT CATALOG (for reference)
+// INIT EMAILJS
+// ════════════════════════════════════════
+emailjs.init(EMAILJS_PUBLIC_KEY);
+
+// ════════════════════════════════════════
+// FULL PRODUCT CATALOG
 // ════════════════════════════════════════
 const ALL_PRODUCTS = [
   {code:'TR5',name:'Tirzepatide',cat:'Weight Loss',spec:'5mg/vial',price:12.61},
@@ -373,8 +387,8 @@ const CAT_ORDER=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging
 // ════════════════════════════════════════
 const cart={};
 let activeCategory='All';
-let inventory={}; // loaded from Google Sheets
-let PRODUCTS=[]; // filtered by inventory
+let inventory={};
+let PRODUCTS=[];
 
 // ════════════════════════════════════════
 // HIDDEN ADMIN TRIGGER
@@ -403,11 +417,10 @@ async function loadInventory(){
       xhr.send();
     });
     inventory=data;
-    // Filter products to only those in stock
     if(inventory&&Object.keys(inventory).length>0){
       PRODUCTS=ALL_PRODUCTS.filter(p=>inventory[p.code]&&inventory[p.code].stock>0);
     } else {
-      PRODUCTS=[...ALL_PRODUCTS]; // show all if no inventory set up yet
+      PRODUCTS=[...ALL_PRODUCTS];
     }
   }catch(e){
     console.warn('Could not load inventory, showing all products');
@@ -585,6 +598,10 @@ async function submitOrder(){
     return{code,name:p?p.name:code,spec:p?p.spec:'',qty,price:p?p.price:0};
   });
   const total=cartTotal();
+
+  // Build readable order summary for the email
+  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n');
+
   const order={
     id:'ORD-'+Date.now(),
     status:'pending',
@@ -594,6 +611,7 @@ async function submitOrder(){
     items
   };
 
+  // Save to Google Sheets
   try{
     const params=new URLSearchParams({
       action:'saveOrder',
@@ -607,6 +625,23 @@ async function submitOrder(){
     });
   }catch(e){
     console.warn('Could not save to sheets:',e);
+  }
+
+  // Send email via EmailJS
+  try{
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_email:     FULFILLER_EMAIL,
+      from_name:    name,
+      from_email:   email,
+      from_phone:   phone,
+      shipping_address: address || 'Not provided',
+      customer_notes:   notes  || 'None',
+      order_summary:    orderSummary,
+      order_total:      '$'+total.toFixed(2),
+    });
+  }catch(e){
+    console.warn('EmailJS send failed:',e);
+    // Order still saved to Sheets — don't block success screen
   }
 
   // Clear cart and show success

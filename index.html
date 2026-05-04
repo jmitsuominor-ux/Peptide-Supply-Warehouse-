@@ -22,7 +22,7 @@ html{scroll-behavior:smooth;}
 body{font-family:var(--sans);background:var(--navy);color:var(--text);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 20% 20%,rgba(14,79,168,0.25) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(21,101,192,0.2) 0%,transparent 60%);pointer-events:none;z-index:0;}
 body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(33,150,243,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(33,150,243,0.04) 1px,transparent 1px);background-size:50px 50px;pointer-events:none;z-index:0;}
- 
+
 /* TOPBAR */
 .topbar{position:sticky;top:0;z-index:200;background:rgba(4,14,31,0.96);border-bottom:1px solid rgba(33,150,243,0.2);backdrop-filter:blur(16px);}
 .topbar-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:58px;display:flex;align-items:center;gap:14px;}
@@ -41,7 +41,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .cart-btn:active{transform:scale(0.97);}
 .cart-btn svg{width:15px;height:15px;}
 .cart-badge{background:var(--gold);color:var(--navy);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:var(--mono);flex-shrink:0;}
- 
+
 /* HERO */
 .hero{position:relative;z-index:1;padding:52px 20px 56px;text-align:center;overflow:hidden;}
 .hero-rings{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;pointer-events:none;}
@@ -62,7 +62,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .contact-icon{font-size:18px;}
 .contact-label{font-size:10px;color:var(--text2);letter-spacing:0.08em;margin-right:4px;}
 .mj-sig{font-family:var(--script);font-size:32px;color:var(--gold);display:block;margin-bottom:4px;filter:drop-shadow(0 0 8px rgba(240,192,64,0.3));}
- 
+
 /* CATEGORY STRIP */
 .cat-strip{position:relative;z-index:1;background:rgba(7,20,40,0.8);border-top:1px solid rgba(33,150,243,0.15);border-bottom:1px solid rgba(33,150,243,0.15);backdrop-filter:blur(8px);padding:0 20px;}
 .cat-strip-inner{max-width:1200px;margin:0 auto;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
@@ -70,16 +70,16 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .cat-pill{padding:13px 18px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;}
 .cat-pill:hover{color:var(--blue-bright);}
 .cat-pill.active{color:var(--cyan);border-bottom-color:var(--cyan);}
- 
+
 /* MAIN */
 .main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:28px 20px;}
- 
+
 /* LOADING */
 .loading-state{text-align:center;padding:60px 20px;}
 .loading-spinner{width:40px;height:40px;border:3px solid rgba(33,150,243,0.2);border-top-color:var(--blue-bright);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-text{font-family:var(--mono);font-size:12px;color:var(--text3);letter-spacing:0.08em;}
- 
+
 /* PRODUCT GRID */
 .product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px;}
 .product-card{background:linear-gradient(145deg,rgba(10,29,58,0.9),rgba(7,20,40,0.95));border:1px solid var(--border);border-radius:10px;padding:16px 14px;display:flex;flex-direction:column;gap:6px;transition:all 0.2s;cursor:pointer;position:relative;overflow:hidden;}
@@ -103,7 +103,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .in-cart-dot{position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);display:none;}
 .product-card.in-cart .in-cart-dot{display:block;}
 .no-results{text-align:center;padding:60px 20px;color:var(--text3);font-family:var(--mono);}
- 
+
 /* CART DRAWER */
 .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;display:none;backdrop-filter:blur(4px);}
 .drawer-overlay.open{display:block;}
@@ -143,7 +143,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .checkout-btn:disabled{opacity:0.5;cursor:not-allowed;}
 .clear-cart-btn{width:100%;background:transparent;color:var(--text3);border:none;padding:10px;font-size:12px;font-family:var(--mono);cursor:pointer;margin-top:6px;letter-spacing:0.04em;transition:color 0.15s;}
 .clear-cart-btn:hover{color:var(--red);}
- 
+
 /* CHECKOUT MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);}
 .modal-overlay.open{display:flex;}
@@ -176,7 +176,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .submit-btn{width:100%;background:linear-gradient(135deg,var(--blue),var(--blue-bright));color:#fff;border:none;border-radius:9px;padding:14px;font-family:var(--mono);font-size:15px;font-weight:700;cursor:pointer;transition:all 0.15s;margin-top:16px;letter-spacing:0.06em;text-transform:uppercase;box-shadow:0 4px 20px rgba(33,150,243,0.35);display:flex;align-items:center;justify-content:center;gap:8px;}
 .submit-btn:disabled{opacity:0.6;cursor:not-allowed;}
 .submit-btn:active:not(:disabled){transform:scale(0.98);}
- 
+
 /* SUCCESS */
 .success-screen{text-align:center;padding:36px 22px 28px;}
 .success-icon{width:70px;height:70px;background:var(--green-dim);border:2px solid rgba(0,200,150,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 18px;box-shadow:0 0 30px rgba(0,200,150,0.2);}
@@ -184,7 +184,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .success-sub{font-size:14px;color:var(--text2);line-height:1.6;}
 .success-note{background:rgba(33,150,243,0.08);border:1px solid rgba(33,150,243,0.2);border-radius:10px;padding:13px 15px;font-size:12px;color:var(--text2);line-height:1.7;margin-top:16px;text-align:left;}
 .success-done-btn{margin-top:20px;width:100%;background:linear-gradient(135deg,var(--blue),var(--blue-bright));color:#fff;border:none;border-radius:8px;padding:13px;font-family:var(--mono);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:0.06em;text-transform:uppercase;}
- 
+
 /* FOOTER */
 .footer{position:relative;z-index:1;background:rgba(4,14,31,0.95);border-top:1px solid rgba(33,150,243,0.15);padding:28px 20px;text-align:center;margin-top:40px;}
 .footer-name{font-family:var(--script);font-size:26px;color:var(--gold);margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(240,192,64,0.25));}
@@ -193,16 +193,16 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 .footer-contact .icon{font-size:16px;}
 .footer-disc{font-size:11px;color:var(--text3);line-height:1.7;max-width:600px;margin:0 auto;}
 .footer-disc strong{color:var(--gold);}
- 
+
 /* SPINNER */
 .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;}
- 
+
 @media(max-width:480px){.product-grid{grid-template-columns:repeat(2,1fr);}.hero-title{font-size:26px;}.cart-drawer{max-width:100%;}}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(33,150,243,0.3);border-radius:2px;}
 </style>
 </head>
 <body>
- 
+
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand">
@@ -221,7 +221,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
     </button>
   </div>
 </div>
- 
+
 <div class="hero">
   <div class="hero-rings"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
   <div class="hero-content">
@@ -236,9 +236,9 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
     </div>
   </div>
 </div>
- 
+
 <div class="cat-strip"><div class="cat-strip-inner" id="catNav"></div></div>
- 
+
 <div class="main">
   <div class="loading-state" id="loadingState">
     <div class="loading-spinner"></div>
@@ -247,7 +247,7 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   <div class="product-grid" id="productGrid" style="display:none"></div>
   <div class="no-results" id="noResults" style="display:none">No products match "<span id="noResultsQuery"></span>"</div>
 </div>
- 
+
 <div class="footer">
   <div class="footer-name">Michael John</div>
   <div class="footer-contacts">
@@ -256,22 +256,22 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
   </div>
   <div class="footer-disc"><strong>Research Use Only.</strong> All compounds are sold for research purposes only. Not intended for human consumption. Not FDA approved. By placing an order you confirm you are a qualified researcher. Consult a licensed healthcare provider before any use.</div>
 </div>
- 
+
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
   <div class="drawer-header"><div class="drawer-title">YOUR ORDER</div><div class="drawer-close" onclick="closeCart()">×</div></div>
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-footer" id="drawerFooter"></div>
 </div>
- 
+
 <div class="modal-overlay" id="checkoutModal"><div class="modal" id="modalContent"></div></div>
- 
+
 <script>
 // ════════════════════════════════════════
 // GOOGLE SHEETS API URL
 // ════════════════════════════════════════
-const API = 'https://script.google.com/macros/s/AKfycbzAzhcEG3jK4A8p5sUY450SMZeB1NMyQJGdGwBWktkwEJ43QdKvaHDJQa5AB43nsTry3A/exec';
- 
+const API = 'https://script.google.com/macros/s/AKfycbysDrAtNrZlL1PumGXh6q_hLo1dQyqeujjaNJvexgfuOeISdP1Vslv_3YN2dWCSgPeFfw/exec';
+
 // ════════════════════════════════════════
 // FULL PRODUCT CATALOG (for reference)
 // ════════════════════════════════════════
@@ -365,9 +365,9 @@ const ALL_PRODUCTS = [
   {code:'WA10',name:'BAC Water',cat:'Reconstitution',spec:'10ml/vial',price:3.00},
   {code:'AA',name:'Acetic Acid Water',cat:'Reconstitution',spec:'3ml/vial',price:1.50},
 ];
- 
+
 const CAT_ORDER=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging & Immune','Mitochondrial','Muscle & IGF','Hormonal','Cognitive','Immune','Reconstitution'];
- 
+
 // ════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════
@@ -375,7 +375,7 @@ const cart={};
 let activeCategory='All';
 let inventory={}; // loaded from Google Sheets
 let PRODUCTS=[]; // filtered by inventory
- 
+
 // ════════════════════════════════════════
 // HIDDEN ADMIN TRIGGER
 // ════════════════════════════════════════
@@ -389,7 +389,7 @@ function adminTapped(){
 document.addEventListener('keydown',(e)=>{
   if(e.ctrlKey&&e.shiftKey&&e.key==='A') window.location.href='admin.html';
 });
- 
+
 // ════════════════════════════════════════
 // LOAD INVENTORY FROM GOOGLE SHEETS
 // ════════════════════════════════════════
@@ -418,7 +418,7 @@ async function loadInventory(){
   buildCatNav();
   renderProducts();
 }
- 
+
 // ════════════════════════════════════════
 // CATEGORY NAV
 // ════════════════════════════════════════
@@ -429,12 +429,12 @@ function buildCatNav(){
   ).join('');
 }
 function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();}
- 
+
 // ════════════════════════════════════════
 // PRODUCTS
 // ════════════════════════════════════════
 function filterProducts(){renderProducts();}
- 
+
 function renderProducts(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
   const filtered=PRODUCTS.filter(p=>{
@@ -465,7 +465,7 @@ function renderProducts(){
     </div>`;
   }).join('');
 }
- 
+
 // ════════════════════════════════════════
 // CART
 // ════════════════════════════════════════
@@ -475,7 +475,7 @@ function removeItem(code){delete cart[code];updateCartUI();renderProducts();}
 function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);updateCartUI();renderProducts();closeCart();}
 function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}
 function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
- 
+
 function updateCartUI(){
   const count=cartCount();
   const badge=document.getElementById('cartBadge');
@@ -483,10 +483,10 @@ function updateCartUI(){
   else badge.style.display='none';
   renderDrawer();
 }
- 
+
 function openCart(){renderDrawer();document.getElementById('drawerOverlay').classList.add('open');document.getElementById('cartDrawer').classList.add('open');document.body.style.overflow='hidden';}
 function closeCart(){document.getElementById('drawerOverlay').classList.remove('open');document.getElementById('cartDrawer').classList.remove('open');document.body.style.overflow='';}
- 
+
 function renderDrawer(){
   const keys=Object.keys(cart);
   const body=document.getElementById('drawerBody');
@@ -522,7 +522,7 @@ function renderDrawer(){
     <button class="checkout-btn" onclick="openCheckout()">PROCEED TO CHECKOUT →</button>
     <button class="clear-cart-btn" onclick="clearCartFn()">Clear order</button>`;
 }
- 
+
 // ════════════════════════════════════════
 // CHECKOUT
 // ════════════════════════════════════════
@@ -564,9 +564,9 @@ function openCheckout(){
   document.getElementById('checkoutModal').classList.add('open');
   document.body.style.overflow='hidden';
 }
- 
+
 function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';}
- 
+
 async function submitOrder(){
   const name=document.getElementById('custName').value.trim();
   const email=document.getElementById('custEmail').value.trim();
@@ -576,10 +576,10 @@ async function submitOrder(){
   if(!name){flash('custName','Please enter your name.');return;}
   if(!email||!email.includes('@')){flash('custEmail','Please enter a valid email.');return;}
   if(!phone){flash('custPhone','Please enter your phone number.');return;}
- 
+
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;btn.innerHTML='<div class="spinner"></div> SENDING…';
- 
+
   const items=Object.entries(cart).map(([code,qty])=>{
     const p=PRODUCTS.find(p=>p.code===code);
     return{code,name:p?p.name:code,spec:p?p.spec:'',qty,price:p?p.price:0};
@@ -593,7 +593,7 @@ async function submitOrder(){
     customer:{name,email,phone,address,notes},
     items
   };
- 
+
   try{
     const params=new URLSearchParams({
       action:'saveOrder',
@@ -608,12 +608,12 @@ async function submitOrder(){
   }catch(e){
     console.warn('Could not save to sheets:',e);
   }
- 
+
   // Clear cart and show success
   Object.keys(cart).forEach(k=>delete cart[k]);
   updateCartUI();
   renderProducts();
- 
+
   document.getElementById('modalContent').innerHTML=`
     <div class="success-screen">
       <div class="success-icon">✓</div>
@@ -626,13 +626,13 @@ async function submitOrder(){
       <button class="success-done-btn" onclick="closeCheckout()">BACK TO CATALOG</button>
     </div>`;
 }
- 
+
 function flash(id,msg){
   const el=document.getElementById(id);
   el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;
   setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);
 }
- 
+
 // ════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════

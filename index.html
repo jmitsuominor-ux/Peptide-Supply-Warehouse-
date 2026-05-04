@@ -1,6 +1,3 @@
-
-Copy
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -593,10 +590,11 @@ async function submitOrder(){
   };
  
   try{
-    await fetch(API,{
-      method:'POST',
-      body:JSON.stringify({action:'saveOrder',order}),
+    const params=new URLSearchParams({
+      action:'saveOrder',
+      order:JSON.stringify(order)
     });
+    await fetch(API+'?'+params.toString());
   }catch(e){
     console.warn('Could not save to sheets:',e);
   }

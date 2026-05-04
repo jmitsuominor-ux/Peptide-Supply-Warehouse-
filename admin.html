@@ -408,7 +408,11 @@ async function apiGet(action){
   return res.json();
 }
 async function apiPost(data){
-  await fetch(API,{method:'POST',body:JSON.stringify(data)});
+  const params = new URLSearchParams();
+  Object.entries(data).forEach(([k,v]) => {
+    params.append(k, typeof v === 'object' ? JSON.stringify(v) : v);
+  });
+  await fetch(API+'?'+params.toString());
 }
  
 // ════════════════════════════════════════

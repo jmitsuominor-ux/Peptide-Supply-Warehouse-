@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Peptide Supply Warehouse</title>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Open+Sans:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
@@ -282,9 +282,11 @@ const FULFILLER_EMAIL     = 'peptidesupplywarehouse@gmail.com';
 const API = 'https://script.google.com/macros/s/AKfycbysDrAtNrZlL1PumGXh6q_hLo1dQyqeujjaNJvexgfuOeISdP1Vslv_3YN2dWCSgPeFfw/exec';
 
 // ════════════════════════════════════════
-// INIT EMAILJS
+// INIT EMAILJS (deferred — waits for script)
 // ════════════════════════════════════════
-emailjs.init(EMAILJS_PUBLIC_KEY);
+window.addEventListener('load', () => {
+  if(typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
+});
 
 // ════════════════════════════════════════
 // FULL PRODUCT CATALOG
@@ -640,7 +642,7 @@ async function submitOrder(){
       order_total:      '$'+total.toFixed(2),
     });
   }catch(e){
-    console.warn('EmailJS send failed:',e);
+    console.error('EmailJS send failed:', JSON.stringify(e), e);
     // Order still saved to Sheets — don't block success screen
   }
 

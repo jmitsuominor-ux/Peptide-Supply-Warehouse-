@@ -523,7 +523,7 @@ function orderCardHTML(order){
   const notesHtml=order.customer&&order.customer.notes?`<div class="order-notes"><strong>NOTES</strong>${order.customer.notes}</div>`:'';
   const cust=order.customer||{};
   return `<div class="order-card" id="ocard-${safeId}" data-order-id="${escapedId}" data-safe-id="${safeId}">
-    <div class="order-head">
+    <div class="order-head" onclick="document.getElementById('obody-'+this.closest('.order-card').dataset.safeId).classList.toggle('open')">
       <div class="order-status ${order.status}"></div>
       <div class="order-info">
         <div class="order-name">${cust.name||'Unknown'}</div>

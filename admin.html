@@ -526,7 +526,7 @@ function orderCardHTML(order){
     :`<button class="action-btn pending-btn" onclick="setPendingOrder('${safeId}')">↩ Revert to Pending</button>`;
   const cust=order.customer||{};
   return `<div class="order-card" id="ocard-${safeId}" data-order-id="${order.id}" data-safe-id="${safeId}">
-    <div class="order-head" onclick="toggleOrder(this.closest('.order-card').dataset.safeId)">
+    <div class="order-head">
       <div class="order-status ${order.status}"></div>
       <div class="order-info">
         <div class="order-name">${cust.name||'Unknown'}</div>
@@ -545,19 +545,41 @@ function orderCardHTML(order){
       <table class="order-items-table"><thead><tr><th>CODE</th><th>PRODUCT</th><th>SPEC</th><th>QTY</th><th>TOTAL</th></tr></thead><tbody>${itemRows}</tbody></table>
       <div class="order-actions">
         ${order.status==='pending'
-          ?`<button class="action-btn fulfill" onclick="fulfillOrder(this.closest('.order-card').dataset.safeId)">✓ Mark Fulfilled</button>
-             <button class="action-btn cancel" onclick="cancelOrder(this.closest('.order-card').dataset.safeId)">✗ Cancel</button>`
-          :`<button class="action-btn pending-btn" onclick="setPendingOrder(this.closest('.order-card').dataset.safeId)">↩ Revert to Pending</button>`
+          ?`<button class="action-btn fulfill" data-action="fulfill">✓ Mark Fulfilled</button>
+             <button class="action-btn cancel" data-action="cancel">✗ Cancel</button>`
+          :`<button class="action-btn pending-btn" data-action="pending">↩ Revert to Pending</button>`
         }
       </div>
     </div>
   </div>`;
 }
 
-function toggleOrder(safeId){
-  const body=document.getElementById('obody-'+safeId);
-  if(body)body.classList.toggle('open');
-}
+// ════════════════════════════════════════
+// EVENT DELEGATION FOR ORDER CARDS
+// ════════════════════════════════════════
+document.addEventListener('click', function(e) {
+  const card = e.target.closest('.order-card');
+  if(!card) return;
+  const safeId = card.dataset.safeId;
+  if(!safeId) return;
+
+  // Button actions
+  const btn = e.target.closest('[data-action]');
+  if(btn) {
+    e.stopPropagation();
+    const action = btn.dataset.action;
+    if(action === 'fulfill') fulfillOrder(safeId);
+    if(action === 'cancel') cancelOrder(safeId);
+    if(action === 'pending') setPendingOrder(safeId);
+    return;
+  }
+
+  // Header toggle — only if clicking the header area not the body
+  const body = document.getElementById('obody-' + safeId);
+  if(body && !body.contains(e.target)) {
+    body.classList.toggle('open');
+  }
+});
 
 // ════════════════════════════════════════
 // RENDER ORDERS

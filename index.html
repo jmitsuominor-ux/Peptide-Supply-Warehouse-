@@ -425,11 +425,11 @@ async function loadInventory(){
     if(inventory&&Object.keys(inventory).length>0){
       PRODUCTS=ALL_PRODUCTS.filter(p=>inventory[p.code]&&inventory[p.code].stock>0);
     } else {
-      PRODUCTS=[...ALL_PRODUCTS];
+      PRODUCTS=[];
     }
   }catch(e){
-    console.warn('Could not load inventory, showing all products');
-    PRODUCTS=[...ALL_PRODUCTS];
+    console.warn('Could not load inventory');
+    PRODUCTS=[];
   }
   document.getElementById('loadingState').style.display='none';
   document.getElementById('productGrid').style.display='grid';
@@ -462,7 +462,16 @@ function renderProducts(){
   });
   const grid=document.getElementById('productGrid');
   const noRes=document.getElementById('noResults');
-  if(!filtered.length){grid.innerHTML='';noRes.style.display='block';document.getElementById('noResultsQuery').textContent=q||activeCategory;return;}
+  if(!filtered.length){
+    grid.innerHTML='';
+    noRes.style.display='block';
+    if(PRODUCTS.length===0){
+      noRes.innerHTML='<div style="text-align:center;padding:60px 20px;"><div style="font-family:var(--mono);font-size:13px;color:var(--text2);margin-bottom:8px;">Something went wrong loading the catalog.</div><div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px;">Please refresh the page to try again.</div><button onclick="window.location.reload()" style="background:linear-gradient(135deg,var(--blue),var(--blue-bright));color:#fff;border:none;border-radius:6px;padding:10px 20px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.06em;">RELOAD PAGE</button></div>';
+    } else {
+      document.getElementById('noResultsQuery').textContent=q||activeCategory;
+    }
+    return;
+  }
   noRes.style.display='none';
   grid.innerHTML=filtered.map(p=>{
     const inCart=!!cart[p.code];

@@ -512,6 +512,7 @@ function orderCardHTML(order){
   const dateStr=order.date||new Date(order.createdAt||Date.now()).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   const items=Array.isArray(order.items)?order.items:[];
   const safeId=order.id.replace(/[^a-zA-Z0-9]/g,'_');
+  const escapedId=order.id.replace(/"/g,'&quot;');
   const itemRows=items.map(item=>`<tr>
     <td style="font-family:var(--mono);font-size:10px;">${item.code||''}</td>
     <td>${item.name||''}</td>
@@ -520,12 +521,8 @@ function orderCardHTML(order){
     <td style="font-family:var(--mono);color:var(--blue);">$${((item.price||0)*(item.qty||0)).toFixed(2)}</td>
   </tr>`).join('');
   const notesHtml=order.customer&&order.customer.notes?`<div class="order-notes"><strong>NOTES</strong>${order.customer.notes}</div>`:'';
-  const actionsHtml=order.status==='pending'
-    ?`<button class="action-btn fulfill" onclick="fulfillOrder('${safeId}')">✓ Mark Fulfilled</button>
-       <button class="action-btn cancel" onclick="cancelOrder('${safeId}')">✗ Cancel</button>`
-    :`<button class="action-btn pending-btn" onclick="setPendingOrder('${safeId}')">↩ Revert to Pending</button>`;
   const cust=order.customer||{};
-  return `<div class="order-card" id="ocard-${safeId}" data-order-id="${order.id}" data-safe-id="${safeId}">
+  return `<div class="order-card" id="ocard-${safeId}" data-order-id="${escapedId}" data-safe-id="${safeId}">
     <div class="order-head">
       <div class="order-status ${order.status}"></div>
       <div class="order-info">

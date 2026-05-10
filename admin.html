@@ -683,6 +683,7 @@ function renderInventory(){
     const item=inventory[code];
     const stock=item.stock||0;
     const threshold=item.threshold||5;
+    const price=item.price||0;
     const status=stock===0?'out':stock<=threshold?'low':'ok';
     const badgeLabel=status==='out'?'OUT OF STOCK':status==='low'?'LOW STOCK':'IN STOCK';
     return `<div class="inv-card ${status}">
@@ -698,6 +699,13 @@ function renderInventory(){
         </div>
         <button class="stock-plus" onclick="adjustStock('${code}',1)">+</button>
       </div>
+      <div style="margin-top:8px;">
+        <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.06em;margin-bottom:4px;">PRICE (USD)</div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-family:var(--mono);font-size:14px;color:var(--text2);">$</span>
+          <input type="number" step="0.01" min="0" class="stock-input" style="font-size:14px;" value="${price.toFixed(2)}" onchange="savePrice('${code}',this.value)" id="priceInput-${code}">
+        </div>
+      </div>
       <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${item.name}')">✕ Remove from inventory</button>
     </div>`;
   }).join('');
@@ -710,7 +718,7 @@ async function adjustStock(code,delta){
   const input=document.getElementById('stockInput-'+code);
   if(input)input.value=newStock;
   renderInventory();
-  await apiPost({action:'updateInventory',code,stock:newStock,threshold:inventory[code].threshold||5,name:inventory[code].name,spec:inventory[code].spec});
+  await apiPost({action:'updateInventory',code,stock:newStock,threshold:inventory[code].threshold||5,name:inventory[code].name,spec:inventory[code].spec,price:inventory[code].price||0});
   showToast('Stock updated','green');
 }
 
@@ -719,9 +727,18 @@ async function saveStock(code,val){
   const n=parseInt(val);
   if(isNaN(n)||n<0)return;
   inventory[code].stock=n;
-  await apiPost({action:'updateInventory',code,stock:n,threshold:inventory[code].threshold||5,name:inventory[code].name,spec:inventory[code].spec});
+  await apiPost({action:'updateInventory',code,stock:n,threshold:inventory[code].threshold||5,name:inventory[code].name,spec:inventory[code].spec,price:inventory[code].price||0});
   renderInventory();
   showToast('Stock saved','green');
+}
+
+async function savePrice(code,val){
+  if(!inventory[code])return;
+  const n=parseFloat(val);
+  if(isNaN(n)||n<0)return;
+  inventory[code].price=n;
+  await apiPost({action:'updateInventory',code,stock:inventory[code].stock||0,threshold:inventory[code].threshold||5,name:inventory[code].name,spec:inventory[code].spec,price:n});
+  showToast('Price updated — $'+n.toFixed(2),'green');
 }
 
 function populateProductSelect(){

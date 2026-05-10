@@ -261,9 +261,10 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
   <div class="modal-box">
     <div class="modal-hdr"><h3>Add Inventory Item</h3><div class="modal-x" onclick="closeAddStock()">×</div></div>
     <div class="modal-body-inner">
-      <div class="mf"><label>PRODUCT</label><select id="addStockProduct"><option value="">— Select product —</option></select></div>
+      <div class="mf"><label>PRODUCT</label><select id="addStockProduct" onchange="previewPrice(this.value)"><option value="">— Select product —</option></select></div>
       <div class="mf"><label>INITIAL STOCK (vials)</label><input type="number" id="addStockQty" placeholder="e.g. 10" min="0" value="0"></div>
       <div class="mf"><label>LOW STOCK THRESHOLD</label><input type="number" id="addStockThreshold" placeholder="e.g. 5" min="0" value="5"></div>
+      <div class="mf"><label>DEFAULT PRICE <span style="color:var(--text3);font-weight:400;">(auto-filled, adjustable in inventory)</span></label><input type="text" id="addStockPricePreview" placeholder="Select a product" disabled style="opacity:0.6;"></div>
       <button class="modal-save-btn" onclick="saveNewInventoryItem()">Add to Inventory</button>
     </div>
   </div>
@@ -741,6 +742,12 @@ async function savePrice(code,val){
   showToast('Price updated — $'+n.toFixed(2),'green');
 }
 
+function previewPrice(code){
+  const product=PRODUCTS.find(p=>p.code===code);
+  const el=document.getElementById('addStockPricePreview');
+  if(el)el.value=product?'$'+product.price.toFixed(2):'';
+}
+
 function populateProductSelect(){
   const sel=document.getElementById('addStockProduct');
   PRODUCTS.forEach(p=>{const o=document.createElement('option');o.value=p.code;o.textContent=p.code+' — '+p.name+' ('+p.spec+')';sel.appendChild(o);});
@@ -770,9 +777,10 @@ async function saveNewInventoryItem(){
   const threshold=parseInt(document.getElementById('addStockThreshold').value)||5;
   if(!code){showToast('Please select a product','red');return;}
   const product=PRODUCTS.find(p=>p.code===code);
-  if(!inventory[code]){inventory[code]={name:product.name,spec:product.spec,stock:qty,threshold};}
+  const defaultPrice=product?product.price:0;
+  if(!inventory[code]){inventory[code]={name:product.name,spec:product.spec,stock:qty,threshold,price:defaultPrice};}
   else{inventory[code].stock+=qty;}
-  await apiPost({action:'updateInventory',code,stock:inventory[code].stock,threshold,name:product.name,spec:product.spec});
+  await apiPost({action:'updateInventory',code,stock:inventory[code].stock,threshold,name:product.name,spec:product.spec,price:inventory[code].price||defaultPrice});
   closeAddStock();
   renderInventory();
   updateCounts();

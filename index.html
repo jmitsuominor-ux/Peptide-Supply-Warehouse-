@@ -423,7 +423,12 @@ async function loadInventory(){
     });
     inventory=data;
     if(inventory&&Object.keys(inventory).length>0){
-      PRODUCTS=ALL_PRODUCTS.filter(p=>inventory[p.code]&&inventory[p.code].stock>0);
+      PRODUCTS=ALL_PRODUCTS
+        .filter(p=>inventory[p.code]&&inventory[p.code].stock>0)
+        .map(p=>({
+          ...p,
+          price: inventory[p.code].price>0 ? inventory[p.code].price : p.price
+        }));
     } else {
       PRODUCTS=[];
     }

@@ -201,6 +201,18 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
 
 @media(max-width:480px){.product-grid{grid-template-columns:repeat(2,1fr);}.hero-title{font-size:26px;}.cart-drawer{max-width:100%;}}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(33,150,243,0.3);border-radius:2px;}
+
+/* REFERENCE GUIDE */
+.ref-section{position:relative;z-index:1;padding:20px 20px 0;}
+.ref-heading{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text3);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px;max-width:1200px;margin-left:auto;margin-right:auto;}
+.ref-scroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;max-width:1200px;margin:0 auto;padding-bottom:4px;}
+.ref-scroll::-webkit-scrollbar{display:none;}
+.ref-tile{flex-shrink:0;background:linear-gradient(145deg,rgba(10,29,58,0.9),rgba(7,20,40,0.95));border:1px solid rgba(255,255,255,0.08);border-left:3px solid var(--ta,#00b4d8);border-radius:8px;padding:12px 14px 10px;cursor:pointer;transition:all 0.18s;min-width:110px;text-decoration:none;display:block;}
+.ref-tile:hover{background:rgba(14,79,168,0.2);transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,0.3);}
+.ref-tile:active{transform:scale(0.96);}
+.ref-tile-icon{font-size:20px;margin-bottom:7px;line-height:1;}
+.ref-tile-name{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--white);line-height:1.25;margin-bottom:5px;}
+.ref-tile-count{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:0.08em;}
 </style>
 </head>
 <body>
@@ -237,6 +249,63 @@ body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(r
       <div class="contact-row"><span class="contact-icon">💬</span><span class="contact-label">WHATSAPP</span><span>+1-310-683-0049</span></div>
       <div class="contact-row"><span class="contact-icon">📱</span><span class="contact-label">MOBILE</span><span>+52-55-2446-9745</span></div>
     </div>
+  </div>
+</div>
+
+<!-- COMPOUND REFERENCE GUIDE -->
+<div class="ref-section">
+  <div class="ref-heading">COMPOUND REFERENCE GUIDE</div>
+  <div class="ref-scroll">
+    <a class="ref-tile" style="--ta:#00b4d8" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">⚖️</div>
+      <div class="ref-tile-name">Weight Loss</div>
+      <div class="ref-tile-count">27 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#9c79ff" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">📈</div>
+      <div class="ref-tile-name">Growth Hormone</div>
+      <div class="ref-tile-count">14 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#00c896" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">🩹</div>
+      <div class="ref-tile-name">Healing & Recovery</div>
+      <div class="ref-tile-count">7 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#f0c040" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">✨</div>
+      <div class="ref-tile-name">Anti-Aging & Immune</div>
+      <div class="ref-tile-count">8 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#ff9f43" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">⚡</div>
+      <div class="ref-tile-name">Mitochondrial</div>
+      <div class="ref-tile-count">9 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#00b4d8" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">💪</div>
+      <div class="ref-tile-name">Muscle & IGF</div>
+      <div class="ref-tile-count">3 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#f06292" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">🧬</div>
+      <div class="ref-tile-name">Hormonal</div>
+      <div class="ref-tile-count">8 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#9c79ff" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">🧠</div>
+      <div class="ref-tile-name">Cognitive</div>
+      <div class="ref-tile-count">6 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#00c896" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">🛡️</div>
+      <div class="ref-tile-name">Immune</div>
+      <div class="ref-tile-count">3 CMPDS</div>
+    </a>
+    <a class="ref-tile" style="--ta:#8aafd4" href="https://jmitsuominor-ux.github.io/peptide-reference/" target="_blank">
+      <div class="ref-tile-icon">💧</div>
+      <div class="ref-tile-name">Reconstitution</div>
+      <div class="ref-tile-count">3 CMPDS</div>
+    </a>
   </div>
 </div>
 

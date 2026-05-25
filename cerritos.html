@@ -388,7 +388,7 @@ async function loadInventory(){
       xhr.send();
       setTimeout(()=>resolve({}),8000);
     });
-    inventory=data;
+    if(Array.isArray(data)){inventory={};data.forEach(item=>{if(item.code)inventory[item.code]=item;});}else{inventory=data||{};}
     if(inventory&&Object.keys(inventory).length>0){
       PRODUCTS=ALL_PRODUCTS.filter(p=>inventory[p.code]&&inventory[p.code].stock>0).map(p=>({...p,price:inventory[p.code].price>0?inventory[p.code].price:p.price}));
     }else{PRODUCTS=[];}

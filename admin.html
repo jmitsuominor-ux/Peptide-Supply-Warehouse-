@@ -276,14 +276,20 @@ body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:ur
 // ════════════════════════════════════════
 // CONFIG
 // ════════════════════════════════════════
-const API = 'https://script.google.com/macros/s/AKfycbyYfA0-khEKN5nL1h4Iy4375reLbVUlI8AUzoe20TsFSwNAFNa3VspGVbwixIsggGA3SA/exec';
+const MARKET_CONFIGS = {
+  cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbztRTHC4PFfMqbCXmeEy_xKAiDH3z9Ue3DJAyYkvjqvhu4D300k6_jcjW-BY9k7xhY8/exec', email:'pswcerritos.orders@gmail.com' },
+  tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com'  },
+  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'', email:'' },
+};
+const _mkt = new URLSearchParams(window.location.search).get('market') || 'cerritos';
+const _cfg = MARKET_CONFIGS[_mkt] || MARKET_CONFIGS.cerritos;
+const API = _cfg.api;
+const MARKET_NAME = _cfg.name;
 const PINS = ['5642', '0049'];
-
-// EmailJS — for fulfillment confirmation emails to customers
 const EMAILJS_PUBLIC_KEY  = 'BLEcAY-zs_dwN4UuI';
 const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
-const EMAILJS_TEMPLATE_ID = 'template_bd3i3oh';      // Order notification → PSW inbox
-const EMAILJS_FULFILL_ID  = 'template_fp119xp';      // Fulfillment confirmation → customer
+const EMAILJS_TEMPLATE_ID = 'template_bd3i3oh';
+const EMAILJS_FULFILL_ID  = 'template_fp119xp';
 
 window.addEventListener('load', () => {
   if(typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);

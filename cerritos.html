@@ -376,8 +376,8 @@ let activeCategory='All';
 let inventory={};
 let PRODUCTS=[];
 let adminTapCount=0,adminTapTimer;
-function adminTapped(){adminTapCount++;clearTimeout(adminTapTimer);if(adminTapCount>=3){adminTapCount=0;window.location.href='admin.html';}else adminTapTimer=setTimeout(()=>adminTapCount=0,800);}
-document.addEventListener('keydown',(e)=>{if(e.ctrlKey&&e.shiftKey&&e.key==='A')window.location.href='admin.html';});
+function adminTapped(){adminTapCount++;clearTimeout(adminTapTimer);if(adminTapCount>=3){adminTapCount=0;window.location.href='admin.html?market=cerritos';}else adminTapTimer=setTimeout(()=>adminTapCount=0,800);}
+document.addEventListener('keydown',(e)=>{if(e.ctrlKey&&e.shiftKey&&e.key==='A')window.location.href='admin.html?market=cerritos';});
 async function loadInventory(){
   try{
     const data=await new Promise((resolve)=>{

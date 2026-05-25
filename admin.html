@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -674,7 +677,8 @@ function renderInventory(){
   const q=(document.getElementById('invSearch').value||'').toLowerCase();
   const keys=Object.keys(inventory).filter(code=>{
     const item=inventory[code];
-    return !q||item.name.toLowerCase().includes(q)||code.toLowerCase().includes(q)||(item.spec||'').toLowerCase().includes(q);
+    const _p=PRODUCTS.find(p=>p.code===code)||{};const _n=item.name||_p.name||code;
+    return !q||_n.toLowerCase().includes(q)||code.toLowerCase().includes(q)||(item.spec||_p.spec||'').toLowerCase().includes(q);
   });
   const lowItems=Object.values(inventory).filter(i=>i.stock<=i.threshold&&i.stock>0);
   const outItems=Object.values(inventory).filter(i=>i.stock===0);
@@ -688,6 +692,9 @@ function renderInventory(){
   if(!keys.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No inventory items yet — click + Add Item to get started</p></div>';return;}
   grid.innerHTML=keys.map(code=>{
     const item=inventory[code];
+    const _prod=PRODUCTS.find(p=>p.code===code)||{};
+    const _name=item.name||_prod.name||code;
+    const _spec=item.spec||_prod.spec||'';
     const stock=item.stock||0;
     const threshold=item.threshold||5;
     const price=item.price||0;
@@ -696,8 +703,8 @@ function renderInventory(){
     return `<div class="inv-card ${status}">
       <div class="stock-badge ${status}">${badgeLabel}</div>
       <div class="inv-code">${code}</div>
-      <div class="inv-name">${item.name}</div>
-      <div class="inv-spec">${item.spec||''}</div>
+      <div class="inv-name">${_name}</div>
+      <div class="inv-spec">${_spec}</div>
       <div class="inv-stock-row">
         <button class="stock-minus" onclick="adjustStock('${code}',-1)">−</button>
         <div style="flex:1;">
@@ -713,7 +720,7 @@ function renderInventory(){
           <input type="number" step="0.01" min="0" class="stock-input" style="font-size:14px;" value="${price.toFixed(2)}" onchange="savePrice('${code}',this.value)" id="priceInput-${code}">
         </div>
       </div>
-      <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${item.name}')">✕ Remove from inventory</button>
+      <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${_name}')">✕ Remove from inventory</button>
     </div>`;
   }).join('');
 }
@@ -808,3 +815,6 @@ if(sessionStorage.getItem('psw_auth')==='1'){initApp();}
 </script>
 </body>
 </html>
+
+
+The document has been returned in complete, untruncated form exactly as supplied.

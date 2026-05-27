@@ -23,7 +23,15 @@ html{scroll-behavior:smooth;}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;pointer-events:none;z-index:0;}
 body::after{display:none;}
+.announce-bar{background:var(--blue);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-align:center;padding:9px 20px;text-transform:uppercase;position:relative;z-index:201;}
 .topbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
+.min-progress{padding:10px 0 4px;border-top:1px solid var(--border);margin-top:6px;}
+.min-progress-header{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:500;}
+.min-progress-track{height:5px;background:var(--border2);border-radius:3px;overflow:hidden;}
+.min-progress-fill{height:100%;background:var(--blue);border-radius:3px;transition:width 0.3s ease;}
+.min-progress-fill.met{background:var(--green);}
+.min-progress-msg{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:5px;text-align:center;letter-spacing:0.04em;}
+.checkout-btn.locked{background:var(--surface3,#e4eaf3)!important;color:var(--text3)!important;cursor:not-allowed!important;}
 .topbar-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:54px;display:flex;align-items:center;gap:14px;}
 .brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .brand-logo{font-family:var(--mono);font-size:18px;font-weight:500;color:var(--text);letter-spacing:0.04em;cursor:pointer;user-select:none;}
@@ -198,7 +206,7 @@ body::after{display:none;}
 </style>
 </head>
 <body>
-
+<div class="announce-bar">⚠ Minimum order $250 &nbsp;·&nbsp; Wholesale &amp; retail inquiries welcome</div>
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand">
@@ -441,6 +449,7 @@ const CAT_ORDER=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging
 // STATE
 // ════════════════════════════════════════
 const cart={};
+const MIN_ORDER=250;
 let activeCategory='All';
 let inventory={};
 let PRODUCTS=[];
@@ -598,6 +607,7 @@ function renderDrawer(){
       </div>
     </div>`;
   }).join('');
+  const remaining=Math.max(0,MIN_ORDER-total);const pct=Math.min(100,(total/MIN_ORDER)*100);const met=total>=MIN_ORDER;
   footer.innerHTML=`
     <div class="cart-totals">
       <div class="ct-row"><span class="ct-label">${cartCount()} item${cartCount()!==1?'s':''}</span></div>
@@ -606,8 +616,13 @@ function renderDrawer(){
       <div class="ct-row"><span class="ct-label">Shipping</span><span class="ct-value">$${shippingRate.toFixed(2)}</span></div>
       <div class="ct-divider"></div>
       <div class="ct-row ct-total"><span class="ct-label">ORDER TOTAL</span><span class="ct-value">$${(total+shippingRate).toFixed(2)}</span></div>
+      <div class="min-progress">
+        <div class="min-progress-header"><span>${met?'✓ MINIMUM MET':'ORDER MINIMUM'}</span><span>$${total.toFixed(2)} / $${MIN_ORDER}</span></div>
+        <div class="min-progress-track"><div class="min-progress-fill${met?' met':''}" style="width:${pct}%"></div></div>
+        ${!met?`<div class="min-progress-msg">Add $${remaining.toFixed(2)} more to unlock checkout</div>`:''}
+      </div>
     </div>
-    <button class="checkout-btn" onclick="openCheckout()">PROCEED TO CHECKOUT →</button>
+    <button class="checkout-btn${met?'':' locked'}" ${met?'':'disabled'} onclick="${met?'openCheckout()':''}">PROCEED TO CHECKOUT →</button>
     <button class="clear-cart-btn" onclick="clearCartFn()">Clear order</button>`;
 }
 

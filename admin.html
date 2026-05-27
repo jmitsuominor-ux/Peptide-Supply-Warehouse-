@@ -211,7 +211,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="num-btn" onclick="pinPress('1')">1</div><div class="num-btn" onclick="pinPress('2')">2</div><div class="num-btn" onclick="pinPress('3')">3</div>
       <div class="num-btn" onclick="pinPress('4')">4</div><div class="num-btn" onclick="pinPress('5')">5</div><div class="num-btn" onclick="pinPress('6')">6</div>
       <div class="num-btn" onclick="pinPress('7')">7</div><div class="num-btn" onclick="pinPress('8')">8</div><div class="num-btn" onclick="pinPress('9')">9</div>
-      <div class="num-btn zero" onclick="pinPress('0')">0</div><div class="num-btn del" onclick="pinDelete()">⌫</div>
+      <div class="num-btn zero" onclick="pinPress('0')">0</div><div class="num-btn del" onclick="pinDelete()">‚å´</div>
     </div>
     <div class="login-error" id="loginError"></div>
   </div>
@@ -224,8 +224,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="admin-title">Peptide Supply Warehouse</div>
       <div class="admin-badge">ADMIN</div>
     </div>
-    <a href="#" onclick="var m=new URLSearchParams(location.search).get('market');location.href=m==='tijuana'?'tijuana.html':m==='sandiego'?'sandiego.html':'cerritos.html';return false;" class="store-btn">← Store</a>
-    <div class="logout-btn" onclick="logout()">Lock →</div>
+    <a href="#" onclick="var m=new URLSearchParams(location.search).get('market');location.href=m==='tijuana'?'tijuana.html':m==='sandiego'?'sandiego.html':'cerritos.html';return false;" class="store-btn">‚Üê Store</a>
+    <div class="logout-btn" onclick="logout()">Lock ‚Üí</div>
   </div>
   <div class="admin-nav">
     <div class="nav-tab active" onclick="switchTab('dashboard',this)">Dashboard</div>
@@ -236,40 +236,40 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
   <div class="admin-page active" id="page-dashboard">
     <div class="stat-row">
-      <div class="stat-card blue" onclick="switchTab('orders',document.querySelectorAll('.nav-tab')[1])" style="cursor:pointer;"><div class="stat-label">PENDING ORDERS</div><div class="stat-val blue" id="statPending">—</div><div class="stat-sub">tap to view →</div></div>
-      <div class="stat-card green" onclick="switchTab('fulfilled',document.querySelectorAll('.nav-tab')[2])" style="cursor:pointer;"><div class="stat-label">FULFILLED</div><div class="stat-val green" id="statFulfilled">—</div><div class="stat-sub">tap to view →</div></div>
-      <div class="stat-card amber" onclick="switchTab('orders',document.querySelectorAll('.nav-tab')[1])" style="cursor:pointer;"><div class="stat-label">PENDING VALUE</div><div class="stat-val amber" id="statRevPending">—</div><div class="stat-sub">tap to view →</div></div>
-      <div class="stat-card purple" onclick="switchTab('inventory',document.querySelectorAll('.nav-tab')[3])" style="cursor:pointer;"><div class="stat-label">LOW STOCK</div><div class="stat-val purple" id="statLowStock">—</div><div class="stat-sub">tap to view →</div></div>
+      <div class="stat-card blue" onclick="switchTab('orders',document.querySelectorAll('.nav-tab')[1])" style="cursor:pointer;"><div class="stat-label">PENDING ORDERS</div><div class="stat-val blue" id="statPending">‚Äî</div><div class="stat-sub">tap to view ‚Üí</div></div>
+      <div class="stat-card green" onclick="switchTab('fulfilled',document.querySelectorAll('.nav-tab')[2])" style="cursor:pointer;"><div class="stat-label">FULFILLED</div><div class="stat-val green" id="statFulfilled">‚Äî</div><div class="stat-sub">tap to view ‚Üí</div></div>
+      <div class="stat-card amber" onclick="switchTab('orders',document.querySelectorAll('.nav-tab')[1])" style="cursor:pointer;"><div class="stat-label">PENDING VALUE</div><div class="stat-val amber" id="statRevPending">‚Äî</div><div class="stat-sub">tap to view ‚Üí</div></div>
+      <div class="stat-card purple" onclick="switchTab('inventory',document.querySelectorAll('.nav-tab')[3])" style="cursor:pointer;"><div class="stat-label">LOW STOCK</div><div class="stat-val purple" id="statLowStock">‚Äî</div><div class="stat-sub">tap to view ‚Üí</div></div>
     </div>
     <div class="section-hdr"><h2>Recent Orders</h2><div class="section-hdr-meta" id="dashRecentMeta"></div></div>
-    <div id="dashRecentOrders"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
+    <div id="dashRecentOrders"><div class="loading-bar"><div class="loading-spin"></div>Loading‚Ä¶</div></div>
   </div>
 
   <div class="admin-page" id="page-orders">
     <div class="section-hdr"><h2>Pending Orders</h2><div class="section-hdr-meta" id="pendingMeta"></div></div>
-    <div id="pendingOrdersList"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
+    <div id="pendingOrdersList"><div class="loading-bar"><div class="loading-spin"></div>Loading‚Ä¶</div></div>
   </div>
 
   <div class="admin-page" id="page-fulfilled">
     <div class="section-hdr"><h2>Fulfilled Orders</h2><div class="section-hdr-meta" id="fulfilledMeta"></div></div>
-    <div id="fulfilledOrdersList"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
+    <div id="fulfilledOrdersList"><div class="loading-bar"><div class="loading-spin"></div>Loading‚Ä¶</div></div>
   </div>
 
   <div class="admin-page" id="page-inventory">
     <div class="inv-toolbar">
-      <input type="text" class="inv-search" id="invSearch" placeholder="Search inventory…" oninput="renderInventory()">
+      <input type="text" class="inv-search" id="invSearch" placeholder="Search inventory‚Ä¶" oninput="renderInventory()">
       <button class="add-stock-btn" onclick="openAddStock()">+ Add Item</button>
     </div>
-    <div class="low-stock-banner" id="lowStockBanner">⚠️ <span id="lowStockMsg"></span></div>
-    <div class="inv-grid" id="invGrid"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
+    <div class="low-stock-banner" id="lowStockBanner">‚ö†Ô∏è <span id="lowStockMsg"></span></div>
+    <div class="inv-grid" id="invGrid"><div class="loading-bar"><div class="loading-spin"></div>Loading‚Ä¶</div></div>
   </div>
 </div>
 
 <div class="modal-overlay" id="addStockModal">
   <div class="modal-box">
-    <div class="modal-hdr"><h3>Add Inventory Item</h3><div class="modal-x" onclick="closeAddStock()">×</div></div>
+    <div class="modal-hdr"><h3>Add Inventory Item</h3><div class="modal-x" onclick="closeAddStock()">√ó</div></div>
     <div class="modal-body-inner">
-      <div class="mf"><label>PRODUCT</label><select id="addStockProduct" onchange="previewPrice(this.value)"><option value="">— Select product —</option></select></div>
+      <div class="mf"><label>PRODUCT</label><select id="addStockProduct" onchange="previewPrice(this.value)"><option value="">‚Äî Select product ‚Äî</option></select></div>
       <div class="mf"><label>INITIAL STOCK (vials)</label><input type="number" id="addStockQty" placeholder="e.g. 10" min="0" value="0"></div>
       <div class="mf"><label>LOW STOCK THRESHOLD</label><input type="number" id="addStockThreshold" placeholder="e.g. 5" min="0" value="5"></div>
       <div class="mf"><label>DEFAULT PRICE <span style="color:var(--text3);font-weight:400;">(auto-filled, adjustable in inventory)</span></label><input type="text" id="addStockPricePreview" placeholder="Select a product" disabled style="opacity:0.6;"></div>
@@ -281,13 +281,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 <div class="toast" id="toast"></div>
 
 <script>
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // CONFIG
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 const MARKET_CONFIGS = {
-  cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbztRTHC4PFfMqbCXmeEy_xKAiDH3z9Ue3DJAyYkvjqvhu4D300k6_jcjW-BY9k7xhY8/exec', email:'pswcerritos.orders@gmail.com' },
-  tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com'  },
-  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com' },
+  cerritos: { name:'Peptide Supply Warehouse ‚Äî Cerritos', api:'https://script.google.com/macros/s/AKfycbztRTHC4PFfMqbCXmeEy_xKAiDH3z9Ue3DJAyYkvjqvhu4D300k6_jcjW-BY9k7xhY8/exec', email:'pswcerritos.orders@gmail.com' },
+  tijuana:  { name:'Peptide Supply Warehouse ‚Äî Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com'  },
+  sandiego: { name:'Peptide Supply Warehouse ‚Äî San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com' },
 };
 const _mkt = new URLSearchParams(window.location.search).get('market') || 'cerritos';
 const _cfg = MARKET_CONFIGS[_mkt] || MARKET_CONFIGS.cerritos;
@@ -394,16 +394,16 @@ const PRODUCTS = [
   {code:'AA',name:'Acetic Acid Water',cat:'Reconstitution',spec:'3ml/vial',price:1.50},
 ];
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // STATE
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 let orders=[];
 let inventory={};
 let pinBuffer='';
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // PIN AUTH
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 function pinPress(d){
   if(pinBuffer.length>=4)return;
   pinBuffer+=d;updateDots();
@@ -441,9 +441,9 @@ document.addEventListener('keydown',function(e){
   }
 });
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // API CALLS
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 async function apiGet(action){
   return new Promise((resolve)=>{
     const xhr=new XMLHttpRequest();
@@ -468,15 +468,15 @@ async function apiPost(data){
   });
 }
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // INIT
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 function initApp(){populateProductSelect();loadAll();}
 
 async function loadAll(){
   try{
     const [inv,ords]=await Promise.all([apiGet('getInventory'),apiGet('getOrders')]);
-    inventory=inv||{};
+    if(Array.isArray(inv)){inventory={};inv.forEach(function(item){if(item.code)inventory[item.code]=item;});}else{inventory=inv||{};}
     orders=Array.isArray(ords)?ords:[];
     updateCounts();
     renderDashboard();
@@ -485,9 +485,9 @@ async function loadAll(){
   }
 }
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // TAB
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 function switchTab(tab,el){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
@@ -500,9 +500,9 @@ function switchTab(tab,el){
   window.scrollTo(0,0);
 }
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // COUNTS
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 function updateCounts(){
   const pending=orders.filter(o=>o.status==='pending').length;
   const fulfilled=orders.filter(o=>o.status==='fulfilled').length;
@@ -518,9 +518,9 @@ function updateCounts(){
   document.getElementById('statRevPending').textContent='$'+pendingRev.toFixed(2);
 }
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // ORDER CARD
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 function orderCardHTML(order){
   const statusLabel=order.status==='pending'?'PENDING':order.status==='fulfilled'?'FULFILLED':'CANCELLED';
   const dateStr=order.date||new Date(order.createdAt||Date.now()).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
@@ -547,27 +547,27 @@ function orderCardHTML(order){
     </div>
     <div class="order-body" id="obody-${safeId}">
       <div class="order-customer">
-        <div class="oc-row"><span class="oc-label">NAME</span><span class="oc-val">${cust.name||'—'}</span></div>
-        <div class="oc-row"><span class="oc-label">EMAIL</span><span class="oc-val">${cust.email||'—'}</span></div>
-        <div class="oc-row"><span class="oc-label">PHONE</span><span class="oc-val">${cust.phone||'—'}</span></div>
-        <div class="oc-row"><span class="oc-label">ADDRESS</span><span class="oc-val">${cust.address||'—'}</span></div>
+        <div class="oc-row"><span class="oc-label">NAME</span><span class="oc-val">${cust.name||'‚Äî'}</span></div>
+        <div class="oc-row"><span class="oc-label">EMAIL</span><span class="oc-val">${cust.email||'‚Äî'}</span></div>
+        <div class="oc-row"><span class="oc-label">PHONE</span><span class="oc-val">${cust.phone||'‚Äî'}</span></div>
+        <div class="oc-row"><span class="oc-label">ADDRESS</span><span class="oc-val">${cust.address||'‚Äî'}</span></div>
       </div>
       ${notesHtml}
       <table class="order-items-table"><thead><tr><th>CODE</th><th>PRODUCT</th><th>SPEC</th><th>QTY</th><th>TOTAL</th></tr></thead><tbody>${itemRows}</tbody></table>
       <div class="order-actions">
         ${order.status==='pending'
-          ?`<button class="action-btn fulfill" data-action="fulfill">✓ Mark Fulfilled</button>
-             <button class="action-btn cancel" data-action="cancel">✗ Cancel</button>`
-          :`<button class="action-btn pending-btn" data-action="pending">↩ Revert to Pending</button>`
+          ?`<button class="action-btn fulfill" data-action="fulfill">‚úì Mark Fulfilled</button>
+             <button class="action-btn cancel" data-action="cancel">‚úó Cancel</button>`
+          :`<button class="action-btn pending-btn" data-action="pending">‚Ü© Revert to Pending</button>`
         }
       </div>
     </div>
   </div>`;
 }
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // EVENT DELEGATION FOR ORDER CARDS
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 document.addEventListener('click', function(e) {
   const card = e.target.closest('.order-card');
   if(!card) return;
@@ -585,16 +585,16 @@ document.addEventListener('click', function(e) {
     return;
   }
 
-  // Header toggle — only if clicking the header area not the body
+  // Header toggle ‚Äî only if clicking the header area not the body
   const body = document.getElementById('obody-' + safeId);
   if(body && !body.contains(e.target)) {
     body.classList.toggle('open');
   }
 });
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // RENDER ORDERS
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 function renderDashboard(){
   updateCounts();
   const recent=orders.slice().reverse().slice(0,5);
@@ -604,7 +604,7 @@ function renderDashboard(){
 function renderPendingOrders(){
   const pending=orders.filter(o=>o.status==='pending').slice().reverse();
   document.getElementById('pendingMeta').textContent=pending.length+' order'+(pending.length!==1?'s':'');
-  document.getElementById('pendingOrdersList').innerHTML=pending.length?pending.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No pending orders 🎉</p></div>';
+  document.getElementById('pendingOrdersList').innerHTML=pending.length?pending.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No pending orders üéâ</p></div>';
 }
 function renderFulfilledOrders(){
   const done=orders.filter(o=>o.status!=='pending').slice().reverse();
@@ -612,9 +612,9 @@ function renderFulfilledOrders(){
   document.getElementById('fulfilledOrdersList').innerHTML=done.length?done.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No fulfilled orders yet</p></div>';
 }
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // ORDER ACTIONS
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 async function fulfillOrder(safeId){
   const card=document.getElementById('ocard-'+safeId);
   const originalId=card?card.dataset.orderId:safeId;
@@ -627,7 +627,7 @@ async function fulfillOrder(safeId){
   try{
     if(typeof emailjs!=='undefined'&&order.customer&&order.customer.email){
       const items=Array.isArray(order.items)?order.items:[];
-      const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${((i.price||0)*(i.qty||0)).toFixed(2)}`).join('\n');
+      const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} ‚Äî $${((i.price||0)*(i.qty||0)).toFixed(2)}`).join('\n');
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_FULFILL_ID, {
         to_email:         order.customer.email,
         from_name:        order.customer.name||'Customer',
@@ -638,13 +638,13 @@ async function fulfillOrder(safeId){
         order_summary:    orderSummary,
         order_total:      '$'+parseFloat(order.total||0).toFixed(2),
       });
-      showToast('✓ Order fulfilled — confirmation email sent to customer','green');
+      showToast('‚úì Order fulfilled ‚Äî confirmation email sent to customer','green');
     } else {
-      showToast('✓ Order fulfilled','green');
+      showToast('‚úì Order fulfilled','green');
     }
   }catch(e){
     console.warn('Fulfillment email failed:',e);
-    showToast('✓ Order fulfilled (email failed)','green');
+    showToast('‚úì Order fulfilled (email failed)','green');
   }
 
   updateCounts();
@@ -675,9 +675,9 @@ async function setPendingOrder(safeId){
   showToast('Order restored to pending','');
 }
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // INVENTORY
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 function renderInventory(){
   const q=(document.getElementById('invSearch').value||'').toLowerCase();
   const keys=Object.keys(inventory).filter(code=>{
@@ -691,10 +691,10 @@ function renderInventory(){
   const msgs=[];
   if(outItems.length)msgs.push(outItems.length+' item'+(outItems.length!==1?'s':'')+' out of stock');
   if(lowItems.length)msgs.push(lowItems.length+' item'+(lowItems.length!==1?'s':'')+' low');
-  if(msgs.length){banner.classList.add('show');document.getElementById('lowStockMsg').textContent=msgs.join(' · ');}
+  if(msgs.length){banner.classList.add('show');document.getElementById('lowStockMsg').textContent=msgs.join(' ¬∑ ');}
   else banner.classList.remove('show');
   const grid=document.getElementById('invGrid');
-  if(!keys.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No inventory items yet — click + Add Item to get started</p></div>';return;}
+  if(!keys.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No inventory items yet ‚Äî click + Add Item to get started</p></div>';return;}
   grid.innerHTML=keys.map(code=>{
     const item=inventory[code];
     const _prod=PRODUCTS.find(p=>p.code===code)||{};
@@ -711,7 +711,7 @@ function renderInventory(){
       <div class="inv-name">${_name}</div>
       <div class="inv-spec">${_spec}</div>
       <div class="inv-stock-row">
-        <button class="stock-minus" onclick="adjustStock('${code}',-1)">−</button>
+        <button class="stock-minus" onclick="adjustStock('${code}',-1)">‚àí</button>
         <div style="flex:1;">
           <input type="number" class="stock-input" value="${stock}" min="0" onchange="saveStock('${code}',this.value)" id="stockInput-${code}">
           <div class="stock-label">VIALS</div>
@@ -725,7 +725,7 @@ function renderInventory(){
           <input type="number" step="0.01" min="0" class="stock-input" style="font-size:14px;" value="${price.toFixed(2)}" onchange="savePrice('${code}',this.value)" id="priceInput-${code}">
         </div>
       </div>
-      <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${_name}')">✕ Remove from inventory</button>
+      <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${_name}')">‚úï Remove from inventory</button>
     </div>`;
   }).join('');
 }
@@ -757,7 +757,7 @@ async function savePrice(code,val){
   if(isNaN(n)||n<0)return;
   inventory[code].price=n;
   await apiPost({action:'updateInventory',code,stock:inventory[code].stock||0,threshold:inventory[code].threshold||5,name:inventory[code].name,spec:inventory[code].spec,price:n});
-  showToast('Price updated — $'+n.toFixed(2),'green');
+  showToast('Price updated ‚Äî $'+n.toFixed(2),'green');
 }
 
 function previewPrice(code){
@@ -768,7 +768,7 @@ function previewPrice(code){
 
 function populateProductSelect(){
   const sel=document.getElementById('addStockProduct');
-  PRODUCTS.forEach(p=>{const o=document.createElement('option');o.value=p.code;o.textContent=p.code+' — '+p.name+' ('+p.spec+')';sel.appendChild(o);});
+  PRODUCTS.forEach(p=>{const o=document.createElement('option');o.value=p.code;o.textContent=p.code+' ‚Äî '+p.name+' ('+p.spec+')';sel.appendChild(o);});
 }
 
 function openAddStock(){document.getElementById('addStockModal').classList.add('open');}
@@ -780,7 +780,7 @@ async function deleteInventoryItem(code,name){
   await apiPost({action:'deleteInventory',code});
   renderInventory();
   updateCounts();
-  showToast('✓ '+name+' removed','green');
+  showToast('‚úì '+name+' removed','green');
 }
 
 document.addEventListener('keydown',function(e){
@@ -802,12 +802,12 @@ async function saveNewInventoryItem(){
   closeAddStock();
   renderInventory();
   updateCounts();
-  showToast('✓ Inventory updated','green');
+  showToast('‚úì Inventory updated','green');
 }
 
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 // TOAST
-// ════════════════════════════════════════
+// ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê
 let toastTimer;
 function showToast(msg,type=''){
   const t=document.getElementById('toast');

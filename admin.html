@@ -287,7 +287,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 const MARKET_CONFIGS = {
   cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbztRTHC4PFfMqbCXmeEy_xKAiDH3z9Ue3DJAyYkvjqvhu4D300k6_jcjW-BY9k7xhY8/exec', email:'pswcerritos.orders@gmail.com' },
   tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com'  },
-  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'', email:'' },
+  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com' },
 };
 const _mkt = new URLSearchParams(window.location.search).get('market') || 'cerritos';
 const _cfg = MARKET_CONFIGS[_mkt] || MARKET_CONFIGS.cerritos;

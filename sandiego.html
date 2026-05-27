@@ -89,6 +89,12 @@ body::after{display:none;}
 .pc-add.in-cart:hover{background:var(--green);color:#fff;}
 .pc-add:active{transform:scale(0.96);}
 .in-cart-dot{position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--green);display:none;}
+.pc-qty-controls{display:flex;align-items:center;margin-top:7px;border:1px solid rgba(13,115,119,0.3);border-radius:6px;overflow:hidden;width:100%;}
+.pc-qty-btn{width:36px;height:34px;background:var(--green-dim);color:var(--green);border:none;cursor:pointer;font-size:18px;font-family:var(--mono);display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.pc-qty-btn:hover{background:var(--green);color:#fff;}
+.pc-qty-num{flex:1;text-align:center;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--green);background:var(--green-dim);line-height:34px;border-left:1px solid rgba(13,115,119,0.15);border-right:1px solid rgba(13,115,119,0.15);}
+.pc-remove-item{width:30px;height:34px;background:transparent;color:var(--text3);border:none;border-left:1px solid rgba(13,115,119,0.2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.pc-remove-item:hover{background:var(--red-dim);color:var(--red);}
 .product-card.in-cart .in-cart-dot{display:block;}
 .no-results{text-align:center;padding:60px 20px;color:var(--text3);font-family:var(--mono);}
 .drawer-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.3);z-index:300;display:none;backdrop-filter:blur(4px);}
@@ -438,6 +444,7 @@ const cart={};
 let activeCategory='All';
 let inventory={};
 let PRODUCTS=[];
+let shippingRate=30;
 
 // ════════════════════════════════════════
 // HIDDEN ADMIN TRIGGER
@@ -467,10 +474,11 @@ async function loadInventory(){
       // 8 second timeout — show all products if Sheets is slow
       setTimeout(() => resolve({}), 8000);
     });
-    inventory=data;
+    if(Array.isArray(data)){inventory={};data.forEach(item=>{if(item.code)inventory[item.code]=item;});}else{inventory=data||{};}
+    if(inventory['SHIPPING']&&inventory['SHIPPING'].price>0)shippingRate=inventory['SHIPPING'].price;
     if(inventory&&Object.keys(inventory).length>0){
       PRODUCTS=ALL_PRODUCTS
-        .filter(p=>inventory[p.code]&&inventory[p.code].stock>0)
+        .filter(p=>p.code!=='SHIPPING'&&inventory[p.code]&&inventory[p.code].stock>0)
         .map(p=>({
           ...p,
           price: inventory[p.code].price>0 ? inventory[p.code].price : p.price
@@ -538,9 +546,7 @@ function renderProducts(){
       <div class="pc-spec">${p.spec}</div>
       <div class="pc-stock ${stockClass}">${stockLabel}</div>
       <div class="pc-price">$${p.price.toFixed(2)}</div>
-      <button class="pc-add ${inCart?'in-cart':''}" onclick="addToCart('${p.code}')">
-        ${inCart?`✓ IN ORDER ×${qty}`:`+ ADD TO ORDER`}
-      </button>
+      ${inCart?`<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty('${p.code}',-1)">−</button><span class="pc-qty-num">${qty}</span><button class="pc-qty-btn" onclick="changeQty('${p.code}',1)">+</button><button class="pc-remove-item" onclick="removeItem('${p.code}')" title="Remove">×</button></div>`:`<button class="pc-add" onclick="addToCart('${p.code}')">+ ADD TO ORDER</button>`}
     </div>`;
   }).join('');
 }
@@ -596,7 +602,10 @@ function renderDrawer(){
     <div class="cart-totals">
       <div class="ct-row"><span class="ct-label">${cartCount()} item${cartCount()!==1?'s':''}</span></div>
       <div class="ct-divider"></div>
-      <div class="ct-row ct-total"><span class="ct-label">ORDER TOTAL</span><span class="ct-value">$${total.toFixed(2)}</span></div>
+      <div class="ct-row"><span class="ct-label">Subtotal</span><span class="ct-value">$${total.toFixed(2)}</span></div>
+      <div class="ct-row"><span class="ct-label">Shipping</span><span class="ct-value">$${shippingRate.toFixed(2)}</span></div>
+      <div class="ct-divider"></div>
+      <div class="ct-row ct-total"><span class="ct-label">ORDER TOTAL</span><span class="ct-value">$${(total+shippingRate).toFixed(2)}</span></div>
     </div>
     <button class="checkout-btn" onclick="openCheckout()">PROCEED TO CHECKOUT →</button>
     <button class="clear-cart-btn" onclick="clearCartFn()">Clear order</button>`;
@@ -607,7 +616,7 @@ function renderDrawer(){
 // ════════════════════════════════════════
 function openCheckout(){
   closeCart();
-  const total=cartTotal();
+  const subtotal=cartTotal();
   const keys=Object.keys(cart);
   const orderRows=keys.map(code=>{
     const p=PRODUCTS.find(p=>p.code===code);
@@ -627,13 +636,16 @@ function openCheckout(){
       <div class="modal-section-title">Order Summary</div>
       <div class="order-review">
         ${orderRows}
-        <div class="or-total"><span class="or-total-label">TOTAL</span><span class="or-total-val">$${total.toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>Subtotal</span><span style="font-family:var(--mono);">$${subtotal.toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>Shipping</span><span style="font-family:var(--mono);" id="shippingVal">$${shippingRate.toFixed(2)}</span></div>
+        <div class="or-total"><span class="or-total-label">TOTAL</span><span class="or-total-val" id="checkoutTotal">$${(subtotal+shippingRate).toFixed(2)}</span></div>
       </div>
       <div class="modal-section-title">Your Information</div>
       <div class="form-field"><label class="form-label">Full Name <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="First and last name"></div>
       <div class="form-field"><label class="form-label">Email Address <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="you@email.com"></div>
       <div class="form-field"><label class="form-label">Phone Number <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="+1 (555) 000-0000"></div>
-      <div class="form-field"><label class="form-label">Shipping Address <span class="opt">(optional)</span></label><textarea class="form-textarea" id="custAddress" placeholder="Street, City, State, ZIP"></textarea></div>
+      <div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">LOCAL PICKUP</span><span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes $${shippingRate.toFixed(2)} shipping)</span></label></div>
+      <div class="form-field" id="addressField"><label class="form-label">Shipping Address <span class="opt">(optional)</span></label><textarea class="form-textarea" id="custAddress" placeholder="Street, City, State, ZIP"></textarea></div>
       <div class="form-field"><label class="form-label">Additional Notes <span class="opt">(optional)</span></label><textarea class="form-textarea" id="custNotes" placeholder="Special instructions…" style="min-height:60px;"></textarea></div>
       <div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">
         📧 We'll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +1-310-683-0049
@@ -642,6 +654,15 @@ function openCheckout(){
     </div>`;
   document.getElementById('checkoutModal').classList.add('open');
   document.body.style.overflow='hidden';
+}
+function togglePickup(){
+  const pickup=document.getElementById('localPickup').checked;
+  const subtotal=cartTotal();
+  const shipping=pickup?0:shippingRate;
+  document.getElementById('shippingVal').textContent=pickup?'FREE (Local Pickup)':'$'+shippingRate.toFixed(2);
+  document.getElementById('checkoutTotal').textContent='$'+(subtotal+shipping).toFixed(2);
+  const addrField=document.getElementById('addressField');
+  if(addrField)addrField.style.display=pickup?'none':'block';
 }
 
 function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';}
@@ -659,21 +680,23 @@ async function submitOrder(){
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;btn.innerHTML='<div class="spinner"></div> SENDING…';
 
+  const pickup=(document.getElementById('localPickup')||{}).checked||false;
   const items=Object.entries(cart).map(([code,qty])=>{
     const p=PRODUCTS.find(p=>p.code===code);
     return{code,name:p?p.name:code,spec:p?p.spec:'',qty,price:p?p.price:0};
   });
-  const total=cartTotal();
+  const subtotal=cartTotal();const shipping=pickup?0:shippingRate;const total=subtotal+shipping;
 
   // Build readable order summary for the email
-  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n');
+  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+'\nShipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2));
 
   const order={
     id:'ORD-'+Date.now(),
     status:'pending',
     createdAt:Date.now(),
+    subtotal,shipping,shippingMethod:pickup?'pickup':'delivery',
     total,
-    customer:{name,email,phone,address,notes},
+    customer:{name,email,phone,address:pickup?'LOCAL PICKUP':address,notes},
     items
   };
 
@@ -712,7 +735,7 @@ async function submitOrder(){
       from_name:    name,
       from_email:   email,
       from_phone:   phone,
-      shipping_address: address || 'Not provided',
+      shipping_address: pickup?'LOCAL PICKUP':(address||'Not provided'),
       customer_notes:   notes  || 'None',
       order_summary:    orderSummary,
       order_total:      '$'+total.toFixed(2),

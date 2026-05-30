@@ -77,6 +77,11 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .pc-add.in-cart{background:var(--green-dim);color:var(--green);border-color:rgba(13,115,119,0.25);}
 .pc-add.in-cart:hover{background:var(--green);color:#fff;}
 .pc-add:active{transform:scale(0.96);}
+.pc-btn-row{display:flex;gap:5px;margin-top:7px;}
+.pc-btn-row .pc-add{margin-top:0;flex:1;}
+.pc-add-box{flex-shrink:0;background:var(--bg);color:var(--text2);border:1px solid var(--border2);border-radius:6px;padding:9px 10px;font-family:var(--mono);font-size:10px;font-weight:500;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;letter-spacing:0.03em;white-space:nowrap;}
+.pc-add-box:hover{background:var(--blue);color:#fff;border-color:transparent;}
+.pc-add-box:active{transform:scale(0.96);}
 .in-cart-dot{position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--green);display:none;}
 .product-card.in-cart .in-cart-dot{display:block;}
 .pc-qty-controls{display:flex;align-items:center;margin-top:7px;border:1px solid rgba(13,115,119,0.3);border-radius:6px;overflow:hidden;width:100%;}
@@ -317,7 +322,7 @@ function renderProducts(){
     const inCart=!!cart[p.code];const qty=inCart?cart[p.code]:0;
     const btnHtml=inCart
       ?`<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty('${p.code}',-1)">−</button><span class="pc-qty-num">${qty}</span><button class="pc-qty-btn" onclick="changeQty('${p.code}',1)">+</button><button class="pc-remove-item" onclick="removeItem('${p.code}')" title="Remove">×</button></div>`
-      :`<button class="pc-add" onclick="addToCart('${p.code}')">+ ADD TO TALLY</button>`;
+      :`<div class="pc-btn-row"><button class="pc-add" onclick="addToCart('${p.code}')">+ 1 VIAL</button><button class="pc-add-box" onclick="addBox('${p.code}')" title="Add full box of 10">BOX ×10</button></div>`;
     return `<div class="product-card ${inCart?'in-cart':''}" id="card-${p.code}">
       <div class="in-cart-dot"></div>
       <div class="pc-cat">${p.cat}</div>
@@ -332,6 +337,7 @@ function renderProducts(){
   }).join('');
 }
 function addToCart(code){cart[code]=(cart[code]||0)+1;updateCartUI();renderProducts();}
+function addBox(code){cart[code]=(cart[code]||0)+10;updateCartUI();renderProducts();}
 function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);updateCartUI();renderProducts();}
 function removeItem(code){delete cart[code];updateCartUI();renderProducts();}
 function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);updateCartUI();renderProducts();closeCart();}

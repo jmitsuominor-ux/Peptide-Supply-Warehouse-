@@ -24,6 +24,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .announce-bar{background:var(--blue);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-align:center;padding:9px 20px;text-transform:uppercase;position:relative;z-index:201;}
 .topbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
 .topbar-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:54px;display:flex;align-items:center;gap:14px;}
+.topbar-search-row{display:none;padding:0 20px 10px;}
 .brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .brand-logo{font-family:var(--mono);font-size:18px;font-weight:500;color:var(--text);letter-spacing:0.04em;user-select:none;}
 .brand-logo span{color:var(--blue);}
@@ -125,13 +126,33 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .ct-divider{height:1px;background:var(--border);margin:7px 0;}
 .clear-cart-btn{width:100%;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:7px;padding:10px;font-size:11px;font-family:var(--mono);cursor:pointer;margin-top:8px;letter-spacing:0.04em;transition:color 0.15s;}
 .clear-cart-btn:hover{color:var(--red);border-color:rgba(184,50,40,0.3);}
+.share-btn{width:100%;background:var(--green-dim);color:var(--green);border:1px solid rgba(13,115,119,0.25);border-radius:7px;padding:11px;font-family:var(--mono);font-size:12px;font-weight:500;cursor:pointer;margin-top:8px;letter-spacing:0.05em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
+.share-btn:hover{background:var(--green);color:#fff;}
+.share-btn:active{transform:scale(0.98);}
+@media print{
+  .announce-bar,.topbar,.cat-strip,.hero,.footer,.drawer-overlay,.cart-drawer{display:none!important;}
+  body{background:#fff;}
+  body::before{display:none;}
+  #printArea{display:block!important;}
+}
+#printArea{display:none;}
 .footer{position:relative;z-index:1;background:var(--white);border-top:1px solid var(--border);padding:28px 20px;text-align:center;margin-top:40px;}
 .footer-name{font-family:var(--script);font-size:24px;color:var(--blue);margin-bottom:10px;}
 .footer-contacts{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
 .footer-contact{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);letter-spacing:0.03em;}
 .footer-contact .icon{font-size:15px;}
 .footer-disc{font-size:11px;color:var(--text3);line-height:1.7;max-width:600px;margin:0 auto;}
-@media(max-width:480px){.product-grid{grid-template-columns:repeat(2,1fr);}.hero-title{font-size:24px;}.cart-drawer{max-width:100%;}}
+@media(max-width:600px){
+  .topbar-inner{height:46px;}
+  .topbar-search{display:none;}
+  .topbar-search-row{display:block;}
+  .topbar-search-row .topbar-search{display:flex;max-width:100%;width:100%;}
+  .brand-sub{display:none;}
+  .brand-divider{display:none;}
+  .product-grid{grid-template-columns:repeat(2,1fr);}
+  .hero-title{font-size:24px;}
+  .cart-drawer{max-width:100%;}
+}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 </style>
 </head>
@@ -154,20 +175,18 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="cart-badge" id="cartBadge" style="display:none">0</div>
     </button>
   </div>
+  <div class="topbar-search-row">
+    <div class="topbar-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInputMobile" placeholder="Search compounds, codes…" oninput="document.getElementById('searchInput').value=this.value;filterProducts()">
+    </div>
+  </div>
 </div>
 
 <div class="hero">
   <div class="hero-content">
-    <div class="hero-eyebrow">Supplier Cost Reference</div>
     <h1 class="hero-title">Peptide Supply<br><span>Warehouse</span></h1>
     <div class="hero-eyebrow" style="margin-top:10px;color:#00b4d8;">SUPPLIER PRICING</div>
-    <div class="hero-tagline">per-vial cost from supplier</div>
-    <div class="hero-sub">All prices are cost per vial (box of 10 vials ÷ 10)</div>
-    <div class="hero-contact">
-      <span class="mj-sig">Michael John</span>
-      <div class="contact-row"><span class="contact-icon">💬</span><span class="contact-label">WHATSAPP</span><span>+1-310-683-0049</span></div>
-      <div class="contact-row"><span class="contact-icon">📱</span><span class="contact-label">MOBILE</span><span>+52-55-2446-9745</span></div>
-    </div>
   </div>
 </div>
 
@@ -179,11 +198,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 </div>
 
 <div class="footer">
-  <div class="footer-name">Michael John</div>
-  <div class="footer-contacts">
-    <div class="footer-contact"><span class="icon">💬</span> WhatsApp: +1-310-683-0049</div>
-    <div class="footer-contact"><span class="icon">📱</span> Mobile: +52-55-2446-9745</div>
-  </div>
   <div class="footer-disc">Supplier cost reference — personal use only.</div>
 </div>
 
@@ -351,7 +365,47 @@ function renderDrawer(){
   if(!keys.length){body.innerHTML=`<div class="cart-empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>TALLY EMPTY<br>ADD COMPOUNDS TO SEE COST</p></div>`;footer.innerHTML='';return;}
   const total=cartTotal();
   body.innerHTML=keys.map(code=>{const p=ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="cart-item"><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-spec">${p.code} · ${p.spec}</div><div class="ci-line-price">${qty} vial${qty!==1?'s':''} × $${p.price.toFixed(2)} = $${(p.price*qty).toFixed(2)}</div></div><div class="ci-controls"><button class="qty-btn" onclick="changeQty('${code}',-1)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${code}',1)">+</button><button class="ci-remove" onclick="removeItem('${code}')">×</button></div></div>`;}).join('');
-  footer.innerHTML=`<div class="cart-totals"><div class="ct-row"><span class="ct-label">${cartCount()} vial${cartCount()!==1?'s':''}</span></div><div class="ct-divider"></div><div class="ct-row ct-total"><span class="ct-label">TOTAL SUPPLIER COST</span><span class="ct-value">$${total.toFixed(2)}</span></div></div><button class="clear-cart-btn" onclick="clearCartFn()">Clear tally</button>`;
+  footer.innerHTML=`<div class="cart-totals"><div class="ct-row"><span class="ct-label">${cartCount()} vial${cartCount()!==1?'s':''}</span></div><div class="ct-divider"></div><div class="ct-row ct-total"><span class="ct-label">TOTAL SUPPLIER COST</span><span class="ct-value">$${total.toFixed(2)}</span></div></div><button class="share-btn" onclick="shareOrder()">📋 SHARE / SAVE ORDER</button><button class="clear-cart-btn" onclick="clearCartFn()">Clear tally</button>`;
+}
+
+function shareOrder(){
+  const keys=Object.keys(cart);
+  if(!keys.length)return;
+  const total=cartTotal();
+  const date=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const lines=keys.map(code=>{
+    const p=ALL_PRODUCTS.find(p=>p.code===code);
+    const qty=cart[code];
+    return `${p.code}  ${p.name} (${p.spec})  x${qty}  $${(p.price*qty).toFixed(2)}`;
+  });
+  const text=`PSW SUPPLIER ORDER — ${date}\n${'─'.repeat(40)}\n${lines.join('\n')}\n${'─'.repeat(40)}\nTOTAL: $${total.toFixed(2)}`;
+
+  if(navigator.share){
+    navigator.share({title:'PSW Supplier Order',text}).catch(()=>{});
+  } else {
+    // Open a clean printable page
+    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PSW Order ${date}</title>
+<style>body{font-family:'Courier New',monospace;padding:32px;max-width:600px;margin:0 auto;color:#0a1628;}
+h2{font-size:18px;margin-bottom:4px;}
+.sub{font-size:12px;color:#7a8fa8;margin-bottom:20px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;border-bottom:2px solid #0a1628;padding:6px 4px;font-size:11px;letter-spacing:0.06em;}
+td{padding:7px 4px;border-bottom:1px solid #dde3ec;}
+.total-row td{border-top:2px solid #0a1628;border-bottom:none;font-weight:600;font-size:15px;padding-top:10px;}
+.right{text-align:right;}
+@media print{button{display:none}}
+</style></head><body>
+<h2>PSW SUPPLIER ORDER</h2><div class="sub">${date}</div>
+<table><thead><tr><th>CODE</th><th>COMPOUND</th><th>SPEC</th><th class="right">QTY</th><th class="right">UNIT</th><th class="right">TOTAL</th></tr></thead><tbody>
+${keys.map(code=>{const p=ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<tr><td>${p.code}</td><td>${p.name}</td><td>${p.spec}</td><td class="right">${qty}</td><td class="right">$${p.price.toFixed(2)}</td><td class="right">$${(p.price*qty).toFixed(2)}</td></tr>`;}).join('')}
+<tr class="total-row"><td colspan="5">TOTAL SUPPLIER COST</td><td class="right">$${total.toFixed(2)}</td></tr>
+</tbody></table>
+<br><button onclick="window.print()" style="margin-top:16px;padding:10px 24px;background:#1756a9;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit;">Print / Save as PDF</button>
+</body></html>`;
+    const w=window.open('','_blank');
+    w.document.write(html);
+    w.document.close();
+  }
 }
 
 buildCatNav();

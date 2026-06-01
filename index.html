@@ -143,12 +143,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .footer-contact .icon{font-size:15px;}
 .footer-disc{font-size:11px;color:var(--text3);line-height:1.7;max-width:600px;margin:0 auto;}
 @media(max-width:600px){
-  .topbar-inner{height:46px;}
-  .topbar-search{display:none;}
-  .topbar-search-row{display:block;}
-  .topbar-search-row .topbar-search{display:flex;max-width:100%;width:100%;}
-  .brand-sub{display:none;}
-  .brand-divider{display:none;}
+  .brand{display:none;}
+  .topbar-search{max-width:none;}
   .product-grid{grid-template-columns:repeat(2,1fr);}
   .hero-title{font-size:24px;}
   .cart-drawer{max-width:100%;}
@@ -174,12 +170,6 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       COST TALLY
       <div class="cart-badge" id="cartBadge" style="display:none">0</div>
     </button>
-  </div>
-  <div class="topbar-search-row">
-    <div class="topbar-search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="searchInputMobile" placeholder="Search compounds, codes…" oninput="document.getElementById('searchInput').value=this.value;filterProducts()">
-    </div>
   </div>
 </div>
 

@@ -654,9 +654,9 @@ function bysOptimize(totalMg,sizes){
 
 function bysStackHasStock(stack){
   if(!inventory||!Object.keys(inventory).length)return false;
-  return stack.peptides.some(function(p){
+  return stack.peptides.every(function(p){
     var codes=BYS_CODES[p.name];
-    if(!codes)return false;
+    if(!codes)return true;
     return codes.some(function(c){return inventory[c.code]&&inventory[c.code].stock>0;});
   });
 }
@@ -803,7 +803,7 @@ function bysShowResult(){
   });
   html+='</div>';
   var hasAddable=lines.some(function(l){return l.vials&&l.vials.length;});
-  if(hasAddable)html+='<button class="bys-add-all-btn" onclick="bysAddAll()">Add All Items to Order</button>';
+  if(hasAddable)html+='<button class="bys-add-all-btn" onclick="bysAddAll(this)">Add All Items to Order</button>';
   html+='<div class="bys-disclaimer">Quantities estimated from '+bysTier.toUpperCase()+' dose x '+bysWeeks+' weeks. Adjust for your actual titration schedule.</div>';
   body.innerHTML=html;
   body._bysLines=lines;
@@ -833,7 +833,8 @@ window.bysAddOne=function(btn){
   btn.closest('.bys-item-vial').querySelectorAll('.bys-vq-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.4';});
 };
 
-window.bysAddAll=function(){
+window.bysAddAll=function(btn){
+  if(btn){btn.disabled=true;btn.textContent='&#10003; Added to Order';}
   document.querySelectorAll('.bys-item-vial[data-code]').forEach(function(row){
     if(row.getAttribute('data-added')==='1')return;
     var code=row.getAttribute('data-code');
@@ -843,8 +844,7 @@ window.bysAddAll=function(){
   });
   updateCartUI();renderProducts();
   bysQueue=[];
-  closeStackBuilder();
-  openCart();
+  setTimeout(function(){closeStackBuilder();openCart();},300);
 };
 
 })();
@@ -1090,7 +1090,7 @@ function addToCart(code){cart[code]=(cart[code]||0)+1;updateCartUI();renderProdu
 function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);updateCartUI();renderProducts();}
 function removeItem(code){delete cart[code];updateCartUI();renderProducts();}
 function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);updateCartUI();renderProducts();closeCart();}
-function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}
+function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS.find(p=>p.code===c)||ALL_PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}
 function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
 
 function updateStorefrontProgress(){
@@ -1130,7 +1130,7 @@ function renderDrawer(){
   }
   const total=cartTotal();
   body.innerHTML=keys.map(code=>{
-    const p=PRODUCTS.find(p=>p.code===code);
+    const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);
     const qty=cart[code];
     return `<div class="cart-item">
       <div class="ci-info">
@@ -1175,7 +1175,7 @@ function openCheckout(){
   const checkoutShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
   const keys=Object.keys(cart);
   const orderRows=keys.map(code=>{
-    const p=PRODUCTS.find(p=>p.code===code);
+    const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);
     const qty=cart[code];
     return `<div class="or-item">
       <span class="or-name">${p.name} <span style="color:var(--text3);font-size:10px;">${p.spec}</span></span>
@@ -1240,7 +1240,7 @@ async function submitOrder(){
 
   const pickup=(document.getElementById('localPickup')||{}).checked||false;
   const items=Object.entries(cart).map(([code,qty])=>{
-    const p=PRODUCTS.find(p=>p.code===code);
+    const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);
     return{code,name:p?p.name:code,spec:p?p.spec:'',qty,price:p?p.price:0};
   });
   const subtotal=cartTotal();const effectiveShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;const shipping=pickup?0:effectiveShipping;const total=subtotal+shipping;

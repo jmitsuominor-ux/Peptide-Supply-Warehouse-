@@ -278,6 +278,10 @@ body::after{display:none;}
 .bys-item-vial{display:flex;align-items:center;gap:8px;}
 .bys-vial-qty{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text);min-width:28px;}
 .bys-vial-spec{font-family:var(--mono);font-size:11px;color:var(--text2);flex:1;}
+.bys-vq-btn{width:22px;height:22px;border-radius:4px;background:var(--bg);border:1px solid var(--border2);color:var(--text2);font-size:14px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);flex-shrink:0;transition:all 0.12s;}
+.bys-vq-btn:hover{background:var(--blue);color:#fff;border-color:transparent;}
+.bys-vq-btn:active{transform:scale(0.88);}
+.bys-item-vial{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
 .bys-add-btn{background:rgba(23,86,169,0.08);color:var(--blue);border:1px solid rgba(23,86,169,0.2);border-radius:4px;padding:3px 10px;font-family:var(--mono);font-size:10px;font-weight:500;cursor:pointer;white-space:nowrap;transition:all 0.15s;}
 .bys-add-btn:hover{background:var(--blue);color:#fff;}
 .bys-add-btn:disabled{opacity:0.5;cursor:not-allowed;}
@@ -390,6 +394,7 @@ body::after{display:none;}
         <span class="bys-weeks-unit">wks</span>
         <button class="bys-wk-btn" onclick="bysAdjWeeks(4)">+</button>
         <div class="bys-wk-presets">
+          <button class="bys-wk-preset" onclick="bysSetWeeks(6)">6</button>
           <button class="bys-wk-preset" onclick="bysSetWeeks(8)">8</button>
           <button class="bys-wk-preset active" onclick="bysSetWeeks(12)">12</button>
           <button class="bys-wk-preset" onclick="bysSetWeeks(20)">20</button>
@@ -411,6 +416,7 @@ body::after{display:none;}
 </div>
 
 <div class="modal-overlay" id="checkoutModal"><div class="modal" id="modalContent"></div></div>
+<div class="modal-overlay" id="doseModal" onclick="closeDoseInfo()"><div class="modal" id="doseModalContent" onclick="event.stopPropagation()"></div></div>
 
 <script>
 (function(){
@@ -607,7 +613,7 @@ function bysOptimize(totalMg,sizes){
 }
 
 function bysStackHasStock(stack){
-  if(!inventory||!Object.keys(inventory).length)return true;
+  if(!inventory||!Object.keys(inventory).length)return false;
   return stack.peptides.some(function(p){
     var codes=BYS_CODES[p.name];
     if(!codes)return false;
@@ -645,14 +651,13 @@ function bysRenderSelect(){
     html+='<button class="bys-tier-btn'+(bysTier===o.t?' active':'')+'" onclick="bysSetTier(\''+o.t+'\')">'+o.l+'</button>';
   });
   html+='</div>';
-  html+='<div class="bys-note">Tap a card to select · tap <strong>i</strong> to preview doses · overlapping compounds auto-deduplicated (larger qty wins)</div>';
+  html+='<div class="bys-note">Tap a card to select · tap <strong>ⓘ</strong> to see dose details · If two stacks share a compound, only the higher quantity is ordered — you won\'t be charged twice.</div>';
   html+='<div class="bys-stack-grid">';
   BYS_STACKS.forEach(function(s,i){
     if(!bysStackHasStock(s))return;
     var sel=bysQueue.some(function(q){return q.name===s.name;});
-    var infoOpen=bysInfoIdx===i;
     html+='<div class="bys-stack-card'+(sel?' selected':'')+'" onclick="bysToggleStack('+i+')">';
-    html+='<button class="bys-info-btn'+(infoOpen?' active':'')+'" onclick="bysToggleInfo('+i+',event)" title="View doses">i</button>';
+    html+='<button class="bys-info-btn" onclick="bysToggleInfo('+i+',event)" title="View doses">i</button>';
     html+='<div class="bys-stack-emoji">'+s.emoji+'</div>';
     html+='<div class="bys-stack-name">'+s.name+'</div>';
     html+='<div class="bys-stack-goal">'+s.goal+'</div>';
@@ -660,20 +665,7 @@ function bysRenderSelect(){
     html+='</div>';
   });
   html+='</div>';
-  // Dose detail panel
-  if(bysInfoIdx>=0&&bysInfoIdx<BYS_STACKS.length){
-    var s=BYS_STACKS[bysInfoIdx];
-    html+='<div class="bys-dose-panel">';
-    html+='<div class="bys-dose-panel-title">'+s.emoji+' '+s.name+' — Dose Guide</div>';
-    html+='<table class="bys-dose-table"><thead><tr><th>Compound</th><th style="color:#2e7d32">LO</th><th style="color:#1565c0">MID</th><th style="color:#b71c1c">HI</th></tr></thead><tbody>';
-    s.peptides.forEach(function(p){
-      html+='<tr><td class="bys-dt-compound">'+p.name+'</td>';
-      html+='<td class="bys-dt-lo">'+p.lo+'</td>';
-      html+='<td class="bys-dt-mid">'+p.mid+'</td>';
-      html+='<td class="bys-dt-hi">'+p.hi+'</td></tr>';
-    });
-    html+='</tbody></table></div>';
-  }
+
   body.innerHTML=html;
 }
 
@@ -681,9 +673,18 @@ window.bysSetTier=function(t){bysTier=t;bysRenderSelect();};
 
 window.bysToggleInfo=function(idx,e){
   e.stopPropagation();
-  bysInfoIdx=bysInfoIdx===idx?-1:idx;
-  bysRenderSelect();
+  var s=BYS_STACKS[idx];
+  var h='<div class="modal-header"><div class="modal-title">'+s.emoji+' '+s.name+' — Dose Guide</div><button class="modal-close" onclick="closeDoseInfo()">&#215;</button></div>';
+  h+='<div class="modal-body"><table class="bys-dose-table"><thead><tr><th>Compound</th><th style="color:#2e7d32">LO</th><th style="color:#1565c0">MID</th><th style="color:#b71c1c">HI</th></tr></thead><tbody>';
+  s.peptides.forEach(function(p){
+    h+='<tr><td class="bys-dt-compound">'+p.name+'</td><td class="bys-dt-lo">'+p.lo+'</td><td class="bys-dt-mid">'+p.mid+'</td><td class="bys-dt-hi">'+p.hi+'</td></tr>';
+  });
+  h+='</tbody></table></div>';
+  document.getElementById('doseModalContent').innerHTML=h;
+  document.getElementById('doseModal').classList.add('open');
+  document.body.style.overflow='hidden';
 };
+window.closeDoseInfo=function(){document.getElementById('doseModal').classList.remove('open');document.body.style.overflow='';};
 
 window.bysToggleStack=function(idx){
   var s=BYS_STACKS[idx];
@@ -695,7 +696,7 @@ window.bysToggleStack=function(idx){
 };
 
 window.bysAdjWeeks=function(delta){
-  bysWeeks=Math.max(4,Math.min(52,bysWeeks+delta));
+  bysWeeks=Math.max(6,Math.min(52,bysWeeks+delta));
   var el=document.getElementById('bysWeeksVal');
   if(el)el.textContent=bysWeeks;
   document.querySelectorAll('.bys-wk-preset').forEach(function(b){b.classList.toggle('active',parseInt(b.textContent)===bysWeeks);});
@@ -750,7 +751,10 @@ function bysShowResult(){
       line.vials.forEach(function(v){
         var prod=typeof ALL_PRODUCTS!=='undefined'?ALL_PRODUCTS.find(function(p){return p.code===v.code;}):null;
         var spec=prod?prod.spec:v.code;
-        html+='<div class="bys-item-vial"><span class="bys-vial-qty">x'+v.qty+'</span>';
+        html+='<div class="bys-item-vial" data-code="'+v.code+'">';
+        html+='<button class="bys-vq-btn" onclick="bysAdjQty(this,-1)">&#8722;</button>';
+        html+='<span class="bys-vial-qty">'+v.qty+'</span>';
+        html+='<button class="bys-vq-btn" onclick="bysAdjQty(this,1)">+</button>';
         html+='<span class="bys-vial-spec">'+spec+'</span>';
         html+='<button class="bys-add-btn" data-code="'+v.code+'" data-qty="'+v.qty+'" onclick="bysAddOne(this)">+ Add</button></div>';
       });
@@ -770,20 +774,35 @@ window.bysShowResult=bysShowResult;
 
 window.bysBack=function(){bysInfoIdx=-1;bysRenderSelect();bysUpdateFooter();};
 
+window.bysAdjQty=function(btn,delta){
+  var row=btn.closest('.bys-item-vial');
+  var qtyEl=row.querySelector('.bys-vial-qty');
+  var addBtn=row.querySelector('.bys-add-btn');
+  var cur=parseInt(qtyEl.textContent);
+  var nv=Math.max(1,cur+delta);
+  qtyEl.textContent=nv;
+  if(addBtn)addBtn.setAttribute('data-qty',nv);
+};
 window.bysAddOne=function(btn){
   var code=btn.getAttribute('data-code'),qty=parseInt(btn.getAttribute('data-qty'));
   cart[code]=(cart[code]||0)+qty;
   updateCartUI();renderProducts();
   btn.textContent='&#10003; Added';btn.disabled=true;
+  btn.closest('.bys-item-vial').setAttribute('data-added','1');
+  // disable +/- once added
+  btn.closest('.bys-item-vial').querySelectorAll('.bys-vq-btn').forEach(function(b){b.disabled=true;b.style.opacity='0.4';});
 };
 
 window.bysAddAll=function(){
-  var lines=document.getElementById('bysBody')._bysLines;
-  if(!lines)return;
-  lines.forEach(function(line){
-    if(line.vials)line.vials.forEach(function(v){cart[v.code]=(cart[v.code]||0)+v.qty;});
+  document.querySelectorAll('.bys-item-vial[data-code]').forEach(function(row){
+    if(row.getAttribute('data-added')==='1')return;
+    var code=row.getAttribute('data-code');
+    var qtyEl=row.querySelector('.bys-vial-qty');
+    var qty=qtyEl?parseInt(qtyEl.textContent):0;
+    if(code&&qty>0)cart[code]=(cart[code]||0)+qty;
   });
   updateCartUI();renderProducts();
+  bysQueue=[];
   closeStackBuilder();
   openCart();
 };
@@ -917,12 +936,14 @@ async function loadInventory(){
   document.getElementById('loadingState').style.display='none';
   document.getElementById('productGrid').style.display='grid';
   buildCatNav();renderProducts();
+  if(document.getElementById('bysOverlay').classList.contains('open'))bysRenderSelect();
 }
 function buildCatNav(){
   const cats=['All',...CAT_ORDER.filter(c=>PRODUCTS.some(p=>p.cat===c))];
   document.getElementById('catNav').innerHTML=cats.map(c=>`<div class="cat-pill ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</div>`).join('');
 }
-function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();}
+function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();
+  if(document.getElementById('bysOverlay').classList.contains('open'))bysRenderSelect();}
 function filterProducts(){renderProducts();}
 function renderProducts(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();

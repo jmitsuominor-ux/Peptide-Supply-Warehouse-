@@ -463,55 +463,55 @@ body::after{display:none;}
 'use strict';
 
 var BYS_STACKS=[
-  {name:'FAT STACK',emoji:'🟢',goal:'Maximum weight loss · No plateau · Cardiometabolic',cycle:'20',
+  {name:'FAT STACK (Triple Agonist)',emoji:'🟢',goal:'Maximum weight loss · No plateau · Cardiometabolic',cycle:'20',
    peptides:[
      {name:'Retatrutide',lo:'2 mg/wk × 8 wks → 4 mg/wk',mid:'2→4→6→8 mg/wk (6-8 wks per step)',hi:'12 mg/wk maximum'},
      {name:'NAD+',lo:'100 mg/day',mid:'250 mg/day',hi:'500 mg/day'},
      {name:'5-amino-1mq',lo:'25 mg/day',mid:'50 mg/day',hi:'100 mg/day'}]},
-  {name:'FAT STACK LITE',emoji:'⚡',goal:'Maximum weight loss — GLP-1 + amylin dual pathway',cycle:'20',
+  {name:'FAT STACK LITE (Cagrisa)',emoji:'⚡',goal:'Maximum weight loss — GLP-1 + amylin dual pathway',cycle:'20',
    peptides:[
      {name:'Semaglutide',lo:'0.5 mg/wk',mid:'2.4 mg/wk',hi:'2.4 mg/wk'},
      {name:'Cagrilintide',lo:'0.3 mg/wk',mid:'1.2 mg/wk',hi:'2.4 mg/wk'}]},
-  {name:'BETTER BODY STACK',emoji:'📈',goal:'GH optimization · Lean muscle · Fat loss · Sleep · Anti-aging',cycle:'20',
+  {name:'BETTER BODY STACK (GH Classic)',emoji:'📈',goal:'GH optimization · Lean muscle · Fat loss · Sleep · Anti-aging',cycle:'20',
    peptides:[
      {name:'Tesamorelin',lo:'0.5 mg/day',mid:'1 mg/day',hi:'2 mg/day'},
      {name:'Ipamorelin',lo:'100 mcg/day',mid:'200 mcg/day',hi:'300 mcg/day'}]},
-  {name:'BETTER BODY LITE STACK',emoji:'🧬',goal:'GH optimization · Entry-level · Lean muscle · Fat loss · Sleep',cycle:'12',
+  {name:'BETTER BODY LITE STACK (GH Lite)',emoji:'🧬',goal:'GH optimization · Entry-level · Lean muscle · Fat loss · Sleep',cycle:'12',
    peptides:[
      {name:'CJC-1295 (no DAC)',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'}]},
-  {name:'LIGHTS OUT STACK',emoji:'😴',goal:'Deep sleep · Overnight GH pulse · Cortisol reduction · Recovery',cycle:'12',
+  {name:'LIGHTS OUT STACK (Sleep Stack)',emoji:'😴',goal:'Deep sleep · Overnight GH pulse · Cortisol reduction · Recovery',cycle:'12',
    peptides:[
      {name:'Sermorelin',lo:'200 mcg/night',mid:'300 mcg/night',hi:'500 mcg/night'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
      {name:'DSIP',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
      {name:'Melatonin',lo:'0.5 mg/night',mid:'0.8 mg/night',hi:'1 mg/night'}]},
-  {name:'YOUTH STACK',emoji:'✨',goal:'Anti-aging · Skin & collagen · Comprehensive regeneration',cycle:'12',
+  {name:'YOUTH STACK (Glow)',emoji:'✨',goal:'Anti-aging · Skin & collagen · Comprehensive regeneration',cycle:'12',
    peptides:[
      {name:'GHK-Cu',lo:'1 mg/day',mid:'2 mg/day',hi:'5 mg/day'},
      {name:'BPC-157',lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg 2x/day'},
      {name:'TB-500',lo:'2 mg/wk',mid:'4 mg/wk',hi:'5 mg/wk'}]},
-  {name:'BENJAMIN BUTTON STACK',emoji:'🔋',goal:'Mitochondrial health · Cellular energy · Anti-aging',cycle:'10',
+  {name:'BENJAMIN BUTTON STACK (NAD+ Longevity)',emoji:'🔋',goal:'Mitochondrial health · Cellular energy · Anti-aging',cycle:'10',
    peptides:[
      {name:'NAD+',lo:'100 mg/day',mid:'500 mg/day',hi:'1000 mg/day'},
      {name:'SS-31',lo:'1 mg/day',mid:'5 mg/day',hi:'10 mg/day'},
      {name:'MOTS-c',lo:'2 mg 2x/wk',mid:'5 mg 3x/wk',hi:'10 mg 3x/wk'},
      {name:'5-amino-1mq',lo:'25 mg/day',mid:'50 mg/day',hi:'100 mg/day'}]},
-  {name:'IMMUNITY STACK',emoji:'🛡️',goal:'Immune modulation · Longevity · Anti-aging · Post-viral support',cycle:'6',
+  {name:'IMMUNITY STACK (Immune Stack)',emoji:'🛡️',goal:'Immune modulation · Longevity · Anti-aging · Post-viral support',cycle:'6',
    peptides:[
      {name:'Thymosin Alpha-1',lo:'0.5 mg 2x/wk',mid:'1.0 mg 2x/wk',hi:'1.6 mg 2x/wk'},
      {name:'Epithalon',lo:'5 mg/day × 10 days',mid:'10 mg/day × 10 days',hi:'10 mg/day × 20 days'},
      {name:'BPC-157',lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg 2x/day'}]},
-  {name:'LIMITLESS STACK',emoji:'🧠',goal:'Focus · Memory · Neuroprotection · Anxiety reduction · BDNF',cycle:'6',
+  {name:'LIMITLESS STACK (Cognitive Stack)',emoji:'🧠',goal:'Focus · Memory · Neuroprotection · Anxiety reduction · BDNF',cycle:'6',
    peptides:[
      {name:'Semax',lo:'200 mcg/day',mid:'400 mcg/day',hi:'600 mcg/day'},
      {name:'Selank',lo:'250 mcg/day',mid:'500 mcg/day',hi:'750 mcg/day'},
      {name:'NAD+',lo:'100 mg/day',mid:'250 mg/day',hi:'500 mg/day'}]},
-  {name:'INTIMACY STACK',emoji:'🌹',goal:'Libido · Sexual desire · Bonding · Anxiety-free arousal',cycle:'4',
+  {name:'INTIMACY STACK (J Stack)',emoji:'🌹',goal:'Libido · Sexual desire · Bonding · Anxiety-free arousal',cycle:'4',
    peptides:[
      {name:'PT-141',lo:'0.5 mg as needed',mid:'1 mg as needed',hi:'1.75 mg as needed'},
      {name:'Selank',lo:'250 mcg as needed',mid:'500 mcg as needed',hi:'750 mcg as needed'}]},
-  {name:'RESET STACK',emoji:'💎',goal:'Ultimate healing · Immune modulation · Gut repair · Chronic inflammation',cycle:'12',
+  {name:'RESET STACK (Klow)',emoji:'💎',goal:'Ultimate healing · Immune modulation · Gut repair · Chronic inflammation',cycle:'12',
    peptides:[
      {name:'GHK-Cu',lo:'1 mg/day',mid:'2 mg/day',hi:'5 mg/day'},
      {name:'BPC-157',lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg 2x/day'},
@@ -536,7 +536,7 @@ var BYS_STACKS=[
      {name:'Thymosin Alpha-1',lo:'0.5 mg 2x/wk',mid:'1 mg 2x/wk',hi:'1.5 mg 2x/wk'},
      {name:'IGF-1 LR3',lo:'20 mcg/day',mid:'50 mcg/day',hi:'100 mcg/day'},
      {name:'SS-31',lo:'1 mg/day',mid:'2.5 mg/day',hi:'5 mg/day'}]},
-  {name:"MEN'S WELLNESS STACK",emoji:'🔴',goal:'Natural testosterone · HPG axis restoration · Fertility · Libido',cycle:'12',
+  {name:"MEN'S WELLNESS STACK (HPG Testosterone)",emoji:'🔴',goal:'Natural testosterone · HPG axis restoration · Fertility · Libido',cycle:'12',
    peptides:[
      {name:'KissPeptin-10',lo:'50 mcg/day',mid:'100 mcg/day',hi:'200 mcg/day'},
      {name:'CJC-1295 (no DAC)',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
@@ -715,7 +715,8 @@ window.bysToggleInfo=function(idx,e){
   e.stopPropagation();
   var s=BYS_STACKS[idx];
   var h='<div class="modal-header"><div class="modal-title">'+s.emoji+' '+s.name+' — Dose Guide</div><button class="modal-close" onclick="closeDoseInfo()">&#215;</button></div>';
-  h+='<div class="modal-body"><table class="bys-dose-table"><thead><tr><th>Compound</th><th style="color:#2e7d32">LO</th><th style="color:#1565c0">MID</th><th style="color:#b71c1c">HI</th></tr></thead><tbody>';
+  h+='<div class="modal-body"><div style="font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.06em;margin-bottom:14px;padding:8px 12px;background:var(--bg);border-radius:6px;border:1px solid var(--border);">&#128197; APPROX. CYCLE LENGTH &nbsp;·&nbsp; <strong style="color:var(--text);">~'+s.cycle+' weeks</strong></div>';
+  h+='<table class="bys-dose-table"><thead><tr><th>Compound</th><th style="color:#2e7d32">LO</th><th style="color:#1565c0">MID</th><th style="color:#b71c1c">HI</th></tr></thead><tbody>';
   s.peptides.forEach(function(p){
     h+='<tr><td class="bys-dt-compound">'+p.name+'</td><td class="bys-dt-lo">'+p.lo+'</td><td class="bys-dt-mid">'+p.mid+'</td><td class="bys-dt-hi">'+p.hi+'</td></tr>';
   });

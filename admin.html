@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -448,7 +445,7 @@ async function apiGet(action){
   return new Promise((resolve)=>{
     const xhr=new XMLHttpRequest();
     xhr.open('GET',API+'?action='+action+'&t='+Date.now(),true);
-    xhr.onload=()=>{try{resolve(JSON.parse(xhr.responseText));}catch(e){resolve({});}};
+    xhr.onload=()=>{try{resolve(JSON.parse(xhr.responseText));}catch(e){resolve({});}}
     xhr.onerror=()=>resolve({});
     xhr.send();
     setTimeout(()=>resolve({}),10000);
@@ -637,6 +634,9 @@ async function fulfillOrder(safeId){
         customer_notes:   'Your order has been fulfilled and is on its way!',
         order_summary:    orderSummary,
         order_total:      '$'+parseFloat(order.total||0).toFixed(2),
+        venmo_handle:     '@Mike-Mattarocci',
+        cashapp_handle:   '$MichaelMattarocci',
+        payment_note:     'Venmo: @Mike-Mattarocci | Cash App: $MichaelMattarocci',
       });
       showToast('✓ Order fulfilled — confirmation email sent to customer','green');
     } else {
@@ -820,4 +820,3 @@ if(sessionStorage.getItem('psw_auth')==='1'){initApp();}
 </script>
 </body>
 </html>
-

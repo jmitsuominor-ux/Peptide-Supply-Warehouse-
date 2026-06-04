@@ -294,7 +294,7 @@ const PINS = ['5642', '0049'];
 const EMAILJS_PUBLIC_KEY  = 'BLEcAY-zs_dwN4UuI';
 const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
 const EMAILJS_TEMPLATE_ID = 'template_bd3i3oh';
-const EMAILJS_FULFILL_ID  = 'template_fp119xp';
+const EMAILJS_FULFILL_ID  = 'template_s7ut3bc';
 
 window.addEventListener('load', () => {
   if(typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -445,7 +445,7 @@ async function apiGet(action){
   return new Promise((resolve)=>{
     const xhr=new XMLHttpRequest();
     xhr.open('GET',API+'?action='+action+'&t='+Date.now(),true);
-    xhr.onload=()=>{try{resolve(JSON.parse(xhr.responseText));}catch(e){resolve({});}}
+    xhr.onload=()=>{try{resolve(JSON.parse(xhr.responseText));}catch(e){resolve({});}};
     xhr.onerror=()=>resolve({});
     xhr.send();
     setTimeout(()=>resolve({}),10000);
@@ -820,3 +820,4 @@ if(sessionStorage.getItem('psw_auth')==='1'){initApp();}
 </script>
 </body>
 </html>
+

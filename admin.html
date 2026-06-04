@@ -658,9 +658,18 @@ async function cancelOrder(safeId){
   if(!order)return;
   order.status='cancelled';
   await apiPost({action:'updateOrderStatus',id:order.id,status:'cancelled'});
+  // Restore inventory for each cancelled item
+  const items=Array.isArray(order.items)?order.items:[];
+  for(const item of items){
+    if(item.code&&inventory[item.code]){
+      const newStock=(inventory[item.code].stock||0)+(item.qty||0);
+      inventory[item.code].stock=newStock;
+      await apiPost({action:'updateInventory',code:item.code,stock:newStock,threshold:inventory[item.code].threshold||5,name:inventory[item.code].name,spec:inventory[item.code].spec,price:inventory[item.code].price||0});
+    }
+  }
   updateCounts();
   renderPendingOrders();
-  showToast('Order cancelled','red');
+  showToast('Order cancelled — inventory restored','red');
 }
 
 async function setPendingOrder(safeId){

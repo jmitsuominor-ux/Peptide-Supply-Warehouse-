@@ -510,8 +510,10 @@ async function apiPost(data){
     const url=API+'?'+params.toString();
     const xhr=new XMLHttpRequest();
     xhr.open('GET',url,true);
-    xhr.onload=xhr.onerror=()=>resolve();
+    xhr.onload=()=>{try{resolve(JSON.parse(xhr.responseText));}catch(e){resolve({});}};
+    xhr.onerror=()=>resolve({});
     xhr.send();
+    setTimeout(()=>resolve({}),15000);
   });
 }
 
@@ -522,7 +524,7 @@ function initApp(){populateProductSelect();loadAll();}
 
 async function loadAll(){
   try{
-    const [inv,ords,affs]=await Promise.all([apiGet('getInventory'),apiGet('getOrders'),apiPost({action:'getAffiliates'}).catch(()=>[])]);
+    const [inv,ords,affs]=await Promise.all([apiGet('getInventory'),apiGet('getOrders'),apiGet('getAffiliates').catch(()=>[])]);
     if(Array.isArray(inv)){inventory={};inv.forEach(function(item){if(item.code)inventory[item.code]=item;});}else{inventory=inv||{};}
     orders=Array.isArray(ords)?ords:[];
     affiliates=Array.isArray(affs)?affs:[];
@@ -888,7 +890,7 @@ let affiliates = [];
 
 async function loadAffiliates(){
   try{
-    const res = await apiPost({action:'getAffiliates'});
+    const res = await apiGet('getAffiliates');
     affiliates = Array.isArray(res) ? res : [];
   }catch(e){ affiliates = []; }
   document.getElementById('affCount').textContent = affiliates.length;

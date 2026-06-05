@@ -1133,16 +1133,18 @@ async function loadInventory(){
     });
     if(Array.isArray(data)){inventory={};data.forEach(item=>{if(item.code)inventory[item.code]=item;});}else{inventory=data||{};}
     if(inventory['SHIPPING']&&inventory['SHIPPING'].price>0)shippingRate=inventory['SHIPPING'].price;
-    if(inventory&&Object.keys(inventory).length>0){
-      PRODUCTS=ALL_PRODUCTS
-        .filter(p=>p.code!=='SHIPPING'&&inventory[p.code])
-        .map(p=>({
-          ...p,
-          price: inventory[p.code].price>0 ? inventory[p.code].price : p.price
-        }));
-    } else {
-      PRODUCTS=[];
-    }
+    // Show all products; map price from inventory when available; sort in-stock first
+    PRODUCTS=ALL_PRODUCTS
+      .filter(p=>p.code!=='SHIPPING')
+      .map(p=>({
+        ...p,
+        price: (inventory[p.code]&&inventory[p.code].price>0) ? inventory[p.code].price : p.price
+      }))
+      .sort((a,b)=>{
+        var sa=inventory[a.code]?inventory[a.code].stock:0;
+        var sb=inventory[b.code]?inventory[b.code].stock:0;
+        return (sb>0?0:1)-(sa>0?0:1);
+      });
   }catch(e){
     console.warn('Could not load inventory');
     PRODUCTS=[];
@@ -1231,9 +1233,9 @@ function renderProducts(){
     var inCart=!!cart[p.code];
     var qty=inCart?cart[p.code]:0;
     var stock=inventory[p.code]?inventory[p.code].stock:null;
-    var stockLabel=stock===null?'':(stock===0?T[lang].outOfStock:stock<=5?stock+' '+T[lang].lowStock:stock+' '+T[lang].inStock);
-    var stockClass=stock===null?'':(stock===0?'no-stock':stock<=5?'low-stock':'in-stock');
-    var isOut=stock===0;
+    var stockLabel=stock===null||stock===0?T[lang].outOfStock:(stock<=5?stock+' '+T[lang].lowStock:stock+' '+T[lang].inStock);
+    var stockClass=stock===null||stock===0?'no-stock':(stock<=5?'low-stock':'in-stock');
+    var isOut=stock===null||stock===0;
     var btnHtml;
     if(isOut){
       btnHtml='<button class="pc-add" disabled style="opacity:0.35;cursor:not-allowed;">'+T[lang].outOfStockBtn+'</button>';
@@ -1245,7 +1247,7 @@ function renderProducts(){
     var variantHtml=buildVariantPills(group,p.code);
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
     var cardCls='product-card'+(inCart?' in-cart':'')+(isOut?' out-of-stock-card':'');
-    var cardStyle=isOut?'opacity:0.55;':'';
+    var cardStyle=isOut?'opacity:0.5;filter:grayscale(0.85);':'';
     return '<div class="'+cardCls+'" id="card-'+p.code+'" style="'+cardStyle+'"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+specLine+'<div class="pc-stock '+stockClass+'">'+stockLabel+'</div><div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
   });
   grid.innerHTML=cards.join('');

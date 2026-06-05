@@ -972,6 +972,9 @@ let activeCategory='All';
 let inventory={};
 let PRODUCTS=[];
 let shippingRate=30;
+let affiliates=[];
+let appliedAffiliate=null;
+const EMAILJS_AFFILIATE_ID='';// Add your affiliate notification template ID here
 
 // ════════════════════════════════════════
 // HIDDEN ADMIN TRIGGER
@@ -1017,6 +1020,12 @@ async function loadInventory(){
     console.warn('Could not load inventory');
     PRODUCTS=[];
   }
+  try{
+    const xhr2=new XMLHttpRequest();
+    xhr2.open('GET',API+'?action=getAffiliates&t='+Date.now(),true);
+    xhr2.onload=()=>{try{const a=JSON.parse(xhr2.responseText);affiliates=Array.isArray(a)?a:[];}catch(e){}};
+    xhr2.send();
+  }catch(e){}
   document.getElementById('loadingState').style.display='none';
   document.getElementById('productGrid').style.display='grid';
   buildCatNav();
@@ -1192,7 +1201,7 @@ function openCheckout(){
         ${orderRows}
         <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>Subtotal</span><span style="font-family:var(--mono);">$${subtotal.toFixed(2)}</span></div>
         <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>Shipping</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?'FREE (Over $500)':'$'+checkoutShipping.toFixed(2)}</span></div>
-        <div class="or-total"><span class="or-total-label">TOTAL</span><span class="or-total-val" id="checkoutTotal">$${(subtotal+checkoutShipping).toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">TOTAL</span><span class="or-total-val" id="checkoutTotal">$${(subtotal+checkoutShipping).toFixed(2)}</span></div>
       </div>
       <div class="modal-section-title">Your Information</div>
       <div class="form-field"><label class="form-label">Full Name <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="First and last name"></div>
@@ -1201,6 +1210,7 @@ function openCheckout(){
       <div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">LOCAL PICKUP</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes $${checkoutShipping.toFixed(2)} shipping)</span>`:''}</label></div>
       <div class="form-field" id="addressField"><label class="form-label">Shipping Address <span class="opt">(optional)</span></label><textarea class="form-textarea" id="custAddress" placeholder="Street, City, State, ZIP"></textarea></div>
       <div class="form-field"><label class="form-label">Additional Notes <span class="opt">(optional)</span></label><textarea class="form-textarea" id="custNotes" placeholder="Special instructions…" style="min-height:60px;"></textarea></div>
+      <div class="form-field"><label class="form-label">Promo Code <span class="opt">(optional)</span></label><div style="display:flex;gap:8px;"><input type="text" class="form-input" id="promoCode" placeholder="Enter code" style="text-transform:uppercase;flex:1;" oninput="this.value=this.value.toUpperCase()"><button onclick="applyPromo()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:0 16px;font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">APPLY</button></div><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div>
       <div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">
         📧 We'll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +1-310-683-0049
       </div>
@@ -1221,7 +1231,29 @@ function togglePickup(){
   if(addrField)addrField.style.display=pickup?'none':'block';
 }
 
-function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';appliedAffiliate=null;}
+function applyPromo(){
+  const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
+  const msg=document.getElementById('promoMsg');
+  if(!code){msg.innerHTML='<span style="color:var(--red);font-size:11px;">Enter a code first.</span>';return;}
+  const aff=affiliates.find(a=>String(a.code).toUpperCase()===code);
+  if(!aff){appliedAffiliate=null;msg.innerHTML='<span style="color:var(--red);font-size:11px;">❌ Invalid promo code.</span>';return;}
+  appliedAffiliate=aff;
+  const discount=parseFloat(aff.customerDiscount)||0;
+  msg.innerHTML='<span style="color:var(--green);font-size:11px;">✓ Code applied — '+discount+'% off your order!</span>';
+  const subtotal=cartTotal();
+  const pickup=(document.getElementById('localPickup')||{}).checked||false;
+  const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
+  const shipping=pickup?0:baseShipping;
+  const discountAmt=subtotal*(discount/100);
+  const newTotal=subtotal-discountAmt+shipping;
+  const totalEl=document.getElementById('checkoutTotal');
+  if(totalEl)totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--text3);font-size:12px;">$'+(subtotal+shipping).toFixed(2)+'</span> <span style="color:var(--green);">$'+newTotal.toFixed(2)+'</span>';
+  const discountRow=document.getElementById('discountRow');
+  if(discountRow)discountRow.style.display='flex';
+  const discountVal=document.getElementById('discountVal');
+  if(discountVal)discountVal.textContent='-$'+discountAmt.toFixed(2)+' ('+discount+'% off)';
+}
 
 async function submitOrder(){
   const name=document.getElementById('custName').value.trim();
@@ -1241,16 +1273,19 @@ async function submitOrder(){
     const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);
     return{code,name:p?p.name:code,spec:p?p.spec:'',qty,price:p?p.price:0};
   });
-  const subtotal=cartTotal();const effectiveShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;const shipping=pickup?0:effectiveShipping;const total=subtotal+shipping;
+  const subtotal=cartTotal();const effectiveShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;const shipping=pickup?0:effectiveShipping;
+  const discountPct=appliedAffiliate?parseFloat(appliedAffiliate.customerDiscount)||0:0;
+  const discountAmt=subtotal*(discountPct/100);
+  const total=subtotal-discountAmt+shipping;
 
   // Build readable order summary for the email
-  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+'\nShipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2));
+  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+(discountAmt>0?'\nDiscount ('+discountPct+'% off): -$'+discountAmt.toFixed(2):'')+'\nShipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2));
 
   const order={
     id:'ORD-'+Date.now(),
     status:'pending',
     createdAt:Date.now(),
-    subtotal,shipping,shippingMethod:pickup?'pickup':'delivery',
+    subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',shippingMethod:pickup?'pickup':'delivery',
     total,
     customer:{name,email,phone,address:pickup?'LOCAL PICKUP':address,notes},
     items
@@ -1303,6 +1338,22 @@ async function submitOrder(){
     console.error('EmailJS fulfiller send failed:', JSON.stringify(e), e);
     // Order still saved to Sheets — don't block success screen
   }
+
+  if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
+    const commissionPct=parseFloat(appliedAffiliate.commission)||0;
+    const commissionAmt=(subtotal*(commissionPct/100)).toFixed(2);
+    try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_AFFILIATE_ID,{
+      to_email:appliedAffiliate.email,
+      affiliate_name:appliedAffiliate.name,
+      promo_code:appliedAffiliate.code,
+      order_summary:orderSummary,
+      order_total:'$'+total.toFixed(2),
+      commission_rate:commissionPct+'%',
+      commission_amount:'$'+commissionAmt,
+      customer_name:name,
+    });}catch(e){console.error('Affiliate email failed:',e);}
+  }
+  appliedAffiliate=null;
 
   // Clear cart and show success
   Object.keys(cart).forEach(k=>delete cart[k]);

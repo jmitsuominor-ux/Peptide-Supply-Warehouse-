@@ -179,6 +179,15 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .aff-del-btn{flex:1;background:transparent;border:1px solid var(--red-border);color:var(--red);border-radius:6px;padding:6px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;}
 .aff-del-btn:hover{background:var(--red);color:#fff;}
 .aff-empty{text-align:center;padding:60px 20px;font-family:var(--mono);font-size:12px;color:var(--text3);}
+.aff-pay-btn{flex:1;background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.3);color:#4caf50;border-radius:6px;padding:6px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;}
+.aff-pay-btn:hover{background:#4caf50;color:#fff;}
+.aff-pay-history{margin-top:10px;border-top:1px solid var(--border);padding-top:8px;}
+.aff-pay-header{font-family:var(--mono);font-size:9px;letter-spacing:0.08em;color:var(--text3);margin-bottom:6px;}
+.aff-pay-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px;}
+.aff-pay-date{color:var(--text3);font-family:var(--mono);font-size:10px;min-width:80px;}
+.aff-pay-amt{font-weight:600;color:#4caf50;}
+.aff-pay-note{color:var(--text3);font-size:10px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.aff-pay-empty{font-family:var(--mono);font-size:10px;color:var(--text3);padding:4px 0;}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.35);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
@@ -308,6 +317,20 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       </div>
       <input type="hidden" id="affEditCode">
       <button class="modal-save-btn" onclick="saveAffiliate()">Save Affiliate</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="markPaidModal">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-hdr"><h3>Mark Payment</h3><div class="modal-x" onclick="closeMarkPaid()">×</div></div>
+    <div class="modal-body-inner">
+      <input type="hidden" id="markPaidCode">
+      <div class="mf"><label>AFFILIATE</label><input type="text" id="markPaidName" disabled style="opacity:0.7;"></div>
+      <div class="mf"><label>NET OWED</label><input type="text" id="markPaidOwed" disabled style="opacity:0.7;font-weight:700;"></div>
+      <div class="mf"><label>AMOUNT PAID ($)</label><input type="number" id="markPaidAmount" placeholder="e.g. 50.00" min="0" step="0.01"></div>
+      <div class="mf"><label>NOTE (optional)</label><input type="text" id="markPaidNote" placeholder="e.g. Venmo sent 6/5"></div>
+      <button class="modal-save-btn" onclick="savePayment()">Record Payment</button>
     </div>
   </div>
 </div>
@@ -524,10 +547,11 @@ function initApp(){populateProductSelect();loadAll();}
 
 async function loadAll(){
   try{
-    const [inv,ords,affs]=await Promise.all([apiGet('getInventory'),apiGet('getOrders'),apiGet('getAffiliates').catch(()=>[])]);
+    const [inv,ords,affs,pays]=await Promise.all([apiGet('getInventory'),apiGet('getOrders'),apiGet('getAffiliates').catch(()=>[]),apiGet('getPayments').catch(()=>[])]);
     if(Array.isArray(inv)){inventory={};inv.forEach(function(item){if(item.code)inventory[item.code]=item;});}else{inventory=inv||{};}
     orders=Array.isArray(ords)?ords:[];
     affiliates=Array.isArray(affs)?affs:[];
+    payments=Array.isArray(pays)?pays:[];
     document.getElementById('affCount').textContent=affiliates.length;
     updateCounts();
     renderDashboard();
@@ -887,16 +911,22 @@ if(sessionStorage.getItem('psw_auth')==='1'){initApp();}
 // AFFILIATES
 // ════════════════════════════════════════
 let affiliates = [];
+let payments = [];
 
 async function loadAffiliates(){
   try{
-    const res = await apiGet('getAffiliates');
-    affiliates = Array.isArray(res) ? res : [];
-  }catch(e){ affiliates = []; }
+    const [affRes, payRes] = await Promise.all([apiGet('getAffiliates'), apiGet('getPayments')]);
+    affiliates = Array.isArray(affRes) ? affRes : [];
+    payments = Array.isArray(payRes) ? payRes : [];
+  }catch(e){ affiliates = []; payments = []; }
   document.getElementById('affCount').textContent = affiliates.length;
 }
 
-function affCommissionOwed(aff){
+function affOrderCount(aff){
+  return orders.filter(o=>o.affiliateCode && o.affiliateCode.toUpperCase()===String(aff.code).toUpperCase()).length;
+}
+
+function affCommissionTotal(aff){
   return orders
     .filter(o=>o.affiliateCode && o.affiliateCode.toUpperCase()===String(aff.code).toUpperCase())
     .reduce((sum,o)=>{
@@ -905,8 +935,16 @@ function affCommissionOwed(aff){
     }, 0);
 }
 
-function affOrderCount(aff){
-  return orders.filter(o=>o.affiliateCode && o.affiliateCode.toUpperCase()===String(aff.code).toUpperCase()).length;
+function affPaidTotal(aff){
+  return payments
+    .filter(p=>p.affiliateCode && String(p.affiliateCode).toUpperCase()===String(aff.code).toUpperCase())
+    .reduce((sum,p)=>sum+(parseFloat(p.amount)||0), 0);
+}
+
+function affPayments(aff){
+  return payments
+    .filter(p=>p.affiliateCode && String(p.affiliateCode).toUpperCase()===String(aff.code).toUpperCase())
+    .sort((a,b)=>new Date(b.date)-new Date(a.date));
 }
 
 function renderAffiliates(){
@@ -917,8 +955,17 @@ function renderAffiliates(){
     return;
   }
   grid.innerHTML='<div class="aff-grid">'+affiliates.map(a=>{
-    const owed = affCommissionOwed(a);
+    const total = affCommissionTotal(a);
+    const paid = affPaidTotal(a);
+    const net = total - paid;
     const count = affOrderCount(a);
+    const history = affPayments(a);
+    const historyHtml = history.length ? history.map(p=>`
+      <div class="aff-pay-row">
+        <span class="aff-pay-date">${new Date(p.date).toLocaleDateString()}</span>
+        <span class="aff-pay-amt">$${parseFloat(p.amount).toFixed(2)}</span>
+        ${p.note?`<span class="aff-pay-note">${p.note}</span>`:''}
+      </div>`).join('') : '<div class="aff-pay-empty">No payments recorded yet.</div>';
     return `<div class="aff-card">
       <div class="aff-code">${a.code}</div>
       <div class="aff-name">${a.name}</div>
@@ -930,11 +977,18 @@ function renderAffiliates(){
         <span class="aff-rate-pill commission">Commission: ${a.commission}%</span>
       </div>
       <div class="aff-stats">
-        <div><div class="aff-stat-label">ORDERS WITH CODE</div><div class="aff-stat-val">${count}</div></div>
-        <div><div class="aff-stat-label">COMMISSION OWED</div><div class="aff-stat-val" style="color:var(--purple);">$${owed.toFixed(2)}</div></div>
+        <div><div class="aff-stat-label">ORDERS</div><div class="aff-stat-val">${count}</div></div>
+        <div><div class="aff-stat-label">EARNED</div><div class="aff-stat-val">$${total.toFixed(2)}</div></div>
+        <div><div class="aff-stat-label">PAID OUT</div><div class="aff-stat-val" style="color:var(--green,#4caf50);">$${paid.toFixed(2)}</div></div>
+        <div><div class="aff-stat-label">NET OWED</div><div class="aff-stat-val" style="color:${net>0?'var(--purple)':'#aaa'};">$${net.toFixed(2)}</div></div>
+      </div>
+      <div class="aff-pay-history">
+        <div class="aff-pay-header">Payment History</div>
+        ${historyHtml}
       </div>
       <div class="aff-actions">
         <button class="aff-edit-btn" onclick="editAffiliate('${a.code}')">✏ Edit</button>
+        <button class="aff-pay-btn" onclick="openMarkPaid('${a.code}')">💰 Mark Paid</button>
         <button class="aff-del-btn" onclick="deleteAffiliate('${a.code}')">Delete</button>
       </div>
     </div>`;
@@ -996,6 +1050,34 @@ async function deleteAffiliate(code){
   await loadAffiliates();
   renderAffiliates();
   showToast('Affiliate deleted','red');
+}
+
+function openMarkPaid(code){
+  const a = affiliates.find(x=>String(x.code).toUpperCase()===code.toUpperCase());
+  if(!a)return;
+  const net = affCommissionTotal(a) - affPaidTotal(a);
+  document.getElementById('markPaidCode').value = a.code;
+  document.getElementById('markPaidName').value = a.name + ' (' + a.code + ')';
+  document.getElementById('markPaidOwed').value = '$' + net.toFixed(2);
+  document.getElementById('markPaidAmount').value = net > 0 ? net.toFixed(2) : '';
+  document.getElementById('markPaidNote').value = '';
+  document.getElementById('markPaidModal').classList.add('open');
+}
+
+function closeMarkPaid(){
+  document.getElementById('markPaidModal').classList.remove('open');
+}
+
+async function savePayment(){
+  const code = document.getElementById('markPaidCode').value;
+  const amount = parseFloat(document.getElementById('markPaidAmount').value);
+  const note = document.getElementById('markPaidNote').value.trim();
+  if(!amount || amount <= 0){showToast('Enter a valid amount','red');return;}
+  await apiPost({action:'savePayment', affiliateCode:code, amount, note});
+  await loadAffiliates();
+  closeMarkPaid();
+  renderAffiliates();
+  showToast('Payment recorded — $'+amount.toFixed(2),'green');
 }
 </script>
 </body>

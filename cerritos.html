@@ -217,9 +217,9 @@ body::after{display:none;}
 .bys-banner-title{font-family:var(--mono);font-size:14px;font-weight:600;color:#fff;letter-spacing:0.05em;}
 .bys-banner-sub{font-size:11px;color:rgba(255,255,255,0.72);margin-top:2px;}
 .bys-banner-arrow{margin-left:auto;font-size:20px;color:rgba(255,255,255,0.8);flex-shrink:0;}
-.bys-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:400;display:none;align-items:flex-end;justify-content:center;}
+.bys-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:400;display:none;align-items:flex-end;justify-content:center;padding-bottom:env(safe-area-inset-bottom,0px);}
 .bys-overlay.open{display:flex;}
-.bys-modal{background:var(--white);border-radius:16px 16px 0 0;width:100%;max-width:780px;max-height:92vh;display:flex;flex-direction:column;}
+.bys-modal{background:var(--white);border-radius:16px 16px 0 0;width:100%;max-width:780px;max-height:82vh;display:flex;flex-direction:column;}
 .bys-modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
 .bys-modal-title{font-family:var(--mono);font-size:15px;font-weight:600;color:var(--text);letter-spacing:0.04em;}
 .bys-modal-close{background:none;border:none;font-size:24px;cursor:pointer;color:var(--text3);padding:0 4px;line-height:1;}
@@ -1072,8 +1072,8 @@ async function loadInventory(){
 function buildCatNav(){
   const cats=['All',...CAT_ORDER.filter(c=>PRODUCTS.some(p=>p.cat===c))];
   document.getElementById('catNav').innerHTML=cats.map(c=>{
-    const label=c==='All'?T[lang].catAll:(T[lang].cats[c]||c);
-    return `<div class="cat-pill ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${label}</div>`;
+    var label=c==='All'?T[lang].catAll:(T[lang].cats&&T[lang].cats[c]?T[lang].cats[c]:c);
+    return '<div class="cat-pill '+(c===activeCategory?'active':'')+'" onclick="setCategory(\''+c+'\')">'+label+'</div>';
   }).join('');
 }
 function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();
@@ -1148,7 +1148,7 @@ function renderProducts(){
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
     var cardCls='product-card'+(inCart?' in-cart':'')+(isOut?' out-of-stock-card':'');
     var cardStyle=isOut?'opacity:0.55;':'';
-    return '<div class="'+cardCls+'" id="card-'+p.code+'" style="'+cardStyle+'"><div class="in-cart-dot"></div><div class="pc-cat">'+p.cat+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+specLine+'<div class="pc-stock '+stockClass+'">'+stockLabel+'</div><div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
+    return '<div class="'+cardCls+'" id="card-'+p.code+'" style="'+cardStyle+'"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+specLine+'<div class="pc-stock '+stockClass+'">'+stockLabel+'</div><div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
   });
   grid.innerHTML=cards.join('');
 }

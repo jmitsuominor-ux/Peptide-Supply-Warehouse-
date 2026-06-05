@@ -1137,6 +1137,12 @@ function renderProducts(){
   }
   noRes.style.display='none';
   var groups=groupByName(filtered);
+  // Sort groups: any variant in stock → top; all out of stock → bottom
+  groups.sort(function(a,b){
+    var aHas=a.some(function(p){return inventory[p.code]&&inventory[p.code].stock>0;});
+    var bHas=b.some(function(p){return inventory[p.code]&&inventory[p.code].stock>0;});
+    return (bHas?1:0)-(aHas?1:0);
+  });
   var cards=groups.map(function(group){
     var p=getActiveVariant(group);
     var inCart=!!cart[p.code];

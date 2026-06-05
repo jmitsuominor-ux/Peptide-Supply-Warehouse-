@@ -923,12 +923,12 @@ async function loadAffiliates(){
 }
 
 function affOrderCount(aff){
-  return orders.filter(o=>o.affiliateCode && o.affiliateCode.toUpperCase()===String(aff.code).toUpperCase()).length;
+  return orders.filter(o=>o.affiliateCode && o.affiliateCode.toUpperCase()===String(aff.code).toUpperCase() && o.status!=='cancelled').length;
 }
 
 function affCommissionTotal(aff){
   return orders
-    .filter(o=>o.affiliateCode && o.affiliateCode.toUpperCase()===String(aff.code).toUpperCase())
+    .filter(o=>o.affiliateCode && o.affiliateCode.toUpperCase()===String(aff.code).toUpperCase() && o.status!=='cancelled')
     .reduce((sum,o)=>{
       const rate = parseFloat(aff.commission)||0;
       return sum + (parseFloat(o.total)||0) * rate / 100;

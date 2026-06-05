@@ -290,10 +290,21 @@ body::after{display:none;}
 .bys-add-all-btn:hover{background:var(--blue2);}
 .bys-disclaimer{font-family:var(--mono);font-size:9px;color:var(--text3);text-align:center;margin-top:10px;line-height:1.5;}
 @media(max-width:480px){.bys-stack-grid{grid-template-columns:1fr 1fr;}.bys-item-left{flex:0 0 110px;}.bys-dose-table td,.bys-dose-table th{padding:3px 4px;font-size:9px;}}
+
+.lang-toggle{background:transparent;border:1px solid var(--border2);color:var(--text2);border-radius:5px;padding:5px 10px;font-family:var(--mono);font-size:18px;cursor:pointer;letter-spacing:0;transition:all 0.15s;flex-shrink:0;}
+.lang-toggle:hover,.lang-toggle.active{background:var(--blue);color:#fff;border-color:transparent;}
+
+.pc-variants{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 2px;}
+.pc-variant-pill{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;transition:all 0.12s;white-space:nowrap;}
+.pc-variant-pill:hover{border-color:var(--blue);color:var(--blue);}
+.pc-variant-pill.active{background:var(--blue);color:#fff;border-color:transparent;}
+.pc-variant-pill.out{opacity:0.4;}
+.pc-variant-pill.in-cart-v{border-color:var(--green);color:var(--green);}
+.pc-variant-pill.active.in-cart-v{background:var(--green);border-color:transparent;color:#fff;}
 </style>
 </head>
 <body>
-<div class="announce-bar">⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500 &nbsp;·&nbsp; Wholesale &amp; retail inquiries welcome</div>
+<div class="announce-bar" id="announceBar">⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500 &nbsp;·&nbsp; Wholesale &amp; retail inquiries welcome</div>
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand">
@@ -307,9 +318,10 @@ body::after{display:none;}
     </div>
     <button class="cart-btn" onclick="openCart()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-      CHECKOUT
+      <span id="cartBtnText">CHECKOUT</span>
       <div class="cart-badge" id="cartBadge" style="display:none">0</div>
     </button>
+    <button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇲🇽</button>
   </div>
 </div>
 <div class="sf-progress-strip" id="sfProgressStrip">
@@ -320,17 +332,17 @@ body::after{display:none;}
 <div class="hero">
   <div class="hero-rings"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">Research Grade Peptides</div>
+    <div class="hero-eyebrow" id="heroEyebrow">Research Grade Peptides</div>
     <h1 class="hero-title">Peptide Supply<br><span>Warehouse</span></h1>
     <div class="hero-eyebrow" style="margin-top:10px;color:var(--green);">TIJUANA</div>
-    <div class="hero-tagline">we supply your favorite doctors</div>
-    <div class="hero-sub">Wholesale and retail inquiries welcome</div>
+    <div class="hero-tagline" id="heroTagline">we supply your favorite doctors</div>
+    <div class="hero-sub" id="heroSub">Wholesale and retail inquiries welcome</div>
   </div>
 </div>
 
 <!-- COMPOUND REFERENCE GUIDE -->
 <div class="ref-section">
-  <div class="ref-heading">COMPOUND REFERENCE GUIDE</div>
+  <div class="ref-heading" id="refHeading">COMPOUND REFERENCE GUIDE</div>
   <div class="ref-scroll">
     <a class="ref-tile" style="--ta:#00b4d8" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=tijuana#weight">
       <div class="ref-tile-icon">⚖️</div>
@@ -389,8 +401,8 @@ body::after{display:none;}
   <div class="bys-banner-inner">
     <div class="bys-banner-icon">🧬</div>
     <div style="flex:1">
-      <div class="bys-banner-title">BUILD YOUR STACK</div>
-      <div class="bys-banner-sub">Select a protocol · choose your dose tier · vials auto-calculated from live inventory</div>
+      <div class="bys-banner-title" id="bysBannerTitle">BUILD YOUR STACK</div>
+      <div class="bys-banner-sub" id="bysBannerSub">Select a protocol · choose your dose tier · vials auto-calculated from live inventory</div>
     </div>
     <div class="bys-banner-arrow">→</div>
   </div>
@@ -413,7 +425,7 @@ body::after{display:none;}
     <div class="footer-contact"><span class="icon">📱</span> Mobile: +52-664-596-4005</div>
     <div class="footer-contact"><span class="icon">📧</span> Email: geopeptides755@gmail.com</div>
   </div>
-  <div class="footer-disc"><strong>Research Use Only.</strong> All compounds are sold for research purposes only. Not intended for human consumption. Not FDA approved. By placing an order you confirm you are a qualified researcher. Consult a licensed healthcare provider before any use.</div>
+  <div class="footer-disc" id="footerDisc"><strong>Research Use Only.</strong> All compounds are sold for research purposes only. Not intended for human consumption. Not FDA approved. By placing an order you confirm you are a qualified researcher. Consult a licensed healthcare provider before any use.</div>
 </div>
 
 <div class="bys-overlay" id="bysOverlay">
@@ -447,7 +459,7 @@ body::after{display:none;}
 </div>
 <div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
-  <div class="drawer-header"><div class="drawer-title">YOUR ORDER</div><div class="drawer-close" onclick="closeCart()">×</div></div>
+  <div class="drawer-header"><div class="drawer-title" id="drawerTitle">YOUR ORDER</div><div class="drawer-close" onclick="closeCart()">×</div></div>
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-footer" id="drawerFooter"></div>
 </div>
@@ -455,6 +467,118 @@ body::after{display:none;}
 <div class="modal-overlay" id="checkoutModal"><div class="modal" id="modalContent"></div></div>
 <div class="modal-overlay" id="doseModal" onclick="closeDoseInfo()"><div class="modal" id="doseModalContent" onclick="event.stopPropagation()"></div></div>
 
+<script>
+var lang='en';
+var T={
+en:{
+  announceBar:'⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500 &nbsp;·&nbsp; Wholesale &amp; retail inquiries welcome',
+  researchCompounds:'Research Compounds',
+  searchPlaceholder:'Search compounds, codes…',
+  checkout:'CHECKOUT',
+  heroEyebrow:'Research Grade Peptides',
+  heroTagline:'we supply your favorite doctors',
+  heroSub:'Wholesale and retail inquiries welcome',
+  refHeading:'COMPOUND REFERENCE GUIDE',
+  bysTitle:'BUILD YOUR STACK',
+  bysSub:'Select a protocol · choose your dose tier · vials auto-calculated from live inventory',
+  catAll:'All',
+  cats:{'Weight Loss':'Weight Loss','Growth Hormone':'Growth Hormone','Healing & Recovery':'Healing & Recovery','Anti-Aging & Immune':'Anti-Aging & Immune','Mitochondrial':'Mitochondrial','Muscle & IGF':'Muscle & IGF','Hormonal':'Hormonal','Cognitive':'Cognitive','Immune':'Immune','Reconstitution':'Reconstitution'},
+  inStock:'in stock',lowStock:'left — Low Stock',outOfStock:'Out of Stock',outOfStockBtn:'OUT OF STOCK',addToOrder:'+ ADD TO ORDER',
+  yourOrder:'YOUR ORDER',orderEmpty:'ORDER LIST EMPTY',addBelow:'ADD COMPOUNDS BELOW',
+  subtotal:'Subtotal',shipping:'Shipping',orderTotal:'ORDER TOTAL',freeOver500:'FREE (Over $500)',freeLocalPickup:'FREE (Local Pickup)',
+  freeShipUnlocked:'✓ FREE SHIPPING UNLOCKED',minMet:'✓ $250 MINIMUM MET',orderMin:'ORDER MINIMUM',
+  proceedCheckout:'PROCEED TO CHECKOUT →',clearOrder:'Clear order',
+  completeOrder:'COMPLETE ORDER',orderSummary:'Order Summary',yourInfo:'Your Information',
+  fullName:'Full Name',emailAddress:'Email Address',phoneNumber:'Phone Number',
+  namePlaceholder:'First and last name',emailPlaceholder:'you@email.com',phonePlaceholder:'+1 (555) 000-0000',
+  localPickup:'LOCAL PICKUP',shippingAddress:'Shipping Address',additionalNotes:'Additional Notes',
+  addressPlaceholder:'Street, City, State, ZIP',notesPlaceholder:'Special instructions…',
+  promoCode:'Promo Code',promoPlaceholder:'Enter code',apply:'APPLY',
+  placeOrder:'PLACE ORDER →',sending:'SENDING…',
+  orderReceived:'ORDER RECEIVED',backToCatalog:'BACK TO CATALOG',discountLabel:'Discount',optional:'(optional)',
+  promoEnterFirst:'Enter a code first.',promoInvalid:'❌ Invalid promo code.',
+  enterName:'Please enter your name.',enterEmail:'Please enter a valid email.',enterPhone:'Please enter your phone number.',
+  footerDisc:'<strong>Research Use Only.</strong> All compounds are sold for research purposes only. Not intended for human consumption. Not FDA approved. By placing an order you confirm you are a qualified researcher. Consult a licensed healthcare provider before any use.',
+  bysTierLo:'LO DOSE',bysTierMid:'MID DOSE',bysTierHi:'HI DOSE',
+  bysCycle:'Cycle:',bysWks:'wks',bysBackToStacks:'← Back to stacks',
+  bysAddAll:'Add All Items to Order',bysAdded:'✓ Added to Order',
+  bysOutOfStock:'Out of stock',bysNotInCatalog:'Not in current catalog',bysDeduped:'✓ deduped across stacks',
+  bysNote:'Tap a card to select · tap <strong>ⓘ</strong> to see dose details · If two stacks share a compound, only the higher quantity is ordered — you won't be charged twice.',
+  bysDoseGuide:'Dose Guide',bysCycleLength:'APPROX. CYCLE LENGTH',bysCompound:'Compound',
+  refTiles:{'Weight Loss':'Weight Loss','Growth Hormone':'Growth Hormone','Healing & Recovery':'Healing & Recovery','Anti-Aging & Immune':'Anti-Aging & Immune','Mitochondrial':'Mitochondrial','Muscle & IGF':'Muscle & IGF','Hormonal':'Hormonal','Cognitive':'Cognitive','Immune':'Immune','Reconstitution':'Reconstitution'}
+},
+es:{
+  announceBar:'⚠ Pedido mínimo $250 &nbsp;·&nbsp; Envío gratis en pedidos sobre $500 &nbsp;·&nbsp; Consultas al por mayor y al por menor bienvenidas',
+  researchCompounds:'Compuestos de Investigación',
+  searchPlaceholder:'Buscar compuestos, códigos…',
+  checkout:'PAGAR',
+  heroEyebrow:'Péptidos de Grado Investigación',
+  heroTagline:'abastecemos a tus médicos favoritos',
+  heroSub:'Consultas al por mayor y al por menor bienvenidas',
+  refHeading:'GUÍA DE COMPUESTOS',
+  bysTitle:'ARMA TU STACK',
+  bysSub:'Selecciona un protocolo · elige tu dosis · frascos calculados automáticamente del inventario',
+  catAll:'Todo',
+  cats:{'Weight Loss':'Pérdida de Peso','Growth Hormone':'Hormona de Crecimiento','Healing & Recovery':'Sanación y Recuperación','Anti-Aging & Immune':'Anti-Envejecimiento','Mitochondrial':'Mitocondrial','Muscle & IGF':'Músculo e IGF','Hormonal':'Hormonal','Cognitive':'Cognitivo','Immune':'Inmune','Reconstitution':'Reconstitución'},
+  inStock:'en stock',lowStock:'restantes — Stock Bajo',outOfStock:'Agotado',outOfStockBtn:'AGOTADO',addToOrder:'+ AGREGAR AL PEDIDO',
+  yourOrder:'TU PEDIDO',orderEmpty:'PEDIDO VACÍO',addBelow:'AGREGA COMPUESTOS ABAJO',
+  subtotal:'Subtotal',shipping:'Envío',orderTotal:'TOTAL DEL PEDIDO',freeOver500:'GRATIS (Más de $500)',freeLocalPickup:'GRATIS (Recoger en Local)',
+  freeShipUnlocked:'✓ ENVÍO GRATIS DESBLOQUEADO',minMet:'✓ MÍNIMO CUMPLIDO',orderMin:'PEDIDO MÍNIMO',
+  proceedCheckout:'CONTINUAR AL PAGO →',clearOrder:'Limpiar pedido',
+  completeOrder:'COMPLETAR PEDIDO',orderSummary:'Resumen del Pedido',yourInfo:'Tu Información',
+  fullName:'Nombre Completo',emailAddress:'Correo Electrónico',phoneNumber:'Número de Teléfono',
+  namePlaceholder:'Nombre y apellido',emailPlaceholder:'tucorreo@email.com',phonePlaceholder:'+1 (555) 000-0000',
+  localPickup:'RECOGER EN LOCAL',shippingAddress:'Dirección de Envío',additionalNotes:'Notas Adicionales',
+  addressPlaceholder:'Calle, Ciudad, Estado, CP',notesPlaceholder:'Instrucciones especiales…',
+  promoCode:'Código Promocional',promoPlaceholder:'Ingresa código',apply:'APLICAR',
+  placeOrder:'REALIZAR PEDIDO →',sending:'ENVIANDO…',
+  orderReceived:'PEDIDO RECIBIDO',backToCatalog:'VOLVER AL CATÁLOGO',discountLabel:'Descuento',optional:'(opcional)',
+  promoEnterFirst:'Ingresa un código primero.',promoInvalid:'❌ Código promocional inválido.',
+  enterName:'Por favor ingresa tu nombre.',enterEmail:'Por favor ingresa un correo válido.',enterPhone:'Por favor ingresa tu número de teléfono.',
+  footerDisc:'<strong>Solo para Investigación.</strong> Todos los compuestos se venden únicamente para fines de investigación. No destinados al consumo humano. No aprobados por la FDA. Al realizar un pedido confirmas que eres un investigador calificado. Consulta a un proveedor de salud autorizado antes de cualquier uso.',
+  bysTierLo:'DOSIS BAJA',bysTierMid:'DOSIS MEDIA',bysTierHi:'DOSIS ALTA',
+  bysCycle:'Ciclo:',bysWks:'sem',bysBackToStacks:'← Volver a los stacks',
+  bysAddAll:'Agregar Todo al Pedido',bysAdded:'✓ Agregado al Pedido',
+  bysOutOfStock:'Agotado',bysNotInCatalog:'No disponible en catálogo',bysDeduped:'✓ deduplicado entre stacks',
+  bysNote:'Toca una tarjeta para seleccionar · toca <strong>ⓘ</strong> para ver detalles de dosis · Si dos stacks comparten un compuesto, solo se pide la mayor cantidad — no se te cobra dos veces.',
+  bysDoseGuide:'Guía de Dosis',bysCycleLength:'DURACIÓN APROX. DEL CICLO',bysCompound:'Compuesto',
+  refTiles:{'Weight Loss':'Pérdida de Peso','Growth Hormone':'Hormona de Crecimiento','Healing & Recovery':'Sanación y Recuperación','Anti-Aging & Immune':'Anti-Envejecimiento','Mitochondrial':'Mitocondrial','Muscle & IGF':'Músculo e IGF','Hormonal':'Hormonal','Cognitive':'Cognitivo','Immune':'Inmune','Reconstitution':'Reconstitución'}
+}
+};
+function toggleLang(){setLang(lang==='en'?'es':'en');}
+function setLang(l){
+  lang=l;
+  var btn=document.getElementById('langToggle');
+  if(btn)btn.innerHTML=l==='en'?'🇲🇽':'🇺🇸';
+  applyTranslations();
+}
+function applyTranslations(){
+  var t=T[lang];
+  var el;
+  el=document.getElementById('announceBar');if(el)el.innerHTML=t.announceBar;
+  el=document.getElementById('heroEyebrow');if(el)el.textContent=t.heroEyebrow;
+  el=document.getElementById('heroTagline');if(el)el.textContent=t.heroTagline;
+  el=document.getElementById('heroSub');if(el)el.textContent=t.heroSub;
+  el=document.getElementById('refHeading');if(el)el.textContent=t.refHeading;
+  el=document.getElementById('bysBannerTitle');if(el)el.textContent=t.bysTitle;
+  el=document.getElementById('bysBannerSub');if(el)el.textContent=t.bysSub;
+  el=document.getElementById('footerDisc');if(el)el.innerHTML=t.footerDisc;
+  el=document.getElementById('cartBtnText');if(el)el.textContent=t.checkout;
+  el=document.getElementById('drawerTitle');if(el)el.textContent=t.yourOrder;
+  el=document.getElementById('searchInput');if(el)el.placeholder=t.searchPlaceholder;
+  // update ref tile names
+  var refNames=document.querySelectorAll('.ref-tile-name');
+  var enNames=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging & Immune','Mitochondrial','Muscle & IGF','Hormonal','Cognitive','Immune','Reconstitution'];
+  refNames.forEach(function(el){
+    var en=enNames.find(function(n){return el.textContent.trim()===n||el.textContent.trim()===T.en.refTiles[n];});
+    if(en&&t.refTiles[en])el.textContent=t.refTiles[en];
+  });
+  if(typeof buildCatNav==='function')buildCatNav();
+  if(typeof renderProducts==='function')renderProducts();
+  if(typeof renderDrawer==='function')renderDrawer();
+  if(typeof updateStorefrontProgress==='function')updateStorefrontProgress();
+}
+</script>
 <script>
 (function(){
 'use strict';
@@ -688,7 +812,7 @@ function bysRenderSelect(){
     html+='<button class="bys-tier-btn'+(bysTier===o.t?' active':'')+'" onclick="bysSetTier(\''+o.t+'\')">'+o.l+'</button>';
   });
   html+='</div>';
-  html+='<div class="bys-note">Tap a card to select · tap <strong>ⓘ</strong> to see dose details · If two stacks share a compound, only the higher quantity is ordered — you won\'t be charged twice.</div>';
+  html+='<div class="bys-note">'+T[lang].bysNote+'</div>';
   html+='<div class="bys-stack-grid">';
   BYS_STACKS.forEach(function(s,i){
     if(!bysStackHasStock(s))return;
@@ -698,7 +822,7 @@ function bysRenderSelect(){
     html+='<div class="bys-stack-emoji">'+s.emoji+'</div>';
     html+='<div class="bys-stack-name">'+s.name+'</div>';
     html+='<div class="bys-stack-goal">'+s.goal+'</div>';
-    html+='<div class="bys-stack-cycle">~'+s.cycle+' wks default</div>';
+    html+='<div class="bys-stack-cycle">~'+s.cycle+' '+T[lang].bysWks+' default</div>';
     html+='</div>';
   });
   html+='</div>';
@@ -711,9 +835,9 @@ window.bysSetTier=function(t){bysTier=t;bysRenderSelect();};
 window.bysToggleInfo=function(idx,e){
   e.stopPropagation();
   var s=BYS_STACKS[idx];
-  var h='<div class="modal-header"><div class="modal-title">'+s.emoji+' '+s.name+' — Dose Guide</div><button class="modal-close" onclick="closeDoseInfo()">&#215;</button></div>';
+  var h='<div class="modal-header"><div class="modal-title">'+s.emoji+' '+s.name+' — '+T[lang].bysDoseGuide+'</div><button class="modal-close" onclick="closeDoseInfo()">&#215;</button></div>';
   h+='<div class="modal-body"><div style="font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.06em;margin-bottom:14px;padding:8px 12px;background:var(--bg);border-radius:6px;border:1px solid var(--border);">&#128197; APPROX. CYCLE LENGTH &nbsp;·&nbsp; <strong style="color:var(--text);">~'+s.cycle+' weeks</strong></div>';
-  h+='<table class="bys-dose-table"><thead><tr><th>Compound</th><th style="color:#2e7d32">LO</th><th style="color:#1565c0">MID</th><th style="color:#b71c1c">HI</th></tr></thead><tbody>';
+  h+='<table class="bys-dose-table"><thead><tr><th>'+T[lang].bysCompound+'</th><th style="color:#2e7d32">'+T[lang].bysTierLo+'</th><th style="color:#1565c0">'+T[lang].bysTierMid+'</th><th style="color:#b71c1c">'+T[lang].bysTierHi+'</th></tr></thead><tbody>';
   s.peptides.forEach(function(p){
     h+='<tr><td class="bys-dt-compound">'+p.name+'</td><td class="bys-dt-lo">'+p.lo+'</td><td class="bys-dt-mid">'+p.mid+'</td><td class="bys-dt-hi">'+p.hi+'</td></tr>';
   });
@@ -771,19 +895,19 @@ function bysShowResult(){
   var body=document.getElementById('bysBody');
   var stackNames=bysQueue.map(function(s){return s.emoji+' '+s.name;}).join(' + ');
   var html='<div class="bys-result-header">';
-  html+='<button class="bys-back-btn" onclick="bysBack()">&#8592; Back to stacks</button>';
+  html+='<button class="bys-back-btn" onclick="bysBack()">'+T[lang].bysBackToStacks+'</button>';
   html+='<div class="bys-result-title">'+stackNames+'</div>';
-  html+='<div><span class="bys-result-tier">'+bysTier.toUpperCase()+' DOSE &nbsp;&#183;&nbsp; '+bysWeeks+' WKS</span></div></div>';
+  html+='<div><span class="bys-result-tier">'+bysTier.toUpperCase()+' DOSE &nbsp;&#183;&nbsp; '+bysWeeks+' '+T[lang].bysWks.toUpperCase()+'</span></div></div>';
   html+='<div class="bys-result-list">';
   lines.forEach(function(line){
     html+='<div class="bys-result-item"><div class="bys-item-left">';
     html+='<div class="bys-item-name">'+line.name+'</div>';
-    if(line.stacks.length>1)html+='<div class="bys-item-shared">&#10003; deduped across stacks</div>';
+    if(line.stacks.length>1)html+='<div class="bys-item-shared">'+T[lang].bysDeduped+'</div>';
     if(line.mg!=null){var d=line.mg>=1?Math.round(line.mg*10)/10+' mg total':(line.mg*1000).toFixed(0)+' mcg total';html+='<div class="bys-item-total">'+d+'</div>';}
     html+='</div><div class="bys-item-right">';
-    if(line.unavailable){html+='<div class="bys-item-note">Not in current catalog</div>';}
+    if(line.unavailable){html+='<div class="bys-item-note">'+T[lang].bysNotInCatalog+'</div>';}
     else if(line.manual){html+='<div class="bys-item-note">'+line.dose+'</div>';}
-    else if(!line.vials||!line.vials.length){html+='<div class="bys-item-note">Out of stock</div>';}
+    else if(!line.vials||!line.vials.length){html+='<div class="bys-item-note">'+T[lang].bysOutOfStock+'</div>';}
     else{
       if(!line.stockOk)html+='<div class="bys-item-warn">&#9888; Verify stock availability</div>';
       line.vials.forEach(function(v){
@@ -801,8 +925,8 @@ function bysShowResult(){
   });
   html+='</div>';
   var hasAddable=lines.some(function(l){return l.vials&&l.vials.length;});
-  if(hasAddable)html+='<button class="bys-add-all-btn" onclick="bysAddAll(this)">Add All Items to Order</button>';
-  html+='<div class="bys-disclaimer">Quantities estimated from '+bysTier.toUpperCase()+' dose x '+bysWeeks+' weeks. Adjust for your actual titration schedule.</div>';
+  if(hasAddable)html+='<button class="bys-add-all-btn" onclick="bysAddAll(this)">'+T[lang].bysAddAll+'</button>';
+  html+='<div class="bys-disclaimer">'+(lang==='es'?'Cantidades estimadas de dosis '+bysTier.toUpperCase()+' x '+bysWeeks+' semanas. Ajusta según tu programa de titulación.':'Quantities estimated from '+bysTier.toUpperCase()+' dose x '+bysWeeks+' weeks. Adjust for your actual titration schedule.')+'</div>';
   body.innerHTML=html;
   body._bysLines=lines;
   var footer=document.getElementById('bysFooter');
@@ -832,7 +956,7 @@ window.bysAddOne=function(btn){
 };
 
 window.bysAddAll=function(btn){
-  if(btn){btn.disabled=true;btn.textContent='&#10003; Added to Order';}
+  if(btn){btn.disabled=true;btn.textContent=T[lang].bysAdded;}
   document.querySelectorAll('.bys-item-vial[data-code]').forEach(function(row){
     if(row.getAttribute('data-added')==='1')return;
     var code=row.getAttribute('data-code');
@@ -1038,7 +1162,7 @@ async function loadInventory(){
 // CATEGORY NAV
 // ════════════════════════════════════════
 function buildCatNav(){
-  const cats=['All',...CAT_ORDER.filter(c=>PRODUCTS.some(p=>p.cat===c))];
+  const cats=[T[lang].catAll,...CAT_ORDER.filter(c=>PRODUCTS.some(p=>p.cat===c))];
   document.getElementById('catNav').innerHTML=cats.map(c=>
     `<div class="cat-pill ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</div>`
   ).join('');
@@ -1051,6 +1175,10 @@ function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();
 // ════════════════════════════════════════
 function filterProducts(){renderProducts();}
 
+const selectedVariants={};
+function groupByName(arr){const m=new Map();arr.forEach(p=>{if(!m.has(p.name))m.set(p.name,[]);m.get(p.name).push(p);});return Array.from(m.values());}
+function getActiveVariant(group){const name=group[0].name;const saved=selectedVariants[name];if(saved){const f=group.find(p=>p.code===saved);if(f)return f;}return group.find(p=>inventory[p.code]&&inventory[p.code].stock>0)||group[0];}
+function selectVariant(name,code){selectedVariants[name]=code;renderProducts();}
 function renderProducts(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
   const filtered=PRODUCTS.filter(p=>{
@@ -1061,39 +1189,27 @@ function renderProducts(){
   const grid=document.getElementById('productGrid');
   const noRes=document.getElementById('noResults');
   if(!filtered.length){
-    grid.innerHTML='';
-    noRes.style.display='block';
-    if(PRODUCTS.length===0){
-      noRes.innerHTML='<div style="text-align:center;padding:60px 20px;"><div style="font-family:var(--mono);font-size:13px;color:var(--text2);margin-bottom:8px;">Something went wrong loading the catalog.</div><div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px;">Please refresh the page to try again.</div><button onclick="window.location.reload()" style="background:linear-gradient(135deg,var(--blue),var(--blue-bright));color:#fff;border:none;border-radius:6px;padding:10px 20px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.06em;">RELOAD PAGE</button></div>';
-    } else {
-      document.getElementById('noResultsQuery').textContent=q||activeCategory;
-    }
+    grid.innerHTML='';noRes.style.display='block';
+    if(PRODUCTS.length===0){noRes.innerHTML='<div style="text-align:center;padding:60px 20px;"><div style="font-family:var(--mono);font-size:13px;color:var(--text2);margin-bottom:8px;">'+(lang==='es'?'Ocurrió un error al cargar el catálogo.':'Something went wrong loading the catalog.')+'</div><div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px;">'+(lang==='es'?'Por favor recarga la página para intentar de nuevo.':'Please refresh the page to try again.')+'</div><button onclick="window.location.reload()" style="background:linear-gradient(135deg,var(--blue),var(--blue-bright));color:#fff;border:none;border-radius:6px;padding:10px 20px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.06em;">'+(lang==='es'?'RECARGAR PÁGINA':'RELOAD PAGE')+'</button></div>';}
+    else{document.getElementById('noResultsQuery').textContent=q||activeCategory;}
     return;
   }
   noRes.style.display='none';
-  grid.innerHTML=filtered.map(p=>{
-    const inCart=!!cart[p.code];
-    const qty=inCart?cart[p.code]:0;
+  const groups=groupByName(filtered);
+  grid.innerHTML=groups.map(group=>{
+    const p=getActiveVariant(group);
+    const inCart=!!cart[p.code];const qty=inCart?cart[p.code]:0;
     const stock=inventory[p.code]?inventory[p.code].stock:null;
-    const stockLabel=stock===null?'':(stock===0?'Out of Stock':stock<=5?stock+' left — Low Stock':stock+' in stock');
+    const stockLabel=stock===null?'':(stock===0?T[lang].outOfStock:stock<=5?stock+' '+T[lang].lowStock:stock+' '+T[lang].inStock);
     const stockClass=stock===null?'':(stock===0?'no-stock':stock<=5?'low-stock':'in-stock');
     const isOut=stock===0;
-    return `<div class="product-card ${inCart?'in-cart':''}" id="card-${p.code}" style="${isOut?'opacity:0.55;':''}">
-      <div class="in-cart-dot"></div>
-      <div class="pc-cat">${p.cat}</div>
-      <div class="pc-code">${p.code}</div>
-      <div class="pc-name">${p.name}</div>
-      <div class="pc-spec">${p.spec}</div>
-      <div class="pc-stock ${stockClass}">${stockLabel}</div>
-      <div class="pc-price">$${p.price.toFixed(2)}</div>
-      ${isOut?`<button class="pc-add" disabled style="opacity:0.35;cursor:not-allowed;">OUT OF STOCK</button>`:inCart?`<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty('${p.code}',-1)">−</button><input class="pc-qty-input" type="number" min="1" value="${qty}" onchange="setQty('${p.code}',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="changeQty('${p.code}',1)">+</button><button class="pc-remove-item" onclick="removeItem('${p.code}')" title="Remove">×</button></div>`:`<button class="pc-add" onclick="addToCart('${p.code}')">+ ADD TO ORDER</button>`}
-    </div>`;
+    const btnHtml=isOut?`<button class="pc-add" disabled style="opacity:0.35;cursor:not-allowed;">${T[lang].outOfStockBtn}</button>`:inCart?`<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty('${p.code}',-1)">−</button><input class="pc-qty-input" type="number" min="1" value="${qty}" onchange="setQty('${p.code}',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="changeQty('${p.code}',1)">+</button><button class="pc-remove-item" onclick="removeItem('${p.code}')" title="Remove">×</button></div>`:`<button class="pc-add" onclick="addToCart('${p.code}')">${T[lang].addToOrder}</button>`;
+    const variantHtml=group.length>1?`<div class="pc-variants">${group.map(v=>{const vs=inventory[v.code]?inventory[v.code].stock:0;const cls=['pc-variant-pill',v.code===p.code?'active':'',cart[v.code]?'in-cart-v':'',vs===0?'out':''].filter(Boolean).join(' ');const lbl=v.spec.replace(/\/vials?/i,'').trim();return `<button class="${cls}" onclick="selectVariant(${JSON.stringify(v.name)},${JSON.stringify(v.code)})">${lbl}</button>`;}).join('')}</div>`:'';
+    const specLine=group.length===1?`<div class="pc-spec">${p.spec}</div>`:'';
+    return `<div class="product-card ${inCart?'in-cart':''} ${isOut?'out-of-stock-card':''}" id="card-${p.code}" style="${isOut?'opacity:0.55;':''}"><div class="in-cart-dot"></div><div class="pc-cat">${p.cat}</div><div class="pc-code">${p.code}</div><div class="pc-name">${p.name}</div>${variantHtml}${specLine}<div class="pc-stock ${stockClass}">${stockLabel}</div><div class="pc-price">$${p.price.toFixed(2)}</div>${btnHtml}</div>`;
   }).join('');
 }
 
-// ════════════════════════════════════════
-// CART
-// ════════════════════════════════════════
 function addToCart(code){cart[code]=(cart[code]||0)+1;updateCartUI();renderProducts();}
 function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);updateCartUI();renderProducts();}
 function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;updateCartUI();renderProducts();}
@@ -1113,9 +1229,9 @@ function updateStorefrontProgress(){
   const label=document.getElementById('sfProgressLabel');
   fill.style.width=(freeShip?100:pct)+'%';
   fill.className='sf-progress-fill2'+(met?' met':'');
-  if(freeShip){label.textContent='✓ FREE SHIPPING UNLOCKED';label.style.color='var(--green)';}
-  else if(met){label.textContent='✓ $'+MIN_ORDER+' MINIMUM MET';label.style.color='var(--green)';}
-  else{const rem=(MIN_ORDER-total).toFixed(2);label.textContent='$'+total.toFixed(2)+' of $'+MIN_ORDER+' · $'+rem+' to go';label.style.color='var(--text2)';}
+  if(freeShip){label.textContent=T[lang].freeShipUnlocked;label.style.color='var(--green)';}
+  else if(met){label.textContent=T[lang].minMet;label.style.color='var(--green)';}
+  else{const rem=(MIN_ORDER-total).toFixed(2);label.textContent='$'+total.toFixed(2)+(lang==='es'?' de ':' of ')+'$'+MIN_ORDER+' · $'+rem+(lang==='es'?' para desbloquear':' to go');label.style.color='var(--text2)';}
 }
 function updateCartUI(){
   const count=cartCount();
@@ -1201,22 +1317,22 @@ function openCheckout(){
       <div class="modal-section-title">Order Summary</div>
       <div class="order-review">
         ${orderRows}
-        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>Subtotal</span><span style="font-family:var(--mono);">$${subtotal.toFixed(2)}</span></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>Shipping</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?'FREE (Over $500)':'$'+checkoutShipping.toFixed(2)}</span></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">TOTAL</span><span class="or-total-val" id="checkoutTotal">$${(subtotal+checkoutShipping).toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">$${subtotal.toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>${T[lang].shipping}</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?'FREE (Over $500)':'$'+checkoutShipping.toFixed(2)}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">$${(subtotal+checkoutShipping).toFixed(2)}</span></div>
       </div>
       <div class="modal-section-title">Your Information</div>
-      <div class="form-field"><label class="form-label">Full Name <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="First and last name"></div>
-      <div class="form-field"><label class="form-label">Email Address <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="you@email.com"></div>
-      <div class="form-field"><label class="form-label">Phone Number <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="+1 (555) 000-0000"></div>
-      <div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">LOCAL PICKUP</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes $${checkoutShipping.toFixed(2)} shipping)</span>`:''}</label></div>
-      <div class="form-field" id="addressField"><label class="form-label">Shipping Address <span class="opt">(optional)</span></label><textarea class="form-textarea" id="custAddress" placeholder="Street, City, State, ZIP"></textarea></div>
-      <div class="form-field"><label class="form-label">Additional Notes <span class="opt">(optional)</span></label><textarea class="form-textarea" id="custNotes" placeholder="Special instructions…" style="min-height:60px;"></textarea></div>
-      <div class="form-field"><label class="form-label">Promo Code <span class="opt">(optional)</span></label><div style="display:flex;gap:8px;"><input type="text" class="form-input" id="promoCode" placeholder="Enter code" style="text-transform:uppercase;flex:1;" oninput="this.value=this.value.toUpperCase()"><button onclick="applyPromo()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:0 16px;font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">APPLY</button></div><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div>
+      <div class="form-field"><label class="form-label">${T[lang].fullName} <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="${T[lang].namePlaceholder}"></div>
+      <div class="form-field"><label class="form-label">${T[lang].emailAddress} <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="${T[lang].emailPlaceholder}"></div>
+      <div class="form-field"><label class="form-label">${T[lang].phoneNumber} <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="${T[lang].phonePlaceholder}"></div>
+      <div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">${T[lang].localPickup}</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes $${checkoutShipping.toFixed(2)} shipping)</span>`:''}</label></div>
+      <div class="form-field" id="addressField"><label class="form-label">${T[lang].shippingAddress} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custAddress" placeholder="${T[lang].addressPlaceholder}"></textarea></div>
+      <div class="form-field"><label class="form-label">${T[lang].additionalNotes} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custNotes" placeholder="${T[lang].notesPlaceholder}" style="min-height:60px;"></textarea></div>
+      <div class="form-field"><label class="form-label">${T[lang].promoCode} <span class="opt">${T[lang].optional}</span></label><div style="display:flex;gap:8px;"><input type="text" class="form-input" id="promoCode" placeholder="${T[lang].promoPlaceholder}" style="text-transform:uppercase;flex:1;" oninput="this.value=this.value.toUpperCase()"><button onclick="applyPromo()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:0 16px;font-family:var(--mono);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;">${T[lang].apply}</button></div><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div>
       <div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">
         📧 We'll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +52-664-596-4005
       </div>
-      <button class="submit-btn" id="submitBtn" onclick="submitOrder()">PLACE ORDER →</button>
+      <button class="submit-btn" id="submitBtn" onclick="submitOrder()">${T[lang].placeOrder}</button>
     </div>`;
   document.getElementById('checkoutModal').classList.add('open');
   document.body.style.overflow='hidden';
@@ -1226,7 +1342,7 @@ function togglePickup(){
   const subtotal=cartTotal();
   const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
   const shipping=pickup?0:baseShipping;
-  document.getElementById('shippingVal').textContent=pickup?'FREE (Local Pickup)':(baseShipping===0?'FREE (Over $500)':'$'+baseShipping.toFixed(2));
+  document.getElementById('shippingVal').textContent=pickup?T[lang].freeLocalPickup:(baseShipping===0?T[lang].freeOver500:'$'+baseShipping.toFixed(2));
   document.getElementById('shippingVal').style.color=(shipping===0)?'var(--green)':'inherit';
   document.getElementById('checkoutTotal').textContent='$'+(subtotal+shipping).toFixed(2);
   const addrField=document.getElementById('addressField');
@@ -1237,12 +1353,12 @@ function closeCheckout(){document.getElementById('checkoutModal').classList.remo
 function applyPromo(){
   const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
   const msg=document.getElementById('promoMsg');
-  if(!code){msg.innerHTML='<span style="color:var(--red);font-size:11px;">Enter a code first.</span>';return;}
+  if(!code){msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoEnterFirst+'</span>';return;}
   const aff=affiliates.find(a=>String(a.code).toUpperCase()===code);
-  if(!aff){appliedAffiliate=null;msg.innerHTML='<span style="color:var(--red);font-size:11px;">❌ Invalid promo code.</span>';return;}
+  if(!aff){appliedAffiliate=null;msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoInvalid+'</span>';return;}
   appliedAffiliate=aff;
   const discount=parseFloat(aff.customerDiscount)||0;
-  msg.innerHTML='<span style="color:var(--green);font-size:11px;">✓ Code applied — '+discount+'% off your order!</span>';
+  msg.innerHTML='<span style="color:var(--green);font-size:11px;">'+(lang==='es'?'✓ Código aplicado — ¡'+discount+'% de descuento!':'✓ Code applied — '+discount+'% off your order!')+'</span>';
   const subtotal=cartTotal();
   const pickup=(document.getElementById('localPickup')||{}).checked||false;
   const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
@@ -1268,7 +1384,7 @@ async function submitOrder(){
   if(!phone){flash('custPhone','Please enter your phone number.');return;}
 
   const btn=document.getElementById('submitBtn');
-  btn.disabled=true;btn.innerHTML='<div class="spinner"></div> SENDING…';
+  btn.disabled=true;btn.innerHTML='<div class="spinner"></div> '+T[lang].sending;
 
   const pickup=(document.getElementById('localPickup')||{}).checked||false;
   const items=Object.entries(cart).map(([code,qty])=>{

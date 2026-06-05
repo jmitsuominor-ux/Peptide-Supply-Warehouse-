@@ -293,6 +293,14 @@ body::after{display:none;}
 
 .lang-toggle{background:transparent;border:1px solid var(--border2);color:var(--text2);border-radius:5px;padding:5px 10px;font-family:var(--mono);font-size:18px;cursor:pointer;letter-spacing:0;transition:all 0.15s;flex-shrink:0;}
 .lang-toggle:hover,.lang-toggle.active{background:var(--blue);color:#fff;border-color:transparent;}
+
+.pc-variants{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 2px;}
+.pc-variant-pill{font-family:var(--mono);font-size:10px;font-weight:500;padding:3px 8px;border-radius:4px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;transition:all 0.12s;white-space:nowrap;}
+.pc-variant-pill:hover{border-color:var(--blue);color:var(--blue);}
+.pc-variant-pill.active{background:var(--blue);color:#fff;border-color:transparent;}
+.pc-variant-pill.out{opacity:0.4;}
+.pc-variant-pill.in-cart-v{border-color:var(--green);color:var(--green);}
+.pc-variant-pill.active.in-cart-v{background:var(--green);border-color:transparent;color:#fff;}
 </style>
 </head>
 <body>
@@ -1165,6 +1173,10 @@ function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();
 // ════════════════════════════════════════
 function filterProducts(){renderProducts();}
 
+const selectedVariants={};
+function groupByName(arr){const m=new Map();arr.forEach(p=>{if(!m.has(p.name))m.set(p.name,[]);m.get(p.name).push(p);});return Array.from(m.values());}
+function getActiveVariant(group){const name=group[0].name;const saved=selectedVariants[name];if(saved){const f=group.find(p=>p.code===saved);if(f)return f;}return group.find(p=>inventory[p.code]&&inventory[p.code].stock>0)||group[0];}
+function selectVariant(name,code){selectedVariants[name]=code;renderProducts();}
 function renderProducts(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
   const filtered=PRODUCTS.filter(p=>{
@@ -1175,39 +1187,27 @@ function renderProducts(){
   const grid=document.getElementById('productGrid');
   const noRes=document.getElementById('noResults');
   if(!filtered.length){
-    grid.innerHTML='';
-    noRes.style.display='block';
-    if(PRODUCTS.length===0){
-      noRes.innerHTML='<div style="text-align:center;padding:60px 20px;"><div style="font-family:var(--mono);font-size:13px;color:var(--text2);margin-bottom:8px;">Something went wrong loading the catalog.</div><div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px;">Please refresh the page to try again.</div><button onclick="window.location.reload()" style="background:linear-gradient(135deg,var(--blue),var(--blue-bright));color:#fff;border:none;border-radius:6px;padding:10px 20px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.06em;">RELOAD PAGE</button></div>';
-    } else {
-      document.getElementById('noResultsQuery').textContent=q||activeCategory;
-    }
+    grid.innerHTML='';noRes.style.display='block';
+    if(PRODUCTS.length===0){noRes.innerHTML='<div style="text-align:center;padding:60px 20px;"><div style="font-family:var(--mono);font-size:13px;color:var(--text2);margin-bottom:8px;">'+(lang==='es'?'Ocurrió un error al cargar el catálogo.':'Something went wrong loading the catalog.')+'</div><div style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-bottom:16px;">'+(lang==='es'?'Por favor recarga la página para intentar de nuevo.':'Please refresh the page to try again.')+'</div><button onclick="window.location.reload()" style="background:linear-gradient(135deg,var(--blue),var(--blue-bright));color:#fff;border:none;border-radius:6px;padding:10px 20px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:0.06em;">'+(lang==='es'?'RECARGAR PÁGINA':'RELOAD PAGE')+'</button></div>';}
+    else{document.getElementById('noResultsQuery').textContent=q||activeCategory;}
     return;
   }
   noRes.style.display='none';
-  grid.innerHTML=filtered.map(p=>{
-    const inCart=!!cart[p.code];
-    const qty=inCart?cart[p.code]:0;
+  const groups=groupByName(filtered);
+  grid.innerHTML=groups.map(group=>{
+    const p=getActiveVariant(group);
+    const inCart=!!cart[p.code];const qty=inCart?cart[p.code]:0;
     const stock=inventory[p.code]?inventory[p.code].stock:null;
     const stockLabel=stock===null?'':(stock===0?T[lang].outOfStock:stock<=5?stock+' '+T[lang].lowStock:stock+' '+T[lang].inStock);
     const stockClass=stock===null?'':(stock===0?'no-stock':stock<=5?'low-stock':'in-stock');
     const isOut=stock===0;
-    return `<div class="product-card ${inCart?'in-cart':''}" id="card-${p.code}" style="${isOut?'opacity:0.55;':''}">
-      <div class="in-cart-dot"></div>
-      <div class="pc-cat">${p.cat}</div>
-      <div class="pc-code">${p.code}</div>
-      <div class="pc-name">${p.name}</div>
-      <div class="pc-spec">${p.spec}</div>
-      <div class="pc-stock ${stockClass}">${stockLabel}</div>
-      <div class="pc-price">$${p.price.toFixed(2)}</div>
-      ${isOut?`<button class="pc-add" disabled style="opacity:0.35;cursor:not-allowed;">OUT OF STOCK</button>`:inCart?`<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty('${p.code}',-1)">−</button><input class="pc-qty-input" type="number" min="1" value="${qty}" onchange="setQty('${p.code}',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="changeQty('${p.code}',1)">+</button><button class="pc-remove-item" onclick="removeItem('${p.code}')" title="Remove">×</button></div>`:`<button class="pc-add" onclick="addToCart('${p.code}')">+ ADD TO ORDER</button>`}
-    </div>`;
+    const btnHtml=isOut?`<button class="pc-add" disabled style="opacity:0.35;cursor:not-allowed;">${T[lang].outOfStockBtn}</button>`:inCart?`<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty('${p.code}',-1)">−</button><input class="pc-qty-input" type="number" min="1" value="${qty}" onchange="setQty('${p.code}',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="changeQty('${p.code}',1)">+</button><button class="pc-remove-item" onclick="removeItem('${p.code}')" title="Remove">×</button></div>`:`<button class="pc-add" onclick="addToCart('${p.code}')">${T[lang].addToOrder}</button>`;
+    const variantHtml=group.length>1?`<div class="pc-variants">${group.map(v=>{const vs=inventory[v.code]?inventory[v.code].stock:0;const cls=['pc-variant-pill',v.code===p.code?'active':'',cart[v.code]?'in-cart-v':'',vs===0?'out':''].filter(Boolean).join(' ');const lbl=v.spec.replace(/\/vials?/i,'').trim();return `<button class="${cls}" onclick="selectVariant(${JSON.stringify(v.name)},${JSON.stringify(v.code)})">${lbl}</button>`;}).join('')}</div>`:'';
+    const specLine=group.length===1?`<div class="pc-spec">${p.spec}</div>`:'';
+    return `<div class="product-card ${inCart?'in-cart':''} ${isOut?'out-of-stock-card':''}" id="card-${p.code}" style="${isOut?'opacity:0.55;':''}"><div class="in-cart-dot"></div><div class="pc-cat">${p.cat}</div><div class="pc-code">${p.code}</div><div class="pc-name">${p.name}</div>${variantHtml}${specLine}<div class="pc-stock ${stockClass}">${stockLabel}</div><div class="pc-price">$${p.price.toFixed(2)}</div>${btnHtml}</div>`;
   }).join('');
 }
 
-// ════════════════════════════════════════
-// CART
-// ════════════════════════════════════════
 function addToCart(code){cart[code]=(cart[code]||0)+1;updateCartUI();renderProducts();}
 function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);updateCartUI();renderProducts();}
 function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;updateCartUI();renderProducts();}

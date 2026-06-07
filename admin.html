@@ -701,8 +701,9 @@ async function fulfillOrder(safeId){
 
   // Send fulfillment confirmation email to customer
   try{
-    const custEmail = (order.customer&&order.customer.email) || order.email || order.from_email || '';
-  const custName  = (order.customer&&order.customer.name)  || order.name  || order.from_name  || 'Customer';
+    console.log('fulfillOrder order object:', JSON.stringify(order));
+  const custEmail = (order.customer&&order.customer.email) || order.email || order.from_email || order.customerEmail || (order.contact&&order.contact.email) || '';
+  const custName  = (order.customer&&order.customer.name)  || order.name  || order.from_name  || order.customerName  || 'Customer';
   const custPhone = (order.customer&&order.customer.phone) || order.phone || order.from_phone || '';
   const custAddr  = (order.customer&&order.customer.address) || order.address || order.shipping_address || 'Not provided';
   if(typeof emailjs!=='undefined'&&custEmail){

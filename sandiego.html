@@ -988,7 +988,7 @@ window.bysAddAll=function(btn){
 const EMAILJS_PUBLIC_KEY  = '8hJqb4uIKB0RP-u4y';
 const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
 const EMAILJS_TEMPLATE_ID = 'template_fp119xp';
-const EMAILJS_FULFILLER_TEMPLATE_ID = 'template_6pb3ehw';
+const EMAILJS_FULFILL_TEMPLATE_ID = 'template_6pb3ehw';
 const FULFILLER_EMAIL     = 'pswsandiego.orders@gmail.com';
 
 // ════════════════════════════════════════
@@ -1510,7 +1510,7 @@ async function submitOrder(){
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, Object.assign({},emailParams,{to_email:email}));
   }catch(e){ console.error('EmailJS customer send failed:', JSON.stringify(e), e); }
   try{
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_FULFILLER_TEMPLATE_ID, Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));
   }catch(e){
     console.error('EmailJS fulfiller send failed:', JSON.stringify(e), e);
     // Order still saved to Sheets — don't block success screen

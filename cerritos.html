@@ -1267,8 +1267,9 @@ async function submitOrder(){
   try{const params=new URLSearchParams({action:'saveOrder',order:encodeURIComponent(JSON.stringify(order))});await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',API+'?'+params.toString(),true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();});}catch(e){console.warn('Could not save to sheets:',e);}
   try{const deductURL=API+'?action=deductInventory&items='+encodeURIComponent(JSON.stringify(items))+'&t='+Date.now();await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',deductURL,true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();setTimeout(()=>resolve(),8000);});}catch(e){console.warn('Inventory deduct failed:',e);}
   const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:pickup?'LOCAL PICKUP':(address||'Not provided'),customer_notes:notes||'None',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
-  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);}catch(e){console.error('EmailJS customer send failed:',JSON.stringify(e),e);}
-  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_FULFILLER_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));}catch(e){console.error('EmailJS fulfiller send failed:',JSON.stringify(e),e);}
+  console.log('EmailJS params:', JSON.stringify(emailParams), 'customer:', email, 'fulfiller:', FULFILLER_EMAIL);
+  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);console.log('EmailJS customer send OK to',email);}catch(e){console.error('EmailJS customer send failed:',JSON.stringify(e),e);showToast('Customer email failed: '+JSON.stringify(e),'red');}
+  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));console.log('EmailJS fulfiller send OK to',FULFILLER_EMAIL);}catch(e){console.error('EmailJS fulfiller send failed:',JSON.stringify(e),e);showToast('Fulfiller email failed: '+JSON.stringify(e),'red');}
   if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
     const commissionPct=parseFloat(appliedAffiliate.commission)||0;
     const commissionAmt=(subtotal*(commissionPct/100)).toFixed(2);

@@ -701,15 +701,19 @@ async function fulfillOrder(safeId){
 
   // Send fulfillment confirmation email to customer
   try{
-    if(typeof emailjs!=='undefined'&&order.customer&&order.customer.email){
+    const custEmail = (order.customer&&order.customer.email) || order.email || order.from_email || '';
+  const custName  = (order.customer&&order.customer.name)  || order.name  || order.from_name  || 'Customer';
+  const custPhone = (order.customer&&order.customer.phone) || order.phone || order.from_phone || '';
+  const custAddr  = (order.customer&&order.customer.address) || order.address || order.shipping_address || 'Not provided';
+  if(typeof emailjs!=='undefined'&&custEmail){
       const items=Array.isArray(order.items)?order.items:[];
       const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${((i.price||0)*(i.qty||0)).toFixed(2)}`).join('\n');
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_FULFILL_ID, {
-        to_email:         order.customer.email,
-        from_name:        order.customer.name||'Customer',
-        from_email:       order.customer.email,
-        from_phone:       order.customer.phone||'',
-        shipping_address: order.customer.address||'Not provided',
+        to_email:         custEmail,
+        from_name:        custName,
+        from_email:       custEmail,
+        from_phone:       custPhone,
+        shipping_address: custAddr,
         customer_notes:   'Great news! Your order has been fulfilled and will ship on the same business day.',
         order_summary:    orderSummary,
         order_total:      '$'+parseFloat(order.total||0).toFixed(2),

@@ -1508,14 +1508,17 @@ async function submitOrder(){
     order_summary:    orderSummary,
     order_total:      '$'+total.toFixed(2),
   };
+  console.log('EmailJS params:', JSON.stringify(emailParams), 'customer:', email, 'fulfiller:', FULFILLER_EMAIL);
   try{
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, Object.assign({},emailParams,{to_email:email}));
-  }catch(e){ console.error('EmailJS customer send failed:', JSON.stringify(e), e); }
+    console.log('EmailJS customer send OK to', email);
+  }catch(e){ console.error('EmailJS customer send failed:', JSON.stringify(e), e); showToast('Customer email failed: '+JSON.stringify(e),'red'); }
   try{
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));
+    console.log('EmailJS fulfiller send OK to', FULFILLER_EMAIL);
   }catch(e){
     console.error('EmailJS fulfiller send failed:', JSON.stringify(e), e);
-    // Order still saved to Sheets — don't block success screen
+    showToast('Fulfiller email failed: '+JSON.stringify(e),'red');
   }
 
   if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){

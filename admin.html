@@ -617,7 +617,7 @@ function orderCardHTML(order){
       <div class="order-status ${order.status}"></div>
       <div class="order-info">
         <div class="order-name">${cust.name||'Unknown'}</div>
-        <div class="order-meta"><span>${statusLabel}</span><span>${dateStr}</span><span>${cust.email||''}</span><span>${cust.phone||''}</span></div>
+        <div class="order-meta"><span>${statusLabel}</span><span>${dateStr}</span><span>${cust.email||''}</span><span>${cust.phone||''}</span>${order.affiliateCode?`<span style="color:var(--green);font-weight:600;">🏷 ${order.affiliateCode}</span>`:''}</div>
       </div>
       <div class="order-total-badge">$${parseFloat(order.total||0).toFixed(2)}</div>
     </div>
@@ -627,6 +627,7 @@ function orderCardHTML(order){
         <div class="oc-row"><span class="oc-label">EMAIL</span><span class="oc-val">${cust.email||'—'}</span></div>
         <div class="oc-row"><span class="oc-label">PHONE</span><span class="oc-val">${cust.phone||'—'}</span></div>
         <div class="oc-row"><span class="oc-label">ADDRESS</span><span class="oc-val">${cust.address||'—'}</span></div>
+        ${order.affiliateCode?`<div class="oc-row"><span class="oc-label">PROMO CODE</span><span class="oc-val" style="color:var(--green);font-weight:600;">🏷 ${order.affiliateCode}</span></div>`:''}
       </div>
       ${notesHtml}
       <table class="order-items-table"><thead><tr><th>CODE</th><th>PRODUCT</th><th>SPEC</th><th>QTY</th><th>TOTAL</th></tr></thead><tbody>${itemRows}</tbody></table>

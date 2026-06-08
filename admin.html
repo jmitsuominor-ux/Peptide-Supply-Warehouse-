@@ -210,6 +210,14 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 /* EMPTY STATE */
 .empty-state{text-align:center;padding:50px 20px;color:var(--text3);}
+.top-compounds{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.top-compound-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);}
+.top-compound-row:last-child{border-bottom:none;}
+.top-compound-rank{font-family:var(--mono);font-size:10px;color:var(--text3);width:16px;text-align:center;}
+.top-compound-bar-wrap{flex:1;background:var(--bg);border-radius:4px;height:6px;overflow:hidden;}
+.top-compound-bar{height:6px;border-radius:4px;background:var(--blue);}
+.top-compound-name{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--text);min-width:120px;}
+.top-compound-qty{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--blue);min-width:40px;text-align:right;}
 .empty-state p{font-family:var(--mono);font-size:12px;margin-top:8px;}
 
 /* TOAST */
@@ -269,6 +277,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="stat-card amber" onclick="switchTab('orders',document.querySelectorAll('.nav-tab')[1])" style="cursor:pointer;"><div class="stat-label">PENDING VALUE</div><div class="stat-val amber" id="statRevPending">—</div><div class="stat-sub">tap to view →</div></div>
       <div class="stat-card purple" onclick="switchTab('inventory',document.querySelectorAll('.nav-tab')[3])" style="cursor:pointer;"><div class="stat-label">LOW STOCK</div><div class="stat-val purple" id="statLowStock">—</div><div class="stat-sub">tap to view →</div></div>
     </div>
+    <div class="section-hdr" style="margin-top:20px;"><h2>Top Compounds Sold</h2><div class="section-hdr-meta" id="topCompoundsMeta"></div></div>
+    <div id="topCompoundsList"></div>
     <div class="section-hdr"><h2>Recent Orders</h2><div class="section-hdr-meta" id="dashRecentMeta"></div></div>
     <div id="dashRecentOrders"><div class="loading-bar"><div class="loading-spin"></div>Loading…</div></div>
   </div>
@@ -674,6 +684,30 @@ document.addEventListener('click', function(e) {
 // ════════════════════════════════════════
 function renderDashboard(){
   updateCounts();
+  // Top compounds
+  const qtys={};
+  orders.filter(o=>o.status!=='cancelled').forEach(o=>{
+    (o.items||[]).forEach(item=>{
+      const key=item.name+(item.spec?(' '+item.spec):'');
+      qtys[key]=(qtys[key]||0)+(parseInt(item.qty)||0);
+    });
+  });
+  const sorted=Object.entries(qtys).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const max=sorted.length?sorted[0][1]:1;
+  const tcEl=document.getElementById('topCompoundsList');
+  if(sorted.length){
+    document.getElementById('topCompoundsMeta').textContent='All time · non-cancelled orders';
+    tcEl.innerHTML='<div class="top-compounds">'+sorted.map(([name,qty],i)=>
+      `<div class="top-compound-row">
+        <span class="top-compound-rank">#${i+1}</span>
+        <span class="top-compound-name">${name}</span>
+        <div class="top-compound-bar-wrap"><div class="top-compound-bar" style="width:${Math.round(qty/max*100)}%"></div></div>
+        <span class="top-compound-qty">${qty} vials</span>
+      </div>`
+    ).join('')+'</div>';
+  } else {
+    tcEl.innerHTML='<div class="empty-state"><p>No order data yet</p></div>';
+  }
   const recent=orders.slice().reverse().slice(0,5);
   document.getElementById('dashRecentMeta').textContent='Last 5 orders';
   document.getElementById('dashRecentOrders').innerHTML=recent.length?recent.map(o=>orderCardHTML(o)).join(''):'<div class="empty-state"><p>No orders yet</p></div>';

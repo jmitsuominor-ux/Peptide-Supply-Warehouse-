@@ -24,8 +24,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;pointer-events:none;z-index:0;}
 body::after{display:none;}
 .announce-bar{background:var(--blue);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-align:center;padding:6px 16px;text-transform:uppercase;position:relative;z-index:201;display:flex;align-items:center;justify-content:center;gap:12px;}
-.contact-strip{background:var(--bg);border-bottom:1px solid var(--border);padding:5px 16px;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;}
-.contact-strip-item{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--text2);letter-spacing:0.04em;}
+.contact-strip{background:var(--bg);border-bottom:1px solid var(--border);padding:4px 16px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:nowrap;overflow:hidden;}
+.contact-strip-item{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:11px;color:var(--text2);letter-spacing:0.03em;white-space:nowrap;}
+@media(max-width:600px){.contact-strip{gap:10px;padding:3px 10px;}.contact-strip-item{font-size:10px;}.contact-strip-item.cs-name{display:none;}}
 .topbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
 .min-progress{padding:10px 0 4px;border-top:1px solid var(--border);margin-top:6px;}
 .min-progress-header{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:500;}
@@ -308,7 +309,7 @@ body::after{display:none;}
 </head>
 <body>
 <div class="announce-bar" id="announceBar"><span id="announceText">⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500 &nbsp;·&nbsp; Wholesale &amp; retail inquiries welcome</span><button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇲🇽</button></div>
-<div class="contact-strip"><span class="contact-strip-item">👤 Michael John</span><span class="contact-strip-item">💬 WhatsApp: +1-310-683-0049</span><span class="contact-strip-item">📱 Mobile: +52-55-2446-9745</span></div>
+<div class="contact-strip"><span class="contact-strip-item cs-name">👤 Michael John</span><span class="contact-strip-item">💬 WhatsApp: +1-310-683-0049</span><span class="contact-strip-item">📱 Mobile: +52-55-2446-9745</span></div>
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand">

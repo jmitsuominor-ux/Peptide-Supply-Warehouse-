@@ -1102,7 +1102,10 @@ const CAT_ORDER=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging
 // ════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════
+function saveCart(){try{localStorage.setItem('psw_cart_tijuana',JSON.stringify(cart));}catch(e){}}
+function loadSavedCart(){try{var s=localStorage.getItem('psw_cart_tijuana');if(s){var d=JSON.parse(s);Object.assign(cart,d);}}catch(e){}}
 const cart={};
+loadSavedCart();
 const MIN_ORDER=250;
 const FREE_SHIP_THRESHOLD=500;
 let activeCategory='All';
@@ -1272,11 +1275,11 @@ function renderProducts(){
   grid.innerHTML=cards.join('');
 }
 
-function addToCart(code){cart[code]=(cart[code]||0)+1;updateCartUI();renderProducts();}
-function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);updateCartUI();renderProducts();}
-function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;updateCartUI();renderProducts();}
-function removeItem(code){delete cart[code];updateCartUI();renderProducts();}
-function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);updateCartUI();renderProducts();closeCart();}
+function addToCart(code){cart[code]=(cart[code]||0)+1;saveCart();updateCartUI();renderProducts();}
+function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);saveCart();updateCartUI();renderProducts();}
+function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;saveCart();updateCartUI();renderProducts();}
+function removeItem(code){delete cart[code];saveCart();updateCartUI();renderProducts();}
+function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();closeCart();}
 function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS.find(p=>p.code===c)||ALL_PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}
 function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
 
@@ -1551,7 +1554,7 @@ async function submitOrder(){
   appliedAffiliate=null;
 
   // Clear cart and show success
-  Object.keys(cart).forEach(k=>delete cart[k]);
+  Object.keys(cart).forEach(k=>delete cart[k]);saveCart();
   updateCartUI();
   renderProducts();
 

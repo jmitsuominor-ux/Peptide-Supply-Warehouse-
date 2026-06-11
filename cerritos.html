@@ -1039,7 +1039,10 @@ const ALL_PRODUCTS=[
   {code:'AA',name:'Acetic Acid Water',cat:'Reconstitution',spec:'3ml/vial',price:1.50},
 ];
 const CAT_ORDER=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging & Immune','Mitochondrial','Muscle & IGF','Hormonal','Cognitive','Immune','Reconstitution'];
+function saveCart(){try{localStorage.setItem('psw_cart_cerritos',JSON.stringify(cart));}catch(e){}}
+function loadSavedCart(){try{var s=localStorage.getItem('psw_cart_cerritos');if(s){var d=JSON.parse(s);Object.assign(cart,d);}}catch(e){}}
 const cart={};
+loadSavedCart();
 const MIN_ORDER=250;
 const FREE_SHIP_THRESHOLD=500;
 let activeCategory='All';
@@ -1177,11 +1180,11 @@ function renderProducts(){
   grid.innerHTML=cards.join('');
 }
 
-function addToCart(code){cart[code]=(cart[code]||0)+1;updateCartUI();renderProducts();}
-function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);updateCartUI();renderProducts();}
-function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;updateCartUI();renderProducts();}
-function removeItem(code){delete cart[code];updateCartUI();renderProducts();}
-function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);updateCartUI();renderProducts();closeCart();}
+function addToCart(code){cart[code]=(cart[code]||0)+1;saveCart();updateCartUI();renderProducts();}
+function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);saveCart();updateCartUI();renderProducts();}
+function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;saveCart();updateCartUI();renderProducts();}
+function removeItem(code){delete cart[code];saveCart();updateCartUI();renderProducts();}
+function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();closeCart();}
 function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS.find(p=>p.code===c)||ALL_PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}
 function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
 function updateStorefrontProgress(){
@@ -1298,7 +1301,7 @@ async function submitOrder(){
     });}catch(e){console.error('Affiliate email failed:',e);}
   }
   appliedAffiliate=null;
-  Object.keys(cart).forEach(k=>delete cart[k]);updateCartUI();renderProducts();
+  Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();
   document.getElementById('modalContent').innerHTML=`<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">${T[lang].orderReceived}</div><div class="success-sub">${lang==='es'?'Gracias, '+name+'. Tu pedido ha sido enviado.':'Thank you, '+name+'. Your order has been submitted.'}</div><div class="success-note">${lang==='es'?'Te contactaremos en <strong>24 horas</strong> para confirmar y coordinar el envío.<br>¿Preguntas? WhatsApp <strong>+1-310-683-0049</strong>':'We\'ll reach out within <strong>24 hours</strong> to confirm and arrange fulfillment.<br>Questions? WhatsApp <strong>+1-310-683-0049</strong>'}</div><button class="success-done-btn" onclick="closeCheckout()">${T[lang].backToCatalog}</button></div>`;
 }
 function flash(id,msg){const el=document.getElementById(id);el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);}

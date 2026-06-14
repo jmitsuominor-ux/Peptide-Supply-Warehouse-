@@ -1382,73 +1382,99 @@ var CAT_COLORS={
 };
 function vialSVG(name,cat){
   var c=CAT_COLORS[cat]||CAT_COLORS['Cognitive'];
-  var id=Math.random().toString(36).slice(2,7);
-  return '<svg class="cp-vial-svg" viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">'+
-    '<defs>'+
-      '<linearGradient id="cg'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
-        '<stop offset="0%" stop-color="'+c.hi+'" stop-opacity="0.9"/>'+
-        '<stop offset="18%" stop-color="'+c.lo+'" stop-opacity="0.95"/>'+
-        '<stop offset="45%" stop-color="'+c.mid+'"/>'+
-        '<stop offset="80%" stop-color="'+c.hi+'"/>'+
-        '<stop offset="100%" stop-color="'+c.mid+'" stop-opacity="0.85"/>'+
-      '</linearGradient>'+
-      '<radialGradient id="ct'+id+'" cx="38%" cy="30%" r="65%">'+
-        '<stop offset="0%" stop-color="'+c.lo+'" stop-opacity="0.95"/>'+
-        '<stop offset="55%" stop-color="'+c.mid+'"/>'+
-        '<stop offset="100%" stop-color="'+c.hi+'"/>'+
-      '</radialGradient>'+
-      '<linearGradient id="gg'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
-        '<stop offset="0%" stop-color="rgba(200,225,250,0.18)"/>'+
-        '<stop offset="7%" stop-color="rgba(255,255,255,0.72)"/>'+
-        '<stop offset="18%" stop-color="rgba(210,232,255,0.08)"/>'+
-        '<stop offset="78%" stop-color="rgba(180,210,245,0.05)"/>'+
-        '<stop offset="92%" stop-color="rgba(255,255,255,0.18)"/>'+
-        '<stop offset="100%" stop-color="rgba(160,200,235,0.22)"/>'+
-      '</linearGradient>'+
-      '<linearGradient id="bg'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
-        '<stop offset="0%" stop-color="'+c.hi+'" stop-opacity="0.95"/>'+
-        '<stop offset="20%" stop-color="'+c.lo+'" stop-opacity="0.85"/>'+
-        '<stop offset="55%" stop-color="'+c.mid+'" stop-opacity="0.9"/>'+
-        '<stop offset="100%" stop-color="'+c.hi+'" stop-opacity="0.8"/>'+
-      '</linearGradient>'+
-    '</defs>'+
-    // Drop shadow
-    '<ellipse cx="50" cy="152" rx="26" ry="5" fill="rgba(0,0,0,0.12)"/>'+
-    // Neck
-    '<rect x="34" y="30" width="32" height="10" rx="2" fill="url(#cg'+id+')"/>'+
-    // Cap cylinder
-    '<rect x="26" y="10" width="48" height="22" rx="5" fill="url(#cg'+id+')"/>'+
-    // Cap top (metallic ellipse)
-    '<ellipse cx="50" cy="10" rx="24" ry="6" fill="url(#ct'+id+')"/>'+
-    // Cap top specular highlight
-    '<ellipse cx="42" cy="7" rx="11" ry="3.5" fill="rgba(255,255,255,0.38)" transform="rotate(-10,42,7)"/>'+
-    // Cap bottom shadow
-    '<ellipse cx="50" cy="32" rx="16" ry="4" fill="rgba(0,0,0,0.18)"/>'+
-    // Glass body shape
-    '<rect x="28" y="40" width="44" height="104" rx="9" fill="rgba(215,235,255,0.14)" stroke="rgba(160,200,235,0.45)" stroke-width="1.2"/>'+
-    // Glass gradient overlay
-    '<rect x="28" y="40" width="44" height="104" rx="9" fill="url(#gg'+id+')"/>'+
-    // White label
-    '<rect x="30" y="60" width="40" height="50" rx="2" fill="white" opacity="0.96"/>'+
-    // Label top rule
-    '<line x1="30" y1="66" x2="70" y2="66" stroke="rgba(0,0,0,0.07)" stroke-width="0.8"/>'+
-    // Label bottom rule
-    '<line x1="30" y1="104" x2="70" y2="104" stroke="rgba(0,0,0,0.07)" stroke-width="0.8"/>'+
-    // Bottom band 1
-    '<rect x="28" y="136" width="44" height="8" fill="url(#bg'+id+')" rx="0"/>'+
-    // Bottom rounded cap
-    '<rect x="28" y="140" width="44" height="8" rx="0" fill="url(#bg'+id+')"/>'+
-    '<ellipse cx="50" cy="148" rx="22" ry="6" fill="url(#bg'+id+')"/>'+
-    // Bottom specular
-    '<ellipse cx="50" cy="146" rx="12" ry="2.5" fill="rgba(255,255,255,0.2)"/>'+
-    // Left glass highlight
-    '<rect x="30" y="42" width="5" height="96" rx="2.5" fill="rgba(255,255,255,0.55)"/>'+
-    // Secondary left highlight
-    '<rect x="37" y="46" width="2.5" height="86" rx="1.2" fill="rgba(255,255,255,0.22)"/>'+
-    // Right edge shimmer
-    '<rect x="65" y="44" width="4" height="92" rx="2" fill="rgba(255,255,255,0.1)"/>'+
-    '</svg>'+
-    '<div class="cp-vial-label-text" id="cpVialLabel">'+name+'</div>';
+  var id='v'+Math.random().toString(36).slice(2,8);
+  var s='<svg class="cp-vial-svg" viewBox="0 0 90 175" xmlns="http://www.w3.org/2000/svg"><defs>'+
+    // Metallic cap: cylindrical gradient (bright left edge, mid tone, dark right)
+    '<linearGradient id="cyl'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
+      '<stop offset="0%" stop-color="'+c.hi+'"/>'+
+      '<stop offset="10%" stop-color="'+c.lo+'"/>'+
+      '<stop offset="30%" stop-color="'+c.mid+'"/>'+
+      '<stop offset="65%" stop-color="'+c.hi+'"/>'+
+      '<stop offset="85%" stop-color="'+c.mid+'"/>'+
+      '<stop offset="100%" stop-color="'+c.hi+'" stop-opacity="0.7"/>'+
+    '</linearGradient>'+
+    // Cap top: radial from bright centre-left to dark edge
+    '<radialGradient id="top'+id+'" cx="35%" cy="35%" r="70%" gradientUnits="objectBoundingBox">'+
+      '<stop offset="0%" stop-color="white" stop-opacity="0.5"/>'+
+      '<stop offset="25%" stop-color="'+c.lo+'"/>'+
+      '<stop offset="70%" stop-color="'+c.mid+'"/>'+
+      '<stop offset="100%" stop-color="'+c.hi+'"/>'+
+    '</radialGradient>'+
+    // Glass body: near-transparent with edge glow
+    '<linearGradient id="glass'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
+      '<stop offset="0%" stop-color="rgba(180,210,240,0.25)"/>'+
+      '<stop offset="5%" stop-color="rgba(255,255,255,0.85)"/>'+
+      '<stop offset="14%" stop-color="rgba(220,238,255,0.1)"/>'+
+      '<stop offset="80%" stop-color="rgba(200,225,250,0.05)"/>'+
+      '<stop offset="93%" stop-color="rgba(255,255,255,0.22)"/>'+
+      '<stop offset="100%" stop-color="rgba(170,205,235,0.3)"/>'+
+    '</linearGradient>'+
+    // Liquid tint inside body (bottom half)
+    '<linearGradient id="liq'+id+'" x1="0%" y1="0%" x2="0%" y2="100%">'+
+      '<stop offset="0%" stop-color="'+c.mid+'" stop-opacity="0"/>'+
+      '<stop offset="100%" stop-color="'+c.mid+'" stop-opacity="0.13"/>'+
+    '</linearGradient>'+
+    // Bottom band gradient
+    '<linearGradient id="band'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
+      '<stop offset="0%" stop-color="'+c.hi+'"/>'+
+      '<stop offset="18%" stop-color="'+c.lo+'"/>'+
+      '<stop offset="55%" stop-color="'+c.mid+'"/>'+
+      '<stop offset="90%" stop-color="'+c.hi+'"/>'+
+    '</linearGradient>'+
+    // Drop shadow filter
+    '<filter id="shd'+id+'" x="-20%" y="-5%" width="140%" height="130%">'+
+      '<feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="rgba(0,0,0,0.22)"/>'+
+    '</filter>'+
+    // Inner glow on label
+    '<filter id="lg'+id+'"><feGaussianBlur stdDeviation="1.5" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter>'+
+  '</defs>'+
+  // === DROP SHADOW ===
+  '<ellipse cx="45" cy="168" rx="28" ry="5" fill="rgba(0,0,0,0.14)"/>'+
+  // === NECK ===
+  '<rect x="30" y="34" width="30" height="12" rx="2" fill="url(#cyl'+id+')" filter="url(#shd'+id+')"/>'+
+  // Neck top rim
+  '<ellipse cx="45" cy="34" rx="15" ry="3.5" fill="url(#top'+id+')"/>'+
+  // === CAP CYLINDER ===
+  '<rect x="20" y="10" width="50" height="26" rx="6" fill="url(#cyl'+id+')" filter="url(#shd'+id+')"/>'+
+  // === CAP TOP ===
+  '<ellipse cx="45" cy="10" rx="25" ry="7" fill="url(#top'+id+')"/>'+
+  // Cap top primary specular (bright glint upper-left)
+  '<ellipse cx="36" cy="6.5" rx="10" ry="3.5" fill="rgba(255,255,255,0.52)" transform="rotate(-18,36,6.5)"/>'+
+  // Cap top secondary tiny glint
+  '<ellipse cx="30" cy="5" rx="4" ry="1.8" fill="rgba(255,255,255,0.7)" transform="rotate(-12,30,5)"/>'+
+  // Cap bottom rim shadow
+  '<ellipse cx="45" cy="36" rx="15" ry="3" fill="rgba(0,0,0,0.22)"/>'+
+  // Cap side bottom shadow line
+  '<rect x="20" y="32" width="50" height="4" rx="0" fill="rgba(0,0,0,0.12)"/>'+
+  // === GLASS BODY ===
+  '<rect x="22" y="46" width="46" height="112" rx="10" fill="rgba(225,238,255,0.18)" stroke="rgba(155,195,230,0.5)" stroke-width="1.2" filter="url(#shd'+id+')"/>'+
+  // Glass highlight overlay
+  '<rect x="22" y="46" width="46" height="112" rx="10" fill="url(#glass'+id+')"/>'+
+  // Liquid tint
+  '<rect x="23" y="46" width="44" height="111" rx="9" fill="url(#liq'+id+')"/>'+
+  // === LABEL ===
+  '<rect x="24" y="70" width="42" height="54" rx="2.5" fill="white" opacity="0.97"/>'+
+  // Label decorative top stripe (color accent)
+  '<rect x="24" y="70" width="42" height="4" rx="2.5" fill="'+c.mid+'" opacity="0.35"/>'+
+  // Label decorative bottom stripe
+  '<rect x="24" y="120" width="42" height="4" rx="2.5" fill="'+c.mid+'" opacity="0.35"/>'+
+  // === BOTTOM BANDS ===
+  '<rect x="22" y="150" width="46" height="8" fill="url(#band'+id+')"/>'+
+  '<ellipse cx="45" cy="158" rx="23" ry="7" fill="url(#band'+id+')"/>'+
+  // Bottom specular highlight
+  '<ellipse cx="45" cy="155" rx="12" ry="2.5" fill="rgba(255,255,255,0.28)"/>'+
+  // === GLASS HIGHLIGHTS ===
+  // Primary left highlight strip
+  '<rect x="24" y="48" width="5" height="104" rx="2.5" fill="rgba(255,255,255,0.6)"/>'+
+  // Secondary softer left
+  '<rect x="31" y="52" width="2.5" height="94" rx="1.2" fill="rgba(255,255,255,0.25)"/>'+
+  // Right edge shimmer
+  '<rect x="60" y="50" width="4.5" height="100" rx="2" fill="rgba(255,255,255,0.12)"/>'+
+  // Cap left highlight strip
+  '<rect x="22" y="12" width="4" height="22" rx="2" fill="rgba(255,255,255,0.38)"/>'+
+  '</svg>'+
+  '<div class="cp-vial-label-text" id="cpVialLabel">'+name+'</div>';
+  return s;
 }
 var CAT_COLORS={
   'Weight Loss':   {hi:'#007fa0',mid:'#00b4d8',lo:'#4dd4f0',shine:'rgba(77,212,240,0.4)'},

@@ -1268,7 +1268,7 @@ function buildVariantPills(group,activeCode){
     if(v.code===activeCode)cls+=' active';
     if(cart[v.code])cls+=' in-cart-v';
     var lbl=v.spec.replace(/\/vials?/i,'').trim();
-    html+='<button class="'+cls+'" data-variant-name="'+v.name.replace(/"/g,'&quot;')+'" data-variant-code="'+v.code+'">'+lbl+'</button>';
+    html+='<button class="'+cls+'" onclick="event.stopPropagation();selectVariant(this.dataset.variantName,this.dataset.variantCode)" data-variant-name="'+v.name.replace(/"/g,'&quot;')+'" data-variant-code="'+v.code+'">'+lbl+'</button>';
   });
   html+='</div>';
   return html;
@@ -1320,7 +1320,7 @@ function renderProducts(){
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
     var cardCls='product-card'+(inCart?' in-cart':'')+(isOut?' out-of-stock-card':'');
     var cardStyle=isOut?'opacity:0.5;filter:grayscale(0.85);':'';
-    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'" onclick="void(0)"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+'<div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
+    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'" onclick="openCPPanel(this.dataset.code)"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+'<div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
   });
   grid.innerHTML=cards.join('');
 }

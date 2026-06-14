@@ -156,6 +156,7 @@ body::after{display:none;}
 .clear-cart-btn:hover{color:var(--red);}
 .modal-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.35);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px);}
 .modal-overlay.open{display:flex;}
+#coaModal{z-index:700;}
 .modal{background:var(--white);border:1px solid var(--border);border-radius:12px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(10,22,40,0.15);animation:modalIn 0.2s ease;}
 @keyframes modalIn{from{opacity:0;transform:scale(0.96) translateY(8px);}to{opacity:1;transform:none;}}
 .modal-header{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;position:sticky;top:0;background:var(--white);z-index:1;}
@@ -1315,7 +1316,7 @@ function renderProducts(){
     } else if(inCart){
       btnHtml='<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="event.stopPropagation();changeQty(\''+p.code+'\',-1)">&#8722;</button><input class="pc-qty-input" type="number" min="1" value="'+qty+'" onchange="setQty(\''+p.code+'\',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="event.stopPropagation();changeQty(\''+p.code+'\',1)">+</button><button class="pc-remove-item" onclick="event.stopPropagation();removeItem(\''+p.code+'\')" title="Remove">&#215;</button></div>';
     } else {
-      btnHtml='<button class="pc-add" onclick="addToCart(\''+p.code+'\')">'+T[lang].addToOrder+'</button>';
+      btnHtml='<button class="pc-add" onclick="event.stopPropagation();addToCart(\''+p.code+'\')">'+T[lang].addToOrder+'</button>';
     }
     var variantHtml=buildVariantPills(group,p.code);
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
@@ -1623,8 +1624,9 @@ function renderCPCartBtn(code){
   if(existing)existing.remove();
   var div=document.createElement('div');
   div.id='cpCartArea';
+  document.getElementById('cpCartFooter').style.display=isOut?'none':'';
   if(isOut){
-    div.innerHTML='<button class="cp-add-btn" disabled style="opacity:0.4;cursor:not-allowed;">OUT OF STOCK</button>';
+    document.getElementById('cpCartFooter').innerHTML='';return;
   } else if(qty>0){
     div.innerHTML='<div class="cp-qty-row"><button onclick="event.stopPropagation();cpQty(-1)">&#8722;</button><span>'+qty+'</span><button onclick="event.stopPropagation();cpQty(1)">+</button></div>';
   } else {

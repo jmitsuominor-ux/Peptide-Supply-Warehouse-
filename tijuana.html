@@ -1478,25 +1478,63 @@ function vialSVG(name,cat){
   return s;
 }
 var VIAL_IMG={
-  '5-amino-1mq':          {p:'5-amino-1mq.png'},
-  'AOD9604':              {p:'AOD9604.png'},
-  'BPC-157':              {p:'BPC-157.png'},
-  'CJC-1295 (no DAC)':   {p:'CJC-1295 (no DAC).png'},
-  'CJC-1295 (with DAC)': {p:'CJC-1295 (with DAC).png'},
-  'Thymosin Beta-4':      {p:' Thymosin Beta-4.png'},
-  'Acetic Acid Water':    {p:' Acetic acid water.png'},
-  'DSIP':                 {p:'DSIP.png'},
-  'Epithalon':            {p:'Epithalon.png'},
-  'Follistatin 344':      {p:'Follistatin 344.png'},
-  'GHK-Cu':              {p:'GHK-CU.png'},
-  'GHRP-2':              {p:'GHRP-2.png'},
-  'GHRP-6':              {p:'GHRP-6 .png'},
-  'Dihexa':              {p:'img/vials/Dihexa.png'},
+  ' Acetic acid water.png':   'Acetic Acid Water',
+  ' Thymosin Beta-4.png':     'Thymosin Beta-4',
+  '5-amino-1mq.png':          '5-amino-1mq',
+  'AOD9604.png':              'AOD9604',
+  'BPC-157.png':              'BPC-157',
+  'CJC-1295 (no DAC).png':   'CJC-1295 (no DAC)',
+  'CJC-1295 (with DAC).png': 'CJC-1295 (with DAC)',
+  'DSIP.png':                 'DSIP',
+  'Epithalon.png':            'Epithalon',
+  'Follistatin 344.png':      'Follistatin 344',
+  'GHK-CU.png':               'GHK-Cu',
+  'GHRP-2.png':               'GHRP-2',
+  'GHRP-6 .png':              'GHRP-6',
+  'HCG.png':                  'HCG',
+  'HGH 191AA.png':            'HGH 191AA',
+  'HGH fragment.png':         'HGH Fragment',
+  'Humanin.png':              'Humanin',
+  'IGF DES.png':              'IGF DES',
+  'IGF-1 LR3.png':            'IGF-1 LR3',
+  'Ipamorelin.png':           'Ipamorelin',
+  'KPV.png':                  'KPV',
+  'KissPeptin-10.png':        'KissPeptin-10',
+  'L-Carnitine.png':          'L-Carnitine',
+  'L-Glutathione.png':        'L-Glutathione',
+  'LL37.png':                 'LL37',
+  'Lipo-C.png':               'Lipo-C',
+  'MGF.png':                  'MGF',
+  'MK-677.png':               'MK-677',
+  'MOTS-C.png':               'MOTS-C',
+  'Melanotan I.png':          'Melanotan I',
+  'Melanotan II.png':         'Melanotan II',
+  'Melatonin.png':            'Melatonin',
+  'NAD+ .png':                'NAD+',
+  'P21.png':                  'P21',
+  'PT-141.png':               'PT-141',
+  'Pentadeca Arginate.png':   'Pentadeca Arginate',
+  'Retatrutide.png':          'Retatrutide',
+  'SLU-PP-332.png':           'SLU-PP-332',
+  'SS-31.png':                'SS-31',
+  'Selank.png':               'Selank',
+  'Semaglutide.png':          'Semaglutide',
+  'Semax.png':                'Semax',
+  'Sermorelin.png':           'Sermorelin',
+  'Snap-8.png':               'Snap-8',
+  'TB-500.png':               'TB-500',
+  'Tesamorelin.png':          'Tesamorelin',
+  'Thymosin Alpha-1.png':     'Thymosin Alpha-1',
+  'Tirzepatide.png':          'Tirzepatide',
+  'img/vials/Dihexa.png':     'Dihexa',
 };
+// Build reverse lookup: compound name -> file path
+var VIAL_IMG_BY_NAME={};
+Object.keys(VIAL_IMG).forEach(function(f){VIAL_IMG_BY_NAME[VIAL_IMG[f]]=f;});
 function vialDisplay(name,cat){
-  var e=VIAL_IMG[name];
-  if(e){
-    var parts=e.p.split('/');
+  var f=VIAL_IMG_BY_NAME[name];
+  if(f){
+    var parts=f.split('/');
     var encoded=parts.map(encodeURIComponent).join('/');
     return '<img src="./'+encoded+'" class="cp-vial-photo" alt="'+name+'">';
   }

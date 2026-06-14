@@ -305,20 +305,20 @@ body::after{display:none;}
 .pc-variant-pill.out{opacity:0.4;}
 .pc-variant-pill.in-cart-v{border-color:var(--green);color:var(--green);}
 .pc-variant-pill.active.in-cart-v{background:var(--green);border-color:transparent;color:#fff;}
-.cp-panel-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.5);z-index:600;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.cp-panel-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.55);z-index:600;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
 .cp-panel-overlay.open{display:flex;}
-.cp-panel{background:var(--white);width:100%;max-width:540px;max-height:88vh;border-radius:16px 16px 0 0;overflow-y:auto;padding:0 0 24px 0;animation:slideUp 0.25s ease;}
+.cp-panel{background:var(--white);width:100%;max-width:540px;max-height:90vh;border-radius:20px 20px 0 0;overflow-y:auto;animation:slideUp 0.28s cubic-bezier(.32,.72,0,1);}
 @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
-.cp-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0;}
-.cp-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);}
-.cp-close{position:absolute;top:12px;right:14px;background:var(--bg);border:1px solid var(--border);border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);}
-.cp-cat-badge{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
-.cp-name{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--text);line-height:1.2;}
-.cp-tagline{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.4;}
-.cp-evidence{display:flex;gap:3px;margin-top:6px;}
-.cp-pip{width:10px;height:10px;border-radius:50%;background:var(--border2);}
-.cp-pip.on{background:var(--blue);}
-.cp-body{padding:14px 16px;}
+.cp-handle{width:36px;height:4px;background:rgba(0,0,0,0.12);border-radius:2px;margin:10px auto 0;}
+.cp-vial-header{background:linear-gradient(160deg,#f7f2ff 0%,#eef4ff 100%);padding:12px 16px 18px;position:relative;text-align:center;border-bottom:1px solid rgba(123,63,212,0.1);}
+.cp-close{position:absolute;top:12px;right:12px;background:rgba(255,255,255,0.85);border:1px solid rgba(0,0,0,0.1);border-radius:50%;width:30px;height:30px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);line-height:1;}
+.cp-vial-container{position:relative;width:100px;margin:6px auto 12px;}
+.cp-vial-svg{width:100%;height:auto;display:block;}
+.cp-vial-label-text{position:absolute;top:40%;left:26%;width:48%;height:32%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:6.5px;font-weight:800;color:#3d1080;text-align:center;text-transform:uppercase;line-height:1.2;letter-spacing:0.03em;overflow:hidden;word-break:break-word;padding:2px;}
+.cp-name{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:4px;}
+.cp-cat-badge{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#7b3fd4;background:rgba(123,63,212,0.1);border-radius:20px;padding:2px 10px;margin-bottom:6px;}
+.cp-tagline{font-size:12px;color:var(--text2);line-height:1.4;max-width:320px;margin:0 auto;}
+.cp-body{padding:14px 16px 8px;}
 .cp-section-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin:14px 0 6px;}
 .cp-dose-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;}
 .cp-dose-table th{text-align:left;color:var(--text3);font-weight:500;padding:4px 0;border-bottom:1px solid var(--border);}
@@ -328,12 +328,12 @@ body::after{display:none;}
 .cp-benefit{display:flex;gap:6px;font-size:12px;color:var(--text2);padding:4px 0;line-height:1.4;}
 .cp-benefit::before{content:'✓';color:var(--green);flex-shrink:0;font-weight:600;}
 .cp-schedule{font-size:12px;color:var(--text2);line-height:1.5;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;}
-.cp-coa-btn{display:flex;align-items:center;gap:6px;background:#f0faf0;border:1px solid rgba(13,115,119,0.25);border-radius:6px;padding:8px 12px;font-family:var(--mono);font-size:11px;color:var(--green);cursor:pointer;width:100%;margin-top:10px;}
-.cp-add-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:13px;font-family:var(--mono);font-size:13px;font-weight:600;cursor:pointer;margin-top:14px;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.15s;}
+.cp-coa-btn{display:flex;align-items:center;gap:6px;background:#f0faf0;border:1px solid rgba(13,115,119,0.25);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--green);cursor:pointer;width:100%;margin-top:10px;}
+.cp-add-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:14px;font-family:var(--mono);font-size:13px;font-weight:600;cursor:pointer;margin-top:14px;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.15s;}
 .cp-add-btn:hover{background:var(--blue2);}
 .cp-add-btn.in-cart{background:var(--green);}
 .cp-qty-row{display:flex;align-items:center;gap:8px;margin-top:14px;}
-.cp-qty-row button{width:36px;height:36px;border-radius:6px;border:1px solid rgba(13,115,119,0.3);background:var(--green-dim);color:var(--green);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.cp-qty-row button{width:38px;height:38px;border-radius:8px;border:1px solid rgba(13,115,119,0.3);background:var(--green-dim);color:var(--green);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .cp-var-pill{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:4px;border:1px solid var(--border2);background:var(--bg);color:var(--text2);cursor:pointer;transition:all 0.12s;}
 .cp-var-pill.active{background:var(--blue);color:#fff;border-color:transparent;}
 .cp-qty-row span{flex:1;text-align:center;font-family:var(--mono);font-size:16px;font-weight:500;color:var(--green);}
@@ -505,15 +505,28 @@ body::after{display:none;}
 <div class="cp-panel-overlay" id="cpOverlay" onclick="closeCPPanel(event)">
   <div class="cp-panel" id="cpPanel" onclick="event.stopPropagation()">
     <div class="cp-handle"></div>
-    <div style="position:relative;">
-      <div class="cp-header">
-        <div class="cp-cat-badge" id="cpCat"></div>
-        <div class="cp-name" id="cpName"></div>
-        <div class="cp-tagline" id="cpTagline"></div>
-        <div id="cpVariants"></div>
-        <div class="cp-evidence" id="cpEvidence"></div>
-      </div>
+    <div class="cp-vial-header">
       <button class="cp-close" onclick="closeCPPanel()">&#215;</button>
+      <div class="cp-vial-container">
+        <svg class="cp-vial-svg" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="50" cy="12" rx="23" ry="5.5" fill="#c490f0"/>
+          <rect x="27" y="12" width="46" height="16" rx="3" fill="#8b44d4"/>
+          <ellipse cx="50" cy="28" rx="23" ry="5.5" fill="#6d28b0"/>
+          <rect x="31" y="28" width="38" height="9" fill="rgba(180,210,245,0.7)"/>
+          <rect x="26" y="37" width="48" height="88" rx="8" fill="rgba(210,230,255,0.28)" stroke="rgba(140,180,230,0.7)" stroke-width="1.5"/>
+          <rect x="29" y="40" width="8" height="82" rx="4" fill="rgba(255,255,255,0.5)"/>
+          <rect x="29" y="55" width="42" height="52" rx="3" fill="white"/>
+          <rect x="26" y="122" width="48" height="7" fill="#8b44d4"/>
+          <rect x="26" y="115" width="48" height="7" fill="rgba(109,40,176,0.45)"/>
+          <ellipse cx="50" cy="129" rx="24" ry="7" fill="#7b3fd4"/>
+          <ellipse cx="50" cy="127" rx="19" ry="4" fill="rgba(196,144,240,0.45)"/>
+        </svg>
+        <div class="cp-vial-label-text" id="cpVialLabel"></div>
+      </div>
+      <div class="cp-name" id="cpName"></div>
+      <div class="cp-cat-badge" id="cpCat"></div>
+      <div class="cp-tagline" id="cpTagline"></div>
+      <div id="cpVariants"></div>
     </div>
     <div class="cp-body" id="cpBody"></div>
   </div>
@@ -1379,13 +1392,12 @@ function openCPPanel(code){
   document.getElementById('cpTagline').textContent=info.tagline||'';
   var varHtml='';
   if(allVariants.length>1){
-    varHtml='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">';
+    varHtml='<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px;">';
     allVariants.forEach(function(v){varHtml+='<button class="cp-var-pill cp-var-btn'+(v.code===code?' active':'')+'" data-vcode="'+v.code+'">'+v.spec+'</button>';});
     varHtml+='</div>';
   }
   document.getElementById('cpVariants').innerHTML=varHtml;
-  var ev=info.evidence||0;
-  document.getElementById('cpEvidence').innerHTML=Array.from({length:5},function(_,i){return '<div class="cp-pip'+(i<ev?' on':'')+'"></div>';}).join('');
+  document.getElementById('cpVialLabel').textContent=p.name;
   var body='';
   if(info.lo||info.mid||info.hi){
     body+='<div class="cp-section-title">Dosing</div>';

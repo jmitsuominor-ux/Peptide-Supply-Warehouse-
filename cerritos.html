@@ -1229,7 +1229,7 @@ function renderProducts(){
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
     var cardCls='product-card'+(inCart?' in-cart':'')+(isOut?' out-of-stock-card':'');
     var cardStyle=isOut?'opacity:0.5;filter:grayscale(0.85);':'';
-    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'" onclick="openCPPanel(this.dataset.code)"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+'<div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
+    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'" onclick="openCPPanel(this.dataset.code)"><div class="in-cart-dot"></div><a class="pc-info-btn" href="https://jmitsuominor-ux.github.io/peptide-reference/?compound='+encodeURIComponent((typeof PR_MAP!=='undefined'&&PR_MAP[p.name])?PR_MAP[p.name]:p.name)+'&store=cerritos" target="_blank" onclick="event.stopPropagation()">i</a><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+'<div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
   });
   grid.innerHTML=cards.join('');
 }
@@ -1636,7 +1636,7 @@ function openCPPanel(code){
   }
   // COA
   if(COA_MAP[p.name]){
-    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'">🧪 View Test Report</button>';
+    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'">🔬 Purity Verified &nbsp;·&nbsp; View Lab Certificate</button>';
   }
   // PR link
   body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=cerritos" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">Full Reference →</a></div>';

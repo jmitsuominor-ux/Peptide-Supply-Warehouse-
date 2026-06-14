@@ -840,7 +840,7 @@ function bysStackHasStock(stack){
   if(!inventory||!Object.keys(inventory).length)return true;
   return stack.peptides.every(function(p){
     var codes=BYS_CODES[p.name];
-    if(!codes)return true;
+    if(!codes)return false;
     return codes.some(function(c){return inventory[c.code]&&inventory[c.code].stock>0;});
   });
 }

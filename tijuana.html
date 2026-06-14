@@ -1370,6 +1370,7 @@ var COMPOUND_INFO={
   'MGF':{category:'Muscle Growth',tagline:'Mechano Growth Factor — local muscle repair after exercise/injury',evidence:2,lo:'100 mcg post-workout 3x/wk',mid:'200 mcg 3–5x/wk',hi:'200 mcg daily',schedule:'SubQ or IM post-workout near muscle',cycle:'6 weeks',benefits:['Satellite cell activation for repair','Post-exercise and injury recovery','Synergistic with IGF-1 LR3 (different mechanisms)']},
   'BAC Water':{category:'Reconstitution',tagline:'Bacteriostatic water — essential for peptide reconstitution',evidence:5,lo:'2 ml per vial',mid:'2 ml per vial',hi:'2 ml per vial',schedule:'Add 2ml to lyophilized peptide vial',cycle:'N/A',benefits:['Multi-use vials (28+ days refrigerated)','Prevents contamination','Isotonic for comfortable injection']},
   'Acetic Acid Water':{category:'Reconstitution',tagline:'Acidic reconstitution solvent for pH-sensitive peptides',evidence:5,lo:'2 ml per vial',mid:'2 ml per vial',hi:'2 ml per vial',schedule:'Add 2ml to vial then dilute with BAC water',cycle:'N/A',benefits:['Reconstitution of IGF-1 LR3, IGF DES','Proper dissolution prevents degradation']},
+  'MOTS-C':{category:'Mitochondrial',tagline:'Mitochondrial-derived peptide — metabolic health, fat loss, insulin sensitivity',evidence:3,lo:'5 mg/week SubQ',mid:'10 mg/week SubQ — most common protocol',hi:'10 mg 2x/week SubQ (advanced)',schedule:'SubQ 1–2x per week, AM preferred',cycle:'8–12 weeks / 4 wks off',benefits:['Improved insulin sensitivity and glucose metabolism','Mitochondrial biogenesis','Exercise mimetic — benefits without exercise','Fat loss via metabolic activation']},
 };
 var CAT_COLORS={
   'Weight Loss':   {hi:'#007fa0',mid:'#00b4d8',lo:'#4dd4f0',shine:'rgba(77,212,240,0.4)'},
@@ -1572,7 +1573,7 @@ function openCPPanel(code){
   var inStockVariants=allVariants.filter(function(v){var st=inventory&&inventory[v.code]?inventory[v.code].stock:null;return st===null||st>0;});
   if(inStockVariants.length>1){
     varHtml='<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px;">';
-    inStockVariants.forEach(function(v){varHtml+='<button class="cp-var-pill cp-var-btn'+(v.code===code?' active':'')+'" data-vcode="'+v.code+'">'+v.spec+'</button>';});
+    inStockVariants.forEach(function(v){varHtml+='<button class="cp-var-pill cp-var-btn'+(v.code===code?' active':'')+'" data-vcode="'+v.code+'" onclick="event.stopPropagation();switchCPVariant(this.dataset.vcode)">'+v.spec+'</button>';});
     varHtml+='</div>';
   }
   document.getElementById('cpVariants').innerHTML=varHtml;
@@ -1594,7 +1595,7 @@ function openCPPanel(code){
     info.benefits.forEach(function(b){body+='<div class="cp-benefit">'+b+'</div>';});
   }
   if(COA_MAP[p.name]){
-    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'">🔬 Purity Verified &nbsp;·&nbsp; View Lab Certificate</button>';
+    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'" onclick="openCOA(this.dataset.compound,event)">🔬 Purity Verified &nbsp;·&nbsp; View Lab Certificate</button>';
   }
   body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=tj" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">Full Reference →</a></div>';
   document.getElementById('cpBody').innerHTML=body;

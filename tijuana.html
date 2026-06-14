@@ -83,8 +83,8 @@ body::after{display:none;}
 .loading-spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-text{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.08em;}
-.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px;}
-.product-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 13px;display:flex;flex-direction:column;gap:5px;transition:box-shadow 0.15s,border-color 0.15s;position:relative;overflow:hidden;}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;}
+.product-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:3px;transition:box-shadow 0.15s,border-color 0.15s;position:relative;overflow:hidden;cursor:pointer;}
 .product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--blue);opacity:0;transition:opacity 0.15s;}
 .product-card:hover{box-shadow:0 2px 12px rgba(10,22,40,0.08);}
 .product-card:active{transform:scale(0.98);}
@@ -92,14 +92,14 @@ body::after{display:none;}
 .product-card.in-cart::before{background:var(--green);opacity:1;}
 .pc-cat{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
 .pc-code{font-family:var(--mono);font-size:10px;color:var(--blue);background:var(--cyan-dim);border:1px solid rgba(23,86,169,0.15);border-radius:3px;padding:2px 7px;width:fit-content;letter-spacing:0.05em;}
-.pc-name{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text);line-height:1.2;letter-spacing:0.01em;}
+.pc-name{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);line-height:1.2;letter-spacing:0.01em;}
 .pc-spec{font-size:12px;color:var(--text3);margin-top:2px;}
 .pc-stock{font-family:var(--mono);font-size:10px;font-weight:500;margin-top:4px;padding:2px 7px;border-radius:4px;width:fit-content;}
 .pc-stock.in-stock{color:var(--green);background:var(--green-dim);border:1px solid rgba(13,115,119,0.2);}
 .pc-stock.low-stock{color:#c47a1e;background:rgba(196,122,30,0.08);border:1px solid rgba(196,122,30,0.2);}
 .pc-stock.no-stock{color:var(--red);background:var(--red-dim);border:1px solid rgba(184,50,40,0.2);}
-.pc-price{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--blue);margin-top:auto;padding-top:8px;letter-spacing:0.01em;}
-.pc-add{width:100%;background:var(--cyan-dim);color:var(--blue);border:1px solid rgba(23,86,169,0.2);border-radius:6px;padding:9px;font-family:var(--mono);font-size:11px;font-weight:500;cursor:pointer;transition:all 0.15s;margin-top:7px;display:flex;align-items:center;justify-content:center;gap:5px;letter-spacing:0.05em;text-transform:uppercase;}
+.pc-price{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--blue);margin-top:auto;padding-top:4px;letter-spacing:0.01em;}
+.pc-add{width:100%;background:var(--cyan-dim);color:var(--blue);border:1px solid rgba(23,86,169,0.2);border-radius:6px;padding:6px;font-family:var(--mono);font-size:10px;font-weight:500;cursor:pointer;transition:all 0.15s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:4px;letter-spacing:0.05em;text-transform:uppercase;}
 .pc-add:hover{background:var(--blue);color:#fff;border-color:transparent;}
 .pc-add.in-cart{background:var(--green-dim);color:var(--green);border-color:rgba(13,115,119,0.25);}
 .pc-add.in-cart:hover{background:var(--green);color:#fff;}
@@ -305,6 +305,38 @@ body::after{display:none;}
 .pc-variant-pill.out{opacity:0.4;}
 .pc-variant-pill.in-cart-v{border-color:var(--green);color:var(--green);}
 .pc-variant-pill.active.in-cart-v{background:var(--green);border-color:transparent;color:#fff;}
+.cp-panel-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.5);z-index:600;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.cp-panel-overlay.open{display:flex;}
+.cp-panel{background:var(--white);width:100%;max-width:540px;max-height:88vh;border-radius:16px 16px 0 0;overflow-y:auto;padding:0 0 24px 0;animation:slideUp 0.25s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.cp-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0;}
+.cp-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);}
+.cp-close{position:absolute;top:12px;right:14px;background:var(--bg);border:1px solid var(--border);border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);}
+.cp-cat-badge{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.cp-name{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--text);line-height:1.2;}
+.cp-tagline{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.4;}
+.cp-evidence{display:flex;gap:3px;margin-top:6px;}
+.cp-pip{width:10px;height:10px;border-radius:50%;background:var(--border2);}
+.cp-pip.on{background:var(--blue);}
+.cp-body{padding:14px 16px;}
+.cp-section-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin:14px 0 6px;}
+.cp-dose-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;}
+.cp-dose-table th{text-align:left;color:var(--text3);font-weight:500;padding:4px 0;border-bottom:1px solid var(--border);}
+.cp-dose-table td{padding:5px 0;vertical-align:top;border-bottom:1px solid var(--border);color:var(--text);line-height:1.3;}
+.cp-dose-table td:first-child{width:52px;font-weight:600;}
+.t-lo{color:#16a34a;}.t-mid{color:var(--blue);}.t-hi{color:#b83228;}
+.cp-benefit{display:flex;gap:6px;font-size:12px;color:var(--text2);padding:4px 0;line-height:1.4;}
+.cp-benefit::before{content:'✓';color:var(--green);flex-shrink:0;font-weight:600;}
+.cp-schedule{font-size:12px;color:var(--text2);line-height:1.5;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;}
+.cp-coa-btn{display:flex;align-items:center;gap:6px;background:#f0faf0;border:1px solid rgba(13,115,119,0.25);border-radius:6px;padding:8px 12px;font-family:var(--mono);font-size:11px;color:var(--green);cursor:pointer;width:100%;margin-top:10px;}
+.cp-add-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:13px;font-family:var(--mono);font-size:13px;font-weight:600;cursor:pointer;margin-top:14px;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.15s;}
+.cp-add-btn:hover{background:var(--blue2);}
+.cp-add-btn.in-cart{background:var(--green);}
+.cp-qty-row{display:flex;align-items:center;gap:8px;margin-top:14px;}
+.cp-qty-row button{width:36px;height:36px;border-radius:6px;border:1px solid rgba(13,115,119,0.3);background:var(--green-dim);color:var(--green);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.cp-qty-row span{flex:1;text-align:center;font-family:var(--mono);font-size:16px;font-weight:500;color:var(--green);}
+
+
 </style>
 </head>
 <body>
@@ -470,6 +502,21 @@ body::after{display:none;}
 
 <div class="modal-overlay" id="checkoutModal"><div class="modal" id="modalContent"></div></div>
 <div class="modal-overlay" id="doseModal" onclick="closeDoseInfo()"><div class="modal" id="doseModalContent" onclick="event.stopPropagation()"></div></div>
+<div class="cp-panel-overlay" id="cpOverlay" onclick="closeCPPanel(event)">
+  <div class="cp-panel" id="cpPanel" onclick="event.stopPropagation()">
+    <div class="cp-handle"></div>
+    <div style="position:relative;">
+      <div class="cp-header">
+        <div class="cp-cat-badge" id="cpCat"></div>
+        <div class="cp-name" id="cpName"></div>
+        <div class="cp-tagline" id="cpTagline"></div>
+        <div class="cp-evidence" id="cpEvidence"></div>
+      </div>
+      <button class="cp-close" onclick="closeCPPanel()">&#215;</button>
+    </div>
+    <div class="cp-body" id="cpBody"></div>
+  </div>
+</div>
 <div class="modal-overlay" id="coaModal" onclick="closeCOA()"><div onclick="event.stopPropagation()" style="position:relative;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;border-radius:10px;background:var(--white);"><button onclick="closeCOA()" style="position:sticky;top:10px;float:right;margin:10px 10px 0 0;z-index:10;background:var(--bg);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);">&#215;</button><img id="coaImage" src="" alt="Test Report" style="width:100%;display:block;border-radius:10px;"></div></div>
 
 <script>
@@ -1262,7 +1309,7 @@ function renderProducts(){
     if(isOut){
       btnHtml='<button class="pc-add" disabled style="opacity:0.35;cursor:not-allowed;">'+T[lang].outOfStockBtn+'</button>';
     } else if(inCart){
-      btnHtml='<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty(\''+p.code+'\',-1)">&#8722;</button><input class="pc-qty-input" type="number" min="1" value="'+qty+'" onchange="setQty(\''+p.code+'\',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="changeQty(\''+p.code+'\',1)">+</button><button class="pc-remove-item" onclick="removeItem(\''+p.code+'\')" title="Remove">&#215;</button></div>';
+      btnHtml='<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="event.stopPropagation();changeQty(\''+p.code+'\',-1)">&#8722;</button><input class="pc-qty-input" type="number" min="1" value="'+qty+'" onchange="setQty(\''+p.code+'\',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="event.stopPropagation();changeQty(\''+p.code+'\',1)">+</button><button class="pc-remove-item" onclick="event.stopPropagation();removeItem(\''+p.code+'\')" title="Remove">&#215;</button></div>';
     } else {
       btnHtml='<button class="pc-add" onclick="addToCart(\''+p.code+'\')">'+T[lang].addToOrder+'</button>';
     }
@@ -1270,323 +1317,32 @@ function renderProducts(){
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
     var cardCls='product-card'+(inCart?' in-cart':'')+(isOut?' out-of-stock-card':'');
     var cardStyle=isOut?'opacity:0.5;filter:grayscale(0.85);':'';
-    var PR_MAP={'5-Amino-1MQ':'5-amino-1mq','AOD-9604':'AOD9604','HGH Fragment 176-191':'HGH Fragment','IGF-1 DES':'IGF DES','Kisspeptin-10':'KissPeptin-10','LL-37':'LL37','MOTS-C':'MOTS-c','SNAP-8':'Snap-8','Sermorelin Acetate':'Sermorelin','BPC-157 + TB-500 Combo':'BPC-157','CJC-1295 + Ipamorelin Combo':'CJC-1295 (no DAC)','CagriSema Combo':'Cagrilintide','CJC-1295 With DAC':'CJC-1295 (with DAC)','CJC-1295 Without DAC':'CJC-1295 (no DAC)'};
-    var prName=PR_MAP[p.name]||p.name;
-    var prLink='https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=tj';
-    return '<div class="'+cardCls+'" id="card-'+p.code+'" style="'+cardStyle+'"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><div class="pc-name">'+p.name+'</div><a href="'+prLink+'" target="_blank" rel="noopener" title="View compound info" style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--blue-light,#e8f0fb);border:1px solid rgba(23,86,169,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;text-decoration:none;color:var(--blue);opacity:1;" onclick="event.stopPropagation()">ℹ</a>'+(COA_MAP[p.name]?'<button class="coa-btn" data-compound="'+p.name+'" title="View test report" style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#f0faf0;border:1px solid rgba(13,115,119,0.25);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;color:var(--green);opacity:1;padding:0;">🧪</button>':'')+' </div>'+variantHtml+specLine+'<div class="pc-stock '+stockClass+'">'+stockLabel+'</div><div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
+    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+specLine+'<div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
   });
   grid.innerHTML=cards.join('');
 }
-
-function addToCart(code){cart[code]=(cart[code]||0)+1;saveCart();updateCartUI();renderProducts();}
-function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);saveCart();updateCartUI();renderProducts();}
-function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;saveCart();updateCartUI();renderProducts();}
-function removeItem(code){delete cart[code];saveCart();updateCartUI();renderProducts();}
-function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();closeCart();}
-function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS.find(p=>p.code===c)||ALL_PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}
-function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
-
-function updateStorefrontProgress(){
-  const strip=document.getElementById('sfProgressStrip');if(!strip)return;
-  const total=cartTotal();const count=cartCount();
-  if(count===0){strip.style.display='none';return;}
-  strip.style.display='flex';
-  const pct=Math.min(100,(total/MIN_ORDER)*100);
-  const met=total>=MIN_ORDER;const freeShip=total>=FREE_SHIP_THRESHOLD;
-  const fill=document.getElementById('sfProgressFill2');
-  const label=document.getElementById('sfProgressLabel');
-  fill.style.width=(freeShip?100:pct)+'%';
-  fill.className='sf-progress-fill2'+(met?' met':'');
-  if(freeShip){label.textContent=T[lang].freeShipUnlocked;label.style.color='var(--green)';}
-  else if(met){label.textContent=T[lang].minMet;label.style.color='var(--green)';}
-  else{const rem=(MIN_ORDER-total).toFixed(2);label.textContent='$'+total.toFixed(2)+(lang==='es'?' de ':' of ')+'$'+MIN_ORDER+' · $'+rem+(lang==='es'?' para desbloquear':' to go');label.style.color='var(--text2)';}
-}
-function updateCartUI(){
-  const count=cartCount();
-  const badge=document.getElementById('cartBadge');
-  if(count>0){badge.textContent=count;badge.style.display='flex';}
-  else badge.style.display='none';
-  updateStorefrontProgress();
-  renderDrawer();
-}
-
-function openCart(){renderDrawer();document.getElementById('drawerOverlay').classList.add('open');document.getElementById('cartDrawer').classList.add('open');document.body.style.overflow='hidden';}
-function closeCart(){document.getElementById('drawerOverlay').classList.remove('open');document.getElementById('cartDrawer').classList.remove('open');document.body.style.overflow='';}
-
-function renderDrawer(){
-  const keys=Object.keys(cart);
-  const body=document.getElementById('drawerBody');
-  const footer=document.getElementById('drawerFooter');
-  if(!keys.length){
-    body.innerHTML=`<div class="cart-empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>ORDER LIST EMPTY<br>ADD COMPOUNDS BELOW</p></div>`;
-    footer.innerHTML='';return;
+function renderCPCartBtn(code){
+  var p=PRODUCTS.find(function(x){return x.code===code;})||ALL_PRODUCTS.find(function(x){return x.code===code;});
+  var stock=inventory&&inventory[code]?inventory[code].stock:null;
+  var isOut=stock===null||stock===0;
+  var qty=cart[code]||0;
+  var existing=document.getElementById('cpCartArea');
+  if(existing)existing.remove();
+  var div=document.createElement('div');
+  div.id='cpCartArea';
+  if(isOut){
+    div.innerHTML='<button class="cp-add-btn" disabled style="opacity:0.4;cursor:not-allowed;">OUT OF STOCK</button>';
+  } else if(qty>0){
+    div.innerHTML='<div class="cp-qty-row"><button onclick="event.stopPropagation();cpQty(-1)">&#8722;</button><span>'+qty+'</span><button onclick="event.stopPropagation();cpQty(1)">+</button></div>';
+  } else {
+    div.innerHTML='<button class="cp-add-btn" onclick="event.stopPropagation();cpAddToCart()">+ ADD TO ORDER</button>';
   }
-  const total=cartTotal();
-  body.innerHTML=keys.map(code=>{
-    const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);
-    const qty=cart[code];
-    return `<div class="cart-item">
-      <div class="ci-info">
-        <div class="ci-name">${p.name}</div>
-        <div class="ci-spec">${p.code} · ${p.spec}</div>
-        <div class="ci-line-price">$${(p.price*qty).toFixed(2)}</div>
-      </div>
-      <div class="ci-controls">
-        <button class="qty-btn" onclick="changeQty('${code}',-1)">−</button>
-        <span class="qty-num">${qty}</span>
-        <button class="qty-btn" onclick="changeQty('${code}',1)">+</button>
-        <button class="ci-remove" onclick="removeItem('${code}')">×</button>
-      </div>
-    </div>`;
-  }).join('');
-  const remaining=Math.max(0,MIN_ORDER-total);const pct=Math.min(100,(total/MIN_ORDER)*100);const met=total>=MIN_ORDER;
-  const effectiveShipping=total>=FREE_SHIP_THRESHOLD?0:shippingRate;
-  footer.innerHTML=`
-    <div class="cart-totals">
-      <div class="ct-row"><span class="ct-label">${cartCount()} item${cartCount()!==1?'s':''}</span></div>
-      <div class="ct-divider"></div>
-      <div class="ct-row"><span class="ct-label">Subtotal</span><span class="ct-value">$${total.toFixed(2)}</span></div>
-      <div class="ct-row"><span class="ct-label">Shipping</span><span class="ct-value">${effectiveShipping===0?'<span style="color:var(--green);font-weight:500;">FREE</span>':'$'+effectiveShipping.toFixed(2)}</span></div>
-      <div class="ct-divider"></div>
-      <div class="ct-row ct-total"><span class="ct-label">ORDER TOTAL</span><span class="ct-value">$${(total+effectiveShipping).toFixed(2)}</span></div>
-      <div class="min-progress">
-        <div class="min-progress-header"><span>${met?'✓ MINIMUM MET':'ORDER MINIMUM'}</span><span>$${total.toFixed(2)} / $${MIN_ORDER}</span></div>
-        <div class="min-progress-track"><div class="min-progress-fill${met?' met':''}" style="width:${pct}%"></div></div>
-        ${!met?`<div class="min-progress-msg">Add $${remaining.toFixed(2)} more to unlock checkout</div>`:''}
-      </div>
-    </div>
-    <button class="checkout-btn${met?'':' locked'}" ${met?'':'disabled'} onclick="${met?'openCheckout()':''}">PROCEED TO CHECKOUT →</button>
-    <button class="clear-cart-btn" onclick="clearCartFn()">Clear order</button>`;
+  document.getElementById('cpBody').appendChild(div);
 }
+function cpAddToCart(){if(!_cpCode)return;addToCart(_cpCode);renderCPCartBtn(_cpCode);}
+function cpQty(delta){if(!_cpCode)return;changeQty(_cpCode,delta);renderCPCartBtn(_cpCode);}
+function closeCPPanel(e){if(e&&e.target!==document.getElementById('cpOverlay'))return;document.getElementById('cpOverlay').classList.remove('open');document.body.style.overflow='';}
 
-// ════════════════════════════════════════
-// CHECKOUT
-// ════════════════════════════════════════
-function openCheckout(){
-  closeCart();
-  const subtotal=cartTotal();
-  const checkoutShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
-  const keys=Object.keys(cart);
-  const orderRows=keys.map(code=>{
-    const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);
-    const qty=cart[code];
-    return `<div class="or-item">
-      <span class="or-name">${p.name} <span style="color:var(--text3);font-size:10px;">${p.spec}</span></span>
-      <span class="or-qty">×${qty}</span>
-      <span class="or-price">$${(p.price*qty).toFixed(2)}</span>
-    </div>`;
-  }).join('');
-  document.getElementById('modalContent').innerHTML=`
-    <div class="modal-header">
-      <div class="modal-title">COMPLETE ORDER</div>
-      <div class="modal-close" onclick="closeCheckout()">×</div>
-    </div>
-    <div class="modal-body">
-      <div class="modal-section-title">Order Summary</div>
-      <div class="order-review">
-        ${orderRows}
-        <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">$${subtotal.toFixed(2)}</span></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>${T[lang].shipping}</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?'FREE (Over $500)':'$'+checkoutShipping.toFixed(2)}</span></div>
-        <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">$${(subtotal+checkoutShipping).toFixed(2)}</span></div>
-      </div>
-      <div class="modal-section-title">Your Information</div>
-      <div class="form-field"><label class="form-label">${T[lang].fullName} <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="${T[lang].namePlaceholder}"></div>
-      <div class="form-field"><label class="form-label">${T[lang].emailAddress} <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="${T[lang].emailPlaceholder}"></div>
-      <div class="form-field"><label class="form-label">${T[lang].phoneNumber} <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="${T[lang].phonePlaceholder}"></div>
-      <div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">${T[lang].localPickup}</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes $${checkoutShipping.toFixed(2)} shipping)</span>`:''}</label></div>
-      <div class="form-field" id="addressField"><label class="form-label">${T[lang].shippingAddress} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custAddress" placeholder="${T[lang].addressPlaceholder}"></textarea></div>
-      <div class="form-field"><label class="form-label">${T[lang].additionalNotes} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custNotes" placeholder="${T[lang].notesPlaceholder}" style="min-height:60px;"></textarea></div>
-      <div class="form-field"><label class="form-label">${T[lang].promoCode} <span class="opt">${T[lang].optional}</span></label><input type="text" class="form-input" id="promoCode" placeholder="${T[lang].promoPlaceholder}" style="text-transform:uppercase;width:100%;" oninput="this.value=this.value.toUpperCase();autoApplyPromo()"><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div>
-      <div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">
-        📧 We'll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +52-664-596-4005
-      </div>
-      <button class="submit-btn" id="submitBtn" onclick="submitOrder()">${T[lang].placeOrder}</button>
-    </div>`;
-  document.getElementById('checkoutModal').classList.add('open');
-  document.body.style.overflow='hidden';
-}
-function togglePickup(){
-  const pickup=document.getElementById('localPickup').checked;
-  const subtotal=cartTotal();
-  const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
-  const shipping=pickup?0:baseShipping;
-  document.getElementById('shippingVal').textContent=pickup?T[lang].freeLocalPickup:(baseShipping===0?T[lang].freeOver500:'$'+baseShipping.toFixed(2));
-  document.getElementById('shippingVal').style.color=(shipping===0)?'var(--green)':'inherit';
-  document.getElementById('checkoutTotal').textContent='$'+(subtotal+shipping).toFixed(2);
-  const addrField=document.getElementById('addressField');
-  if(addrField)addrField.style.display=pickup?'none':'block';
-}
-
-function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';appliedAffiliate=null;}
-let _promoDebounce=null;
-function autoApplyPromo(){
-  if(appliedAffiliate)return;
-  clearTimeout(_promoDebounce);
-  _promoDebounce=setTimeout(function(){
-    const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
-    if(!code)return;
-    const aff=affiliates.find(a=>String(a.code).toUpperCase()===code);
-    if(aff)applyPromo();
-  },400);
-}
-function applyPromo(){
-  if(appliedAffiliate){document.getElementById('promoMsg').innerHTML='<span style="color:var(--green);font-size:11px;">✓ Code already applied.</span>';return;}
-  const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
-  const msg=document.getElementById('promoMsg');
-  if(!code){msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoEnterFirst+'</span>';return;}
-  const aff=affiliates.find(a=>String(a.code).toUpperCase()===code);
-  if(!aff){appliedAffiliate=null;msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoInvalid+'</span>';return;}
-  appliedAffiliate=aff;
-  const discount=parseFloat(aff.customerDiscount)||0;
-  msg.innerHTML='<span style="color:var(--green);font-size:11px;">'+(lang==='es'?'✓ Código aplicado — ¡'+discount+'% de descuento!':'✓ Code applied — '+discount+'% off your order!')+'</span>';
-  const subtotal=cartTotal();
-  const pickup=(document.getElementById('localPickup')||{}).checked||false;
-  const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
-  const shipping=pickup?0:baseShipping;
-  const discountAmt=subtotal*(discount/100);
-  const newTotal=subtotal-discountAmt+shipping;
-  const totalEl=document.getElementById('checkoutTotal');
-  if(totalEl)totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--text3);font-size:12px;">$'+(subtotal+shipping).toFixed(2)+'</span> <span style="color:var(--green);">$'+newTotal.toFixed(2)+'</span>';
-  const discountRow=document.getElementById('discountRow');
-  if(discountRow)discountRow.style.display='flex';
-  const discountVal=document.getElementById('discountVal');
-  if(discountVal)discountVal.textContent='-$'+discountAmt.toFixed(2)+' ('+discount+'% off)';
-}
-
-async function submitOrder(){
-  const name=document.getElementById('custName').value.trim();
-  const email=document.getElementById('custEmail').value.trim();
-  const phone=document.getElementById('custPhone').value.trim();
-  const address=document.getElementById('custAddress').value.trim();
-  const notes=document.getElementById('custNotes').value.trim();
-  if(!name){flash('custName','Please enter your name.');return;}
-  if(!email||!email.includes('@')){flash('custEmail','Please enter a valid email.');return;}
-  if(!phone){flash('custPhone','Please enter your phone number.');return;}
-
-  const btn=document.getElementById('submitBtn');
-  btn.disabled=true;btn.innerHTML='<div class="spinner"></div> '+T[lang].sending;
-
-  const pickup=(document.getElementById('localPickup')||{}).checked||false;
-  const items=Object.entries(cart).map(([code,qty])=>{
-    const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);
-    return{code,name:p?p.name:code,spec:p?p.spec:'',qty,price:p?p.price:0};
-  });
-  const subtotal=cartTotal();const effectiveShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;const shipping=pickup?0:effectiveShipping;
-  const discountPct=appliedAffiliate?parseFloat(appliedAffiliate.customerDiscount)||0:0;
-  const discountAmt=subtotal*(discountPct/100);
-  const total=subtotal-discountAmt+shipping;
-
-  // Build readable order summary for the email
-  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+(discountAmt>0?'\nDiscount ('+discountPct+'% off): -$'+discountAmt.toFixed(2):'')+'\nShipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2));
-
-  const order={
-    id:'ORD-'+Date.now(),
-    status:'pending',
-    createdAt:Date.now(),
-    subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',shippingMethod:pickup?'pickup':'delivery',
-    total,
-    customer:{name,email,phone,address:pickup?'LOCAL PICKUP':address,notes},
-    items
-  };
-
-  // Save to Google Sheets
-  try{
-    const params=new URLSearchParams({
-      action:'saveOrder',
-      order:encodeURIComponent(JSON.stringify(order))
-    });
-    await new Promise((resolve) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', API+'?'+params.toString(), true);
-      xhr.onload = xhr.onerror = () => resolve();
-      xhr.send();
-    });
-  }catch(e){
-    console.warn('Could not save to sheets:',e);
-  }
-
-  // Deduct inventory immediately
-  try{
-    const deductURL = API + '?action=deductInventory&items=' + encodeURIComponent(JSON.stringify(items)) + '&t=' + Date.now();
-    await new Promise((resolve)=>{
-      const xhr=new XMLHttpRequest();
-      xhr.open('GET', deductURL, true);
-      xhr.onload=xhr.onerror=()=>resolve();
-      xhr.send();
-      setTimeout(()=>resolve(),8000);
-    });
-  }catch(e){console.warn('Inventory deduct failed:',e);}
-
-  // Send email via EmailJS — to customer and fulfiller
-  const emailParams = {
-    from_name:    name,
-    from_email:   email,
-    from_phone:   phone,
-    shipping_address: pickup?'LOCAL PICKUP':(address||'Not provided'),
-    customer_notes:   notes  || 'None',
-    order_summary:    orderSummary,
-    order_total:      '$'+total.toFixed(2),
-  };
-  console.log('EmailJS params:', JSON.stringify(emailParams), 'customer:', email, 'fulfiller:', FULFILLER_EMAIL);
-  try{
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, Object.assign({},emailParams,{to_email:email}));
-    console.log('EmailJS customer send OK to', email);
-  }catch(e){ console.error('EmailJS customer send failed:', JSON.stringify(e), e); showToast('Customer email failed: '+JSON.stringify(e),'red'); }
-  try{
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));
-    console.log('EmailJS fulfiller send OK to', FULFILLER_EMAIL);
-  }catch(e){
-    console.error('EmailJS fulfiller send failed:', JSON.stringify(e), e);
-    showToast('Fulfiller email failed: '+JSON.stringify(e),'red');
-  }
-
-  if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
-    const commissionPct=parseFloat(appliedAffiliate.commission)||0;
-    const commissionAmt=(subtotal*(commissionPct/100)).toFixed(2);
-    try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_AFFILIATE_ID,{
-      to_email:appliedAffiliate.email,
-      affiliate_name:appliedAffiliate.name,
-      promo_code:appliedAffiliate.code,
-      order_summary:orderSummary,
-      order_total:'$'+total.toFixed(2),
-      commission_rate:commissionPct+'%',
-      commission_amount:'$'+commissionAmt,
-      customer_name:name,
-    });}catch(e){console.error('Affiliate email failed:',e);}
-  }
-  appliedAffiliate=null;
-
-  // Clear cart and show success
-  Object.keys(cart).forEach(k=>delete cart[k]);saveCart();
-  updateCartUI();
-  renderProducts();
-
-  document.getElementById('modalContent').innerHTML=`
-    <div class="success-screen">
-      <div class="success-icon">✓</div>
-      <div class="success-title">ORDER RECEIVED</div>
-      <div class="success-sub">Thank you, ${name}. Your order has been submitted.</div>
-      <div class="success-note">
-        We'll reach out within <strong>24 hours</strong> to confirm and arrange fulfillment.<br>
-        Questions? WhatsApp <strong>+52-664-596-4005</strong>
-      </div>
-      <button class="success-done-btn" onclick="closeCheckout()">BACK TO CATALOG</button>
-    </div>`;
-}
-
-function flash(id,msg){
-  const el=document.getElementById(id);
-  el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;
-  setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);
-}
-
-// ════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════
-document.addEventListener('click',function(e){var coaBtn=e.target.closest('.coa-btn');if(coaBtn){openCOA(coaBtn.dataset.compound,e);return;}
-  var pill=e.target.closest ? e.target.closest('.pc-variant-pill') : null;
-  if(pill&&pill.dataset.variantName){selectVariant(pill.dataset.variantName,pill.dataset.variantCode);}
-});
 var COA_MAP={'MOTS-C':'mots-c'};
 function openCOA(name,e){if(e)e.stopPropagation();var key=COA_MAP[name];if(!key)return;document.getElementById('coaImage').src='./coa/'+key+'.jpg';document.getElementById('coaModal').classList.add('open');document.body.style.overflow='hidden';}
 function closeCOA(){document.getElementById('coaModal').classList.remove('open');document.body.style.overflow='';}

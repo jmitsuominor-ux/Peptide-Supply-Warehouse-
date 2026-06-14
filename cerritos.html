@@ -83,8 +83,8 @@ body::after{display:none;}
 .loading-spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading-text{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.08em;}
-.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px;}
-.product-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 13px;display:flex;flex-direction:column;gap:5px;transition:box-shadow 0.15s,border-color 0.15s;position:relative;overflow:hidden;}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;}
+.product-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:3px;transition:box-shadow 0.15s,border-color 0.15s;position:relative;overflow:hidden;cursor:pointer;}
 .product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--blue);opacity:0;transition:opacity 0.15s;}
 .product-card:hover{box-shadow:0 2px 12px rgba(10,22,40,0.08);}
 .product-card:active{transform:scale(0.98);}
@@ -92,14 +92,14 @@ body::after{display:none;}
 .product-card.in-cart::before{background:var(--green);opacity:1;}
 .pc-cat{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
 .pc-code{font-family:var(--mono);font-size:10px;color:var(--blue);background:var(--cyan-dim);border:1px solid rgba(23,86,169,0.15);border-radius:3px;padding:2px 7px;width:fit-content;letter-spacing:0.05em;}
-.pc-name{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text);line-height:1.2;letter-spacing:0.01em;}
+.pc-name{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);line-height:1.2;letter-spacing:0.01em;}
 .pc-spec{font-size:12px;color:var(--text3);margin-top:2px;}
 .pc-stock{font-family:var(--mono);font-size:10px;font-weight:500;margin-top:4px;padding:2px 7px;border-radius:4px;width:fit-content;}
 .pc-stock.in-stock{color:var(--green);background:var(--green-dim);border:1px solid rgba(13,115,119,0.2);}
 .pc-stock.low-stock{color:#c47a1e;background:rgba(196,122,30,0.08);border:1px solid rgba(196,122,30,0.2);}
 .pc-stock.no-stock{color:var(--red);background:var(--red-dim);border:1px solid rgba(184,50,40,0.2);}
-.pc-price{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--blue);margin-top:auto;padding-top:8px;letter-spacing:0.01em;}
-.pc-add{width:100%;background:var(--cyan-dim);color:var(--blue);border:1px solid rgba(23,86,169,0.2);border-radius:6px;padding:9px;font-family:var(--mono);font-size:11px;font-weight:500;cursor:pointer;transition:all 0.15s;margin-top:7px;display:flex;align-items:center;justify-content:center;gap:5px;letter-spacing:0.05em;text-transform:uppercase;}
+.pc-price{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--blue);margin-top:auto;padding-top:4px;letter-spacing:0.01em;}
+.pc-add{width:100%;background:var(--cyan-dim);color:var(--blue);border:1px solid rgba(23,86,169,0.2);border-radius:6px;padding:6px;font-family:var(--mono);font-size:10px;font-weight:500;cursor:pointer;transition:all 0.15s;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:4px;letter-spacing:0.05em;text-transform:uppercase;}
 .pc-add:hover{background:var(--blue);color:#fff;border-color:transparent;}
 .pc-add.in-cart{background:var(--green-dim);color:var(--green);border-color:rgba(13,115,119,0.25);}
 .pc-add.in-cart:hover{background:var(--green);color:#fff;}
@@ -305,6 +305,38 @@ body::after{display:none;}
 .pc-variant-pill.out{opacity:0.4;}
 .pc-variant-pill.in-cart-v{border-color:var(--green);color:var(--green);}
 .pc-variant-pill.active.in-cart-v{background:var(--green);border-color:transparent;color:#fff;}
+
+.cp-panel-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.5);z-index:600;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.cp-panel-overlay.open{display:flex;}
+.cp-panel{background:var(--white);width:100%;max-width:540px;max-height:88vh;border-radius:16px 16px 0 0;overflow-y:auto;padding:0 0 24px 0;animation:slideUp 0.25s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.cp-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 0;}
+.cp-header{padding:14px 16px 10px;border-bottom:1px solid var(--border);}
+.cp-close{position:absolute;top:12px;right:14px;background:var(--bg);border:1px solid var(--border);border-radius:50%;width:28px;height:28px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);}
+.cp-cat-badge{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;}
+.cp-name{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--text);line-height:1.2;}
+.cp-tagline{font-size:12px;color:var(--text2);margin-top:4px;line-height:1.4;}
+.cp-evidence{display:flex;gap:3px;margin-top:6px;}
+.cp-pip{width:10px;height:10px;border-radius:50%;background:var(--border2);}
+.cp-pip.on{background:var(--blue);}
+.cp-body{padding:14px 16px;}
+.cp-section-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin:14px 0 6px;}
+.cp-dose-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;}
+.cp-dose-table th{text-align:left;color:var(--text3);font-weight:500;padding:4px 0;border-bottom:1px solid var(--border);}
+.cp-dose-table td{padding:5px 0;vertical-align:top;border-bottom:1px solid var(--border);color:var(--text);line-height:1.3;}
+.cp-dose-table td:first-child{width:52px;font-weight:600;}
+.t-lo{color:#16a34a;}.t-mid{color:var(--blue);}.t-hi{color:#b83228;}
+.cp-benefit{display:flex;gap:6px;font-size:12px;color:var(--text2);padding:4px 0;line-height:1.4;}
+.cp-benefit::before{content:'✓';color:var(--green);flex-shrink:0;font-weight:600;}
+.cp-schedule{font-size:12px;color:var(--text2);line-height:1.5;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;}
+.cp-coa-btn{display:flex;align-items:center;gap:6px;background:#f0faf0;border:1px solid rgba(13,115,119,0.25);border-radius:6px;padding:8px 12px;font-family:var(--mono);font-size:11px;color:var(--green);cursor:pointer;width:100%;margin-top:10px;}
+.cp-add-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:13px;font-family:var(--mono);font-size:13px;font-weight:600;cursor:pointer;margin-top:14px;letter-spacing:0.05em;text-transform:uppercase;transition:background 0.15s;}
+.cp-add-btn:hover{background:var(--blue2);}
+.cp-add-btn.in-cart{background:var(--green);}
+.cp-qty-row{display:flex;align-items:center;gap:8px;margin-top:14px;}
+.cp-qty-row button{width:36px;height:36px;border-radius:6px;border:1px solid rgba(13,115,119,0.3);background:var(--green-dim);color:var(--green);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.cp-qty-row span{flex:1;text-align:center;font-family:var(--mono);font-size:16px;font-weight:500;color:var(--green);}
+
 </style>
 </head>
 <body>
@@ -429,6 +461,22 @@ body::after{display:none;}
 
 <div class="modal-overlay" id="checkoutModal"><div class="modal" id="modalContent"></div></div>
 <div class="modal-overlay" id="doseModal" onclick="closeDoseInfo()"><div class="modal" id="doseModalContent" onclick="event.stopPropagation()"></div></div>
+
+<div class="cp-panel-overlay" id="cpOverlay" onclick="closeCPPanel(event)">
+  <div class="cp-panel" id="cpPanel" onclick="event.stopPropagation()">
+    <div class="cp-handle"></div>
+    <div style="position:relative;">
+      <div class="cp-header">
+        <div class="cp-cat-badge" id="cpCat"></div>
+        <div class="cp-name" id="cpName"></div>
+        <div class="cp-tagline" id="cpTagline"></div>
+        <div class="cp-evidence" id="cpEvidence"></div>
+      </div>
+      <button class="cp-close" onclick="closeCPPanel()">&#215;</button>
+    </div>
+    <div class="cp-body" id="cpBody"></div>
+  </div>
+</div>
 <div class="modal-overlay" id="coaModal" onclick="closeCOA()"><div onclick="event.stopPropagation()" style="position:relative;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;border-radius:10px;background:var(--white);"><button onclick="closeCOA()" style="position:sticky;top:10px;float:right;margin:10px 10px 0 0;z-index:10;background:var(--bg);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);">&#215;</button><img id="coaImage" src="" alt="Test Report" style="width:100%;display:block;border-radius:10px;"></div></div>
 
 <script>
@@ -1167,7 +1215,7 @@ function renderProducts(){
     if(isOut){
       btnHtml='<button class="pc-add" disabled style="opacity:0.35;cursor:not-allowed;">'+T[lang].outOfStockBtn+'</button>';
     } else if(inCart){
-      btnHtml='<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty(\''+p.code+'\',-1)">&#8722;</button><input class="pc-qty-input" type="number" min="1" value="'+qty+'" onchange="setQty(\''+p.code+'\',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="changeQty(\''+p.code+'\',1)">+</button><button class="pc-remove-item" onclick="removeItem(\''+p.code+'\')" title="Remove">&#215;</button></div>';
+      btnHtml='<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="event.stopPropagation();changeQty(\''+p.code+'\',-1)">&#8722;</button><input class="pc-qty-input" type="number" min="1" value="'+qty+'" onchange="setQty(\''+p.code+'\',this.value)" onclick="this.select()"><button class="pc-qty-btn" onclick="event.stopPropagation();changeQty(\''+p.code+'\',1)">+</button><button class="pc-remove-item" onclick="event.stopPropagation();removeItem(\''+p.code+'\')" title="Remove">&#215;</button></div>';
     } else {
       btnHtml='<button class="pc-add" onclick="addToCart(\''+p.code+'\')">'+T[lang].addToOrder+'</button>';
     }
@@ -1175,10 +1223,7 @@ function renderProducts(){
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
     var cardCls='product-card'+(inCart?' in-cart':'')+(isOut?' out-of-stock-card':'');
     var cardStyle=isOut?'opacity:0.5;filter:grayscale(0.85);':'';
-    var PR_MAP={'5-Amino-1MQ':'5-amino-1mq','AOD-9604':'AOD9604','HGH Fragment 176-191':'HGH Fragment','IGF-1 DES':'IGF DES','Kisspeptin-10':'KissPeptin-10','LL-37':'LL37','MOTS-C':'MOTS-c','SNAP-8':'Snap-8','Sermorelin Acetate':'Sermorelin','BPC-157 + TB-500 Combo':'BPC-157','CJC-1295 + Ipamorelin Combo':'CJC-1295 (no DAC)','CagriSema Combo':'Cagrilintide','CJC-1295 With DAC':'CJC-1295 (with DAC)','CJC-1295 Without DAC':'CJC-1295 (no DAC)'};
-    var prName=PR_MAP[p.name]||p.name;
-    var prLink='https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=cerritos';
-    return '<div class="'+cardCls+'" id="card-'+p.code+'" style="'+cardStyle+'"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div style="display:flex;align-items:center;justify-content:space-between;gap:6px;"><div class="pc-name">'+p.name+'</div><a href="'+prLink+'" target="_blank" rel="noopener" title="View compound info" style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--blue-light,#e8f0fb);border:1px solid rgba(23,86,169,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;text-decoration:none;color:var(--blue);opacity:1;" onclick="event.stopPropagation()">ℹ</a>'+(COA_MAP[p.name]?'<button class="coa-btn" data-compound="'+p.name+'" title="View test report" style="flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#f0faf0;border:1px solid rgba(13,115,119,0.25);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer;color:var(--green);opacity:1;padding:0;">🧪</button>':'')+' </div>'+variantHtml+specLine+'<div class="pc-stock '+stockClass+'">'+stockLabel+'</div><div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
+    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+specLine+'<div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
   });
   grid.innerHTML=cards.join('');
 }
@@ -1212,7 +1257,7 @@ function renderDrawer(){
   const keys=Object.keys(cart);const body=document.getElementById('drawerBody');const footer=document.getElementById('drawerFooter');
   if(!keys.length){body.innerHTML=`<div class="cart-empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>${T[lang].orderEmpty}<br>${T[lang].addBelow}</p></div>`;footer.innerHTML='';return;}
   const total=cartTotal();
-  body.innerHTML=keys.map(code=>{const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="cart-item"><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-spec">${p.code} · ${p.spec}</div><div class="ci-line-price">$${(p.price*qty).toFixed(2)}</div></div><div class="ci-controls"><button class="qty-btn" onclick="changeQty('${code}',-1)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${code}',1)">+</button><button class="ci-remove" onclick="removeItem('${code}')">×</button></div></div>`;}).join('');
+  body.innerHTML=keys.map(code=>{const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="cart-item"><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-spec">${p.code} · ${p.spec}</div><div class="ci-line-price">$${(p.price*qty).toFixed(2)}</div></div><div class="ci-controls"><button class="qty-btn" onclick="event.stopPropagation();changeQty('${code}',-1)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="event.stopPropagation();changeQty('${code}',1)">+</button><button class="ci-remove" onclick="event.stopPropagation();removeItem('${code}')">×</button></div></div>`;}).join('');
   const remaining=Math.max(0,MIN_ORDER-total);const pct=Math.min(100,(total/MIN_ORDER)*100);const met=total>=MIN_ORDER;
   const effectiveShipping=total>=FREE_SHIP_THRESHOLD?0:shippingRate;
   footer.innerHTML=`<div class="cart-totals"><div class="ct-row"><span class="ct-label">${cartCount()} ${cartCount()!==1?T[lang].items:T[lang].item}</span></div><div class="ct-divider"></div><div class="ct-row"><span class="ct-label">${T[lang].subtotal}</span><span class="ct-value">$${total.toFixed(2)}</span></div><div class="ct-row"><span class="ct-label">${T[lang].shipping}</span><span class="ct-value">${effectiveShipping===0?'<span style="color:var(--green);font-weight:500;">'+T[lang].freeOver500+'</span>':'$'+effectiveShipping.toFixed(2)}</span></div><div class="ct-divider"></div><div class="ct-row ct-total"><span class="ct-label">${T[lang].orderTotal}</span><span class="ct-value">$${(total+effectiveShipping).toFixed(2)}</span></div><div class="min-progress"><div class="min-progress-header"><span>${met?T[lang].minMet:T[lang].orderMin}</span><span>$${total.toFixed(2)} / $${MIN_ORDER}</span></div><div class="min-progress-track"><div class="min-progress-fill${met?' met':''}" style="width:${pct}%"></div></div>${!met?`<div class="min-progress-msg">${lang==='es'?'Agrega $'+remaining.toFixed(2)+' más para desbloquear el pago':'Add $'+remaining.toFixed(2)+' more to unlock checkout'}</div>`:''}</div></div><button class="checkout-btn${met?'':' locked'}" ${met?'':'disabled'} onclick="${met?'openCheckout()':''}">` + T[lang].proceedCheckout + `</button><button class="clear-cart-btn" onclick="clearCartFn()">${T[lang].clearOrder}</button>`;
@@ -1308,10 +1353,120 @@ async function submitOrder(){
   document.getElementById('modalContent').innerHTML=`<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">${T[lang].orderReceived}</div><div class="success-sub">${lang==='es'?'Gracias, '+name+'. Tu pedido ha sido enviado.':'Thank you, '+name+'. Your order has been submitted.'}</div><div class="success-note">${lang==='es'?'Te contactaremos en <strong>24 horas</strong> para confirmar y coordinar el envío.<br>¿Preguntas? WhatsApp <strong>+1-310-683-0049</strong>':'We\'ll reach out within <strong>24 hours</strong> to confirm and arrange fulfillment.<br>Questions? WhatsApp <strong>+1-310-683-0049</strong>'}</div><button class="success-done-btn" onclick="closeCheckout()">${T[lang].backToCatalog}</button></div>`;
 }
 function flash(id,msg){const el=document.getElementById(id);el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);}
-document.addEventListener('click',function(e){var coaBtn=e.target.closest('.coa-btn');if(coaBtn){openCOA(coaBtn.dataset.compound,e);return;}
+document.addEventListener('click',function(e){var coaBtn=e.target.closest('.coa-btn');if(coaBtn){openCOA(coaBtn.dataset.compound,e);return;}var card=e.target.closest('.product-card[data-code]');if(card&&!e.target.closest('.pc-add,.pc-qty-controls,.pc-variant-pill')){openCPPanel(card.dataset.code);return;}
   var pill=e.target.closest ? e.target.closest('.pc-variant-pill') : null;
   if(pill&&pill.dataset.variantName){selectVariant(pill.dataset.variantName,pill.dataset.variantCode);}
 });
+var COMPOUND_INFO={
+  'Tirzepatide':{category:'Weight Loss',tagline:'Dual GIP + GLP-1 agonist — strongest approved weight loss medication',evidence:5,lo:'2.5 mg/wk × 4 wks → 5 mg/wk × 4 wks (hold at 5mg maintenance)',mid:'2.5→5→7.5→10 mg/wk (4 wks per step) — standard FDA titration',hi:'2.5→5→7.5→10→12.5→15 mg/wk (4 wks per step) — maximum FDA dose',schedule:'Once weekly SubQ injection — same day each week, any time of day',cycle:'20+ weeks minimum — long-term use for maximum benefit',benefits:['20.2% average body weight loss vs 13.7% semaglutide (SURMOUNT-5 head-to-head 2025)','Superior to semaglutide in SURPASS-2 and SURMOUNT-5','Reduces visceral and abdominal fat preferentially','Improves HbA1c, blood pressure, triglycerides']},
+  'Semaglutide':{category:'Weight Loss',tagline:'GLP-1 agonist — gold standard weight loss with cardiovascular benefit',evidence:5,lo:'0.25 mg/wk → 0.5 mg/wk (starting/titration)',mid:'0.25→0.5→1.0→2.4 mg/wk (standard 4-step titration)',hi:'2.4mg → 7.2mg/wk (Wegovy HD — FDA approved March 2026)',schedule:'Once weekly SubQ injection. 7.2mg requires tolerating 2.4mg for ≥4 weeks first.',cycle:'20+ weeks',benefits:['15–17% average body weight loss at 2.4mg (STEP-1)','20.7% average weight loss at 7.2mg Wegovy HD (STEP UP, 2025)','21% reduction in major cardiovascular events (SELECT trial)','FDA-approved for T2D, obesity, and MASH liver disease']},
+  'BPC-157':{category:'Healing',tagline:'Gastric pentadecapeptide — tissue repair, gut healing, anti-inflammatory',evidence:2,lo:'250 mcg/day (1x AM)',mid:'250 mcg 2x/day (AM + PM) — most common clinical protocol',hi:'500 mcg 2x/day — upper range, significant injuries only',schedule:'Daily SubQ near injury site or abdomen — split AM/PM dosing preferred',cycle:'8–12 weeks on / 4–8 wks off',benefits:['Accelerated tendon and ligament healing','Gut healing and leaky gut repair','Reduced systemic inflammation','Joint pain relief']},
+  'TB-500':{category:'Healing',tagline:'Thymosin Beta-4 fragment — systemic tissue repair and flexibility',evidence:2,lo:'2 mg once/week (mild support / maintenance only — no loading phase)',mid:'2 mg 2x/week × 4–6 wks loading, then 2 mg once/week maintenance',hi:'2.5 mg 2x/week × 4–6 wks loading (acute injury), then 2–2.5 mg once/week maintenance. 5mg+ doses are veterinary ranges — not standard for humans.',schedule:'SubQ — loading phase 2x/week (non-consecutive days), then 1x/week maintenance',cycle:'Loading 4–6 wks, then maintenance 4–6 wks. Total 10–12 weeks.',benefits:['Systemic tissue repair','Inflammation reduction throughout body','Improved flexibility and range of motion','Cardiac protection (animal models)']},
+  'GHK-Cu':{category:'Anti-Aging',tagline:'Copper tripeptide — skin, collagen, anti-aging, wound healing',evidence:3,lo:'1 mg/day SubQ or 0.1–0.5% topical serum 1x/day',mid:'2 mg/day SubQ or 0.5–1% topical 2x/day',hi:'3–5 mg/day SubQ (experienced) or high-concentration topical 2x/day + SubQ combined',schedule:'SubQ daily (systemic) OR topical daily to target skin area — both routes effective, different targets.',cycle:'12 weeks continuous. Safe for longer ongoing use topically.',benefits:['Skin tightening and wrinkle reduction','Collagen and elastin stimulation','Hair growth activation','Wound healing']},
+  'CJC-1295 (no DAC)':{category:'Growth Hormone',tagline:'GHRH analog — preferred for natural pulsatility, daily dosing',evidence:3,lo:'100 mcg/day before bed',mid:'200 mcg/day before bed — standard clinical protocol',hi:'300 mcg/day before bed — upper range',schedule:'Daily SubQ before bed on empty stomach, 2–3 hours after last meal. Some protocols use 5 days/week with weekend break.',cycle:'12 weeks / 4 wks off',benefits:['Increased lean muscle mass','Fat loss via lipolysis stimulation','Improved sleep quality and depth','Faster recovery from training']},
+  'CJC-1295 (with DAC)':{category:'Growth Hormone',tagline:'Long-acting GHRH — once weekly dosing via albumin binding',evidence:3,lo:'300 mcg once/week — conservative start. On a 5mg/2ml vial: pull to 12 units.',mid:'500–1,000 mcg once/week. On a 5mg/2ml vial: pull to 20–40 units.',hi:'1,000–2,000 mcg once/week — JCEM 2006 clinical trial range. On a 5mg/2ml vial: pull to 40–80 units. Do NOT dose daily — half-life is 6–8 days.',schedule:'Once weekly SubQ',cycle:'12 weeks / 4 wks off',benefits:['Once-weekly injection','Sustained GH and IGF-1 elevation','Lean muscle support','Fat loss']},
+  'Ipamorelin':{category:'Growth Hormone',tagline:'Cleanest GH secretagogue — selective pulse, no cortisol spike',evidence:3,lo:'100 mcg/day before bed',mid:'200 mcg/day before bed — most common clinical protocol',hi:'300 mcg/day before bed — upper range; 2x/day (AM + bed) advanced only',schedule:'Daily SubQ before bed on empty stomach. 5 days/week (Mon–Fri with weekend break) is an accepted clinical alternative to daily dosing.',cycle:'12–16 weeks / 4 wks off',benefits:['Clean GH pulse without stress hormones','Lean muscle preservation and growth','Fat loss via lipolysis','Deep sleep improvement']},
+  'NAD+':{category:'Longevity',tagline:'Master coenzyme — cellular energy, DNA repair, sirtuin activation',evidence:3,lo:'50–100 mg SubQ, 2–3x/week (conservative start)',mid:'100–200 mg/day SubQ (experienced) OR 500 mg IV infusion 1–3x/week (clinical)',hi:'1,000 mg IV infusion 1–3x/week — clinical setting only. 200 mg/day SubQ is the practical self-injection maximum.',schedule:'SubQ daily AM (self-injection protocol) OR IV infusion in clinical setting. Do NOT attempt 500–1000mg SubQ at home — high volumes and flushing risk.',cycle:'10 weeks on / 2 weeks off',benefits:['Cellular ATP energy optimization','Mitochondrial function restoration','DNA repair via PARP activation','Sirtuin longevity activation']},
+  'Sermorelin':{category:'Growth Hormone',tagline:'Original GHRH analog — physiological GH stimulation, FDA approved',evidence:3,lo:'200 mcg/night',mid:'300 mcg/night',hi:'500 mcg/night',schedule:'Daily SubQ 30–60 min before bed on empty stomach',cycle:'12 weeks / 4 wks off',benefits:['Natural pulsatile GH stimulation','Preserved negative feedback (safer than HGH)','Improved sleep quality','Lean muscle support']},
+  'Epithalon':{category:'Longevity',tagline:'Telomerase activator — anti-aging at chromosomal level',evidence:2,lo:'5 mg/day × 10 days',mid:'10 mg/day × 10 days',hi:'10 mg/day × 20 days',schedule:'Daily SubQ before bed (nighttime preferred — aligns with pineal/circadian biology). Short burst cycles ONLY — not continuous.',cycle:'10–20 day bursts, 2–4x per year',benefits:['Telomere elongation','Improved sleep via melatonin regulation','Antioxidant protection','Cancer risk reduction potential']},
+  'Thymosin Alpha-1':{category:'Immune',tagline:'Strongest immune-modulating peptide — T-cells, NK cells, dendritic cells',evidence:4,lo:'0.5 mg 2x/wk',mid:'1.0 mg 2x/wk',hi:'1.6 mg 2x/wk',schedule:'SubQ 2x per week',cycle:'10–12 weeks',benefits:['Enhanced antiviral immune response','T-cell and NK cell activation','Anti-cancer immune surveillance','Autoimmune regulation (bidirectional)']},
+  'PT-141':{category:'Hormonal',tagline:'Brain-based sexual arousal — works for both sexes, even when Viagra fails',evidence:3,lo:'0.5 mg as needed',mid:'1 mg as needed',hi:'1.75 mg as needed — FDA-approved Vyleesi dose ceiling. Do not exceed.',schedule:'SubQ as needed 45 min before — empty stomach',cycle:'Max 2x per week',benefits:['Increased sexual desire and arousal both sexes','Effective for psychological ED','Female sexual dysfunction treatment','Spontaneous erections in men']},
+  'SS-31':{category:'Mitochondrial',tagline:'Mitochondria-targeted antioxidant — cardioprotection and cellular energy',evidence:3,lo:'4 mg/day SubQ (Phase 2 heart failure trial starting dose)',mid:'10–20 mg/day SubQ (community/telehealth protocols)',hi:'40 mg/day SubQ (highest dose used in Phase 3 TAZPOWER trial — Barth syndrome)',schedule:'Daily SubQ injection — AM preferred. Reaches peak blood levels within 30–60 minutes.',cycle:'8–12 weeks (clinical trials ran 12–24 weeks)',benefits:['Mitochondrial protection and repair','Improved cellular energy','Cardiac protection (Phase 2 trial data)','Anti-aging at mitochondrial level']},
+  'KPV':{category:'Healing',tagline:'Alpha-MSH tripeptide — GI anti-inflammatory, gut healing, immune modulation',evidence:2,lo:'500 mcg/day oral (GI) or 250–500 mcg SubQ (systemic)',mid:'1–2 mg/day oral or 500 mcg–1 mg SubQ',hi:'2–5 mg/day oral (gut-specific protocols) or 1–2 mg/day SubQ',schedule:'Oral (preferred for GI conditions — stable in stomach acid) OR SubQ for systemic inflammation.',cycle:'8–12 weeks',benefits:['IBD, Crohns, ulcerative colitis relief','Leaky gut healing','Wound healing acceleration','Anti-inflammatory throughout GI tract']},
+  'Semax':{category:'Cognitive',tagline:'Russian nootropic — focus, neuroprotection, BDNF elevation',evidence:3,lo:'200–300 mcg/day (most commonly prescribed starting dose)',mid:'400–600 mcg/day (standard protocol)',hi:'600 mcg–1 mg/day (advanced — cycle 6 wks on / 2 wks off strictly. Post-cycle fatigue common.)',schedule:'Daily SubQ or intranasal',cycle:'6 weeks / 2 wks off',benefits:['Enhanced focus and cognitive performance','Memory consolidation','Neuroprotection','Mood elevation']},
+  'Selank':{category:'Cognitive',tagline:'Anxiolytic nootropic — calms anxiety without sedation or dependence',evidence:2,lo:'250 mcg/day (SubQ) or 250 mcg intranasal 1–2x/day',mid:'500 mcg/day (SubQ) or 500 mcg intranasal 2x/day',hi:'750 mcg–1 mg/day — intranasal preferred at higher doses for CNS delivery. Start low.',schedule:'Daily SubQ or intranasal',cycle:'6 weeks / 2 wks off',benefits:['Anxiety reduction without sedation','No dependency or withdrawal risk','BDNF elevation','Cognitive performance under stress']},
+  'Follistatin 344':{category:'Muscle Growth',tagline:'Myostatin inhibitor — muscle growth beyond genetic limits',evidence:1,lo:'50 mcg/day SubQ × 10 days (burst cycle — extremely limited human data)',mid:'100 mcg/day SubQ × 10 days',hi:'200 mcg/day SubQ × 10 days — NO human RCT data. Cancer risk theoretical concern (myostatin inhibition). Medical supervision mandatory.',schedule:'SubQ — short burst protocols',cycle:'10–20 day burst cycles only',benefits:['Dramatic muscle growth by removing myostatin ceiling','Increased muscle fiber size and number','Potential treatment for muscular dystrophy']},
+  'Melanotan I':{category:'Hormonal',tagline:'Pure tanning peptide — melanin stimulation without sexual effects',evidence:3,lo:'250 mcg/day → 250 mcg 3x/wk',mid:'500 mcg/day → 500 mcg 3x/wk',hi:'1 mg/day → 500 mcg EOD',schedule:'Daily SubQ loading then EOD maintenance',cycle:'8 weeks',benefits:['Tanning without UV damage','Photoprotection','Even skin pigmentation','No sexual side effects unlike MT-II']},
+  'Melanotan II':{category:'Hormonal',tagline:'Tanning + sexual arousal — dual melanocortin agonist',evidence:2,lo:'250 mcg/day → 250 mcg 3x/wk',mid:'500 mcg/day → 500 mcg EOD',hi:'1 mg/day → 500 mcg EOD',schedule:'Daily SubQ loading then EOD maintenance',cycle:'8 weeks',benefits:['Skin tanning with minimal UV','Increased libido and sexual arousal','Spontaneous erections (men)','Appetite suppression']},
+  'HCG':{category:'Hormonal',tagline:'LH mimetic — testosterone and fertility support',evidence:5,lo:'500 IU every other day',mid:'1,000–1,500 IU 3x/wk',hi:'2,000 IU 3x/wk',schedule:'SubQ or IM 3x per week',cycle:'8 weeks',benefits:['Testosterone production stimulation','Testicular atrophy prevention during TRT','Fertility preservation','PCT support']},
+  'DSIP':{category:'Cognitive',tagline:'Delta sleep-inducing peptide — deep sleep and cortisol reduction',evidence:2,lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night',schedule:'Daily SubQ 30 min before bed',cycle:'6–8 weeks',benefits:['Deeper slow-wave sleep','Cortisol reduction','Stress resilience','Enhanced overnight GH pulse']},
+  'VIP':{category:'Immune',tagline:'Vasoactive intestinal peptide — pulmonary, immune, CIRS, anti-inflammatory',evidence:3,lo:'50 mcg SubQ 2x/day (100 mcg/day total)',mid:'100 mcg SubQ 2x/day (200 mcg/day total)',hi:'200 mcg SubQ 2x/day (400 mcg/day total)',schedule:'SubQ — for intranasal CIRS/Shoemaker protocol see Vasoactive Intestinal Peptide (Nasal)',cycle:'8 weeks',benefits:['Pulmonary function improvement','CIRS/mold illness treatment','Vasodilation and blood pressure reduction','GI motility improvement']},
+  'Melatonin':{category:'Anti-Aging',tagline:'Pineal hormone — sleep, circadian rhythm, mitochondrial antioxidant',evidence:4,lo:'0.5 mg/night',mid:'0.8 mg/night',hi:'1 mg/night',schedule:'Daily SubQ 30 min before bed',cycle:'Ongoing as needed',benefits:['Rapid sleep onset improvement','Enhanced deep sleep quality','Circadian rhythm repair','Powerful mitochondrial antioxidant']},
+  'HGH 191AA':{category:'Growth Hormone',tagline:'Recombinant human growth hormone — the full 191 amino acid molecule',evidence:5,lo:'1–2 IU/day',mid:'2–4 IU/day',hi:'4–6 IU/day split',schedule:'Daily SubQ AM or split AM/PM',cycle:'16–24 weeks',benefits:['Increased lean muscle mass','Significant fat loss','Improved recovery','Skin quality and anti-aging']},
+  'HGH Fragment':{category:'Weight Loss',tagline:'HGH 176-191 — pure fat burning without growth effects',evidence:3,lo:'250 mcg 2x/day',mid:'500 mcg 2x/day',hi:'500 mcg 3x/day',schedule:'Daily SubQ 2–3x on empty stomach',cycle:'12 weeks',benefits:['Pure targeted lipolysis','No IGF-1 elevation','No blood glucose impact','FDA GRAS status']},
+  'IGF-1 LR3':{category:'Muscle Growth',tagline:'Most anabolic peptide — muscle hyperplasia and nutrient partitioning',evidence:3,lo:'20–40 mcg/day SubQ post-workout (most commonly used range)',mid:'50–80 mcg/day SubQ post-workout',hi:'80–100 mcg/day — upper range, medical supervision recommended. Hypoglycemia risk increases significantly.',schedule:'Daily SubQ or IM post-workout — eat carbs within 30 min',cycle:'5–6 weeks MAXIMUM',benefits:['Muscle cell hyperplasia (new fibers)','Superior nutrient partitioning','Accelerated recovery','Full-body anabolic effect']},
+  'Retatrutide':{category:'Weight Loss',tagline:'Triple GIP+GLP-1+glucagon agonist — 28.7% weight loss in Phase 3. Most potent obesity drug in trial history.',evidence:3,lo:'1 mg/wk × 8 wks → 2 mg/wk × 8 wks (very conservative)',mid:'1→2→4→8 mg/wk (6–8 wks per step) — Phase 2/3 protocol',hi:'Up to 12 mg/wk maximum — Phase 3 highest dose',schedule:'Once weekly SubQ — titrate extremely slowly. Spend 6–8 weeks at each dose step minimum.',cycle:'48+ weeks for maximum benefit — do not rush titration',benefits:['28.7% average body weight loss at 12mg (Phase 3 TRIUMPH-4, 68 weeks) — highest ever in a Phase 3 trial','No weight loss plateau at 48 weeks (Phase 2 data)','80%+ liver fat reduction','Significant knee osteoarthritis pain reduction in TRIUMPH-4 (-75.8% WOMAC score)']},
+  'Cagrilintide':{category:'Weight Loss',tagline:'Amylin analog — adds 5–8% extra weight loss on top of GLP-1',evidence:4,lo:'0.25 mg/wk × 4 wks → 0.5 mg/wk (Phase 3 REDEFINE starting dose)',mid:'0.25→0.5→1.0→1.5→2.0 mg/wk (4 wks per step) — Phase 3 protocol',hi:'2.4 mg/wk',schedule:'Once weekly SubQ (separate site from sema)',cycle:'20+ weeks',benefits:['Additional 5–8% weight loss stacked on GLP-1','CagriSema (REDEFINE 1): 23% average weight loss on-treatment (Phase 3, 68 weeks)','Genuine additive effect — different mechanism']},
+  'AOD9604':{category:'Weight Loss',tagline:'HGH C-terminal fragment — pure lipolysis, no IGF-1, FDA GRAS',evidence:3,lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg/day — maximum. All 6 human clinical trials capped at 500 mcg/day. No safety data exists above this dose.',schedule:'Daily SubQ on empty stomach (AM preferred)',cycle:'12 weeks',benefits:['Pure lipolysis without GH side effects','No IGF-1 elevation','FDA GRAS status','Safe adjunct to GLP-1 therapy']},
+  'L-Glutathione':{category:'Anti-Aging',tagline:'Master antioxidant — detox, immune, anti-aging, skin brightening',evidence:3,lo:'500 mg 2x/wk',mid:'1,000 mg 2–3x/wk',hi:'1,500 mg 3x/wk',schedule:'SubQ 2–3x/week or IV infusion',cycle:'10 weeks',benefits:['Heavy metal and toxin chelation','Immune support','Skin brightening','Liver protection']},
+  'MOTS-c':{category:'Mitochondrial',tagline:'Mitochondria-derived exercise mimetic — AMPK activation, insulin sensitivity',evidence:2,lo:'2 mg SubQ 2x/week (conservative start)',mid:'5 mg SubQ 2–3x/week (most common clinical protocol)',hi:'5–10 mg SubQ 3x/week (experienced users — total weekly dose ≤15mg)',schedule:'SubQ 2–3x per week (AM or pre-workout). As a signaling peptide, daily dosing is NOT necessary and may blunt receptor sensitivity.',cycle:'8–10 weeks on / 4–6 weeks off',benefits:['Exercise mimetic effects — activates pathways similar to aerobic exercise','Improved insulin sensitivity','Metabolic rate increase','Fat oxidation enhancement']},
+  '5-amino-1mq':{category:'Mitochondrial',tagline:'NNMT inhibitor — elevates NAD+ and suppresses fat cell expansion',evidence:2,lo:'25 mg/day',mid:'50 mg/day',hi:'100 mg/day',schedule:'Daily SubQ AM',cycle:'10 weeks',benefits:['NAD+ elevation via NNMT inhibition','Fat cell expansion suppression','Improved insulin sensitivity','Metabolic rate increase']},
+  'SLU-PP-332':{category:'Mitochondrial',tagline:'ERR agonist — exercise mimetic activating endurance pathways',evidence:1,lo:'5 mg/day — no validated human dose. Community-extrapolated value with no published human PK basis.',mid:'10 mg/day — no validated human dose. Mouse HED conversion yields far higher values; these numbers are not scientifically derived.',hi:'15–20 mg/day — no validated human dose. All data is mouse-only (2023). Treat as highly experimental.',schedule:'Daily SubQ or oral',cycle:'10 weeks',benefits:['Mitochondrial biogenesis','Improved fat oxidation','Endurance capacity increase','Activates same pathways as 1-hour cardio']},
+  'Lipo-C':{category:'Weight Loss',tagline:'Lipotropic injection blend — fat mobilization and liver support',evidence:2,lo:'0.5 ml 1x/wk',mid:'1 ml 2x/wk',hi:'1 ml 3x/wk',schedule:'IM or SubQ 1–3x per week',cycle:'10 weeks',benefits:['Enhanced fat mobilization from liver','Energy boost (B12)','Liver support','Complements GLP-1 therapy']},
+  'KissPeptin-10':{category:'Hormonal',tagline:'Upstream testosterone — activates the HPG axis at hypothalamic level',evidence:3,lo:'50 mcg/day',mid:'100–200 mcg/day',hi:'250–500 mcg/day',schedule:'Daily SubQ',cycle:'8 weeks',benefits:['Natural testosterone restoration','LH/FSH pulse restoration','Fertility support both sexes','HPG axis reactivation after suppression']},
+  'Snap-8':{category:'Anti-Aging',tagline:'Botox-like octapeptide — reduces expression lines at nerve level',evidence:2,lo:'Topical formulation 1x/day (3–5% concentration)',mid:'Topical formulation 2x/day (5–8% concentration)',hi:'High concentration topical 2x/day (8–10%) — all published data is topical only. No injectable human data exists.',schedule:'Topical 1–2x daily — no published SubQ injection data exists for this compound',cycle:'Ongoing',benefits:['Expression line reduction','Skin surface smoothing','Non-toxic Botox-like mechanism','Gradual reversible effect']},
+  'LL37':{category:'Immune',tagline:'Human cathelicidin — antimicrobial including MRSA, biofilm disruption',evidence:3,lo:'Topical application 2–3x/wk — all published human data is topical. SubQ injection has no clinical trial basis.',mid:'Topical 2x/day to wound or affected area — established use for wound healing.',hi:'Topical high-concentration 2x/day — no published human SubQ dose exists. Injectable use is experimental.',schedule:'SubQ or topical 2–3x per week',cycle:'8 weeks',benefits:['Broad-spectrum antimicrobial including MRSA','Biofilm disruption','Wound healing','Antiviral properties (influenza, HIV, HSV)']},
+  'IGF DES':{category:'Muscle Growth',tagline:'Site-specific IGF — inject into target muscle for localized growth',evidence:2,lo:'25 mcg/day',mid:'50 mcg/day',hi:'75–100 mcg/day',schedule:'Daily IM into target muscle — eat after',cycle:'5 weeks MAX',benefits:['Site-specific muscle hypertrophy','Lagging muscle group targeting','Less systemic hypoglycemia than LR3']},
+  'MGF':{category:'Muscle Growth',tagline:'Mechano Growth Factor — local muscle repair after exercise/injury',evidence:2,lo:'100 mcg post-workout 3x/wk',mid:'200 mcg 3–5x/wk',hi:'200 mcg daily',schedule:'SubQ or IM post-workout near muscle',cycle:'6 weeks',benefits:['Satellite cell activation for repair','Post-exercise and injury recovery','Synergistic with IGF-1 LR3 (different mechanisms)']},
+  'BAC Water':{category:'Reconstitution',tagline:'Bacteriostatic water — essential for peptide reconstitution',evidence:5,lo:'2 ml per vial',mid:'2 ml per vial',hi:'2 ml per vial',schedule:'Add 2ml to lyophilized peptide vial',cycle:'N/A',benefits:['Multi-use vials (28+ days refrigerated)','Prevents contamination','Isotonic for comfortable injection']},
+  'Acetic Acid Water':{category:'Reconstitution',tagline:'Acidic reconstitution solvent for pH-sensitive peptides',evidence:5,lo:'2 ml per vial',mid:'2 ml per vial',hi:'2 ml per vial',schedule:'Add 2ml to vial then dilute with BAC water',cycle:'N/A',benefits:['Reconstitution of IGF-1 LR3, IGF DES','Proper dissolution prevents degradation']},
+};
+
+var _cpCode=null;
+function openCPPanel(code){
+  var p=PRODUCTS.find(function(x){return x.code===code;})||ALL_PRODUCTS.find(function(x){return x.code===code;});
+  if(!p)return;
+  _cpCode=code;
+  var prName=(typeof PR_MAP!=='undefined'&&PR_MAP[p.name])?PR_MAP[p.name]:p.name;
+  var info=COMPOUND_INFO[prName]||COMPOUND_INFO[p.name]||{};
+  document.getElementById('cpCat').textContent=info.category||p.cat||'';
+  document.getElementById('cpName').textContent=p.name;
+  document.getElementById('cpTagline').textContent=info.tagline||'';
+  var ev=info.evidence||0;
+  document.getElementById('cpEvidence').innerHTML=Array.from({length:5},function(_,i){return '<div class="cp-pip'+(i<ev?' on':'')+'"></div>';}).join('');
+  var body='';
+  // Dosing
+  if(info.lo||info.mid||info.hi){
+    body+='<div class="cp-section-title">Dosing</div>';
+    body+='<table class="cp-dose-table"><thead><tr><th>Tier</th><th>Dose</th></tr></thead><tbody>';
+    if(info.lo)body+='<tr><td class="t-lo">LOW</td><td>'+info.lo+'</td></tr>';
+    if(info.mid)body+='<tr><td class="t-mid">STD</td><td>'+info.mid+'</td></tr>';
+    if(info.hi)body+='<tr><td class="t-hi">HIGH</td><td>'+info.hi+'</td></tr>';
+    body+='</tbody></table>';
+  }
+  // Schedule & cycle
+  if(info.schedule){
+    body+='<div class="cp-section-title">Schedule</div><div class="cp-schedule">'+info.schedule+(info.cycle?' &nbsp;·&nbsp; Cycle: '+info.cycle:'')+'</div>';
+  }
+  // Benefits
+  if(info.benefits&&info.benefits.length){
+    body+='<div class="cp-section-title">Benefits</div>';
+    info.benefits.forEach(function(b){body+='<div class="cp-benefit">'+b+'</div>';});
+  }
+  // COA
+  if(COA_MAP[p.name]){
+    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'">🧪 View Test Report</button>';
+  }
+  // PR link
+  body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=cerritos" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">Full Reference →</a></div>';
+  document.getElementById('cpBody').innerHTML=body;
+  // Add to cart button
+  renderCPCartBtn(code);
+  document.getElementById('cpOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function renderCPCartBtn(code){
+  var p=PRODUCTS.find(function(x){return x.code===code;})||ALL_PRODUCTS.find(function(x){return x.code===code;});
+  var stock=inventory&&inventory[code]?inventory[code].stock:null;
+  var isOut=stock===null||stock===0;
+  var qty=cart[code]||0;
+  var existing=document.getElementById('cpCartArea');
+  if(existing)existing.remove();
+  var div=document.createElement('div');
+  div.id='cpCartArea';
+  if(isOut){
+    div.innerHTML='<button class="cp-add-btn" disabled style="opacity:0.4;cursor:not-allowed;">OUT OF STOCK</button>';
+  } else if(qty>0){
+    div.innerHTML='<div class="cp-qty-row"><button onclick="cpQty(-1)">&#8722;</button><span>'+qty+'</span><button onclick="cpQty(1)">+</button></div>';
+  } else {
+    div.innerHTML='<button class="cp-add-btn" onclick="cpAddToCart()">+ ADD TO ORDER</button>';
+  }
+  document.getElementById('cpBody').appendChild(div);
+}
+function cpAddToCart(){if(!_cpCode)return;addToCart(_cpCode);renderCPCartBtn(_cpCode);}
+function cpQty(delta){if(!_cpCode)return;changeQty(_cpCode,delta);renderCPCartBtn(_cpCode);}
+function closeCPPanel(e){if(e&&e.target!==document.getElementById('cpOverlay'))return;document.getElementById('cpOverlay').classList.remove('open');document.body.style.overflow='';}
+
 var COA_MAP={'MOTS-C':'mots-c'};
 function openCOA(name,e){if(e)e.stopPropagation();var key=COA_MAP[name];if(!key)return;document.getElementById('coaImage').src='./coa/'+key+'.jpg';document.getElementById('coaModal').classList.add('open');document.body.style.overflow='hidden';}
 function closeCOA(){document.getElementById('coaModal').classList.remove('open');document.body.style.overflow='';}

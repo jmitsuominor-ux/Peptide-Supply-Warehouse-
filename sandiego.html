@@ -253,7 +253,7 @@ body::after{display:none;}
 .bys-stack-card:hover{border-color:var(--blue);box-shadow:0 2px 8px rgba(23,86,169,0.1);}
 .bys-stack-card.selected{border-color:var(--blue);background:rgba(23,86,169,0.05);box-shadow:0 2px 8px rgba(23,86,169,0.12);}
 .bys-stack-card.unavailable{opacity:0.4;filter:grayscale(0.9);cursor:not-allowed;pointer-events:none;}
-.bys-info-btn{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:rgba(23,86,169,0.08);border:1px solid rgba(23,86,169,0.18);font-size:9px;cursor:pointer;color:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;transition:all 0.12s;z-index:1;}
+.bys-info-btn{position:absolute;top:8px;right:8px;width:18px;height:18px;border-radius:50%;background:rgba(23,86,169,0.08);border:1px solid rgba(23,86,169,0.18);font-size:9px;cursor:pointer;color:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:600;transition:all 0.12s;z-index:1;text-decoration:none;line-height:1;}
 .bys-info-btn:hover{background:var(--blue);color:#fff;border-color:transparent;}
 .bys-info-btn.active{background:var(--blue);color:#fff;border-color:transparent;}
 .bys-stack-emoji{font-size:18px;margin-bottom:5px;}
@@ -883,7 +883,7 @@ function bysRenderSelect(){
     var unavail=!hasStock?' unavailable':'';
     var clickHandler=hasStock?' onclick="bysToggleStack('+i+')"':'';
     html+='<div class="bys-stack-card'+(sel?' selected':'')+unavail+'"'+clickHandler+'>';
-    html+='<button class="bys-info-btn" onclick="bysToggleInfo('+i+',event)" title="View doses">i</button>';
+    html+='<a class="bys-info-btn" href="https://jmitsuominor-ux.github.io/peptide-reference/?stack='+encodeURIComponent(s.name.replace(/\s*\([^)]*\).*$/,'').trim())+'&store=sd" target="_blank" onclick="event.stopPropagation()" title="View in PeptideRef">i</a>';
     html+='<div class="bys-stack-emoji">'+s.emoji+'</div>';
     html+='<div class="bys-stack-name">'+s.name+'</div>';
     html+='<div class="bys-stack-goal">'+s.goal+'</div>';

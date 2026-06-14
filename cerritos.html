@@ -1169,10 +1169,10 @@ function buildVariantPills(group,activeCode){
   var html='<div class="pc-variants">';
   group.forEach(function(v){
     var vs=inventory[v.code]?inventory[v.code].stock:0;
+    if(vs===0)return; // skip out-of-stock variants
     var cls='pc-variant-pill';
     if(v.code===activeCode)cls+=' active';
     if(cart[v.code])cls+=' in-cart-v';
-    if(vs===0)cls+=' out';
     var lbl=v.spec.replace(/\/vials?/i,'').trim();
     html+='<button class="'+cls+'" data-variant-name="'+v.name.replace(/"/g,'&quot;')+'" data-variant-code="'+v.code+'">'+lbl+'</button>';
   });
@@ -1226,11 +1226,7 @@ function renderProducts(){
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
     var cardCls='product-card'+(inCart?' in-cart':'')+(isOut?' out-of-stock-card':'');
     var cardStyle=isOut?'opacity:0.5;filter:grayscale(0.85);':'';
-    // Price range for multi-variant groups
-    var minPrice=Math.min.apply(null,group.map(function(v){return v.price;}));
-    var maxPrice=Math.max.apply(null,group.map(function(v){return v.price;}));
-    var priceDisplay=group.length>1&&minPrice!==maxPrice?'$'+minPrice.toFixed(2)+' – $'+maxPrice.toFixed(2):'$'+p.price.toFixed(2);
-    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'" onclick="void(0)"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div><div class="pc-price">'+priceDisplay+'</div>'+btnHtml+'</div>';
+    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'" onclick="void(0)"><div class="in-cart-dot"></div><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+'<div class="pc-price">$'+p.price.toFixed(2)+'</div>'+btnHtml+'</div>';
   });
   grid.innerHTML=cards.join('');
 }

@@ -307,7 +307,7 @@ body::after{display:none;}
 .pc-variant-pill.active.in-cart-v{background:var(--green);border-color:transparent;color:#fff;}
 .cp-panel-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.55);z-index:600;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
 .cp-panel-overlay.open{display:flex;}
-.cp-panel{background:var(--white);width:100%;max-width:540px;max-height:90vh;border-radius:20px 20px 0 0;overflow-y:auto;animation:slideUp 0.28s cubic-bezier(.32,.72,0,1);}
+.cp-panel{background:var(--white);width:100%;max-width:540px;max-height:90vh;border-radius:20px 20px 0 0;overflow:hidden;display:flex;flex-direction:column;animation:slideUp 0.28s cubic-bezier(.32,.72,0,1);}
 @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
 .cp-handle{width:36px;height:4px;background:rgba(0,0,0,0.12);border-radius:2px;margin:10px auto 0;}
 .cp-vial-header{background:linear-gradient(160deg,#f7f2ff 0%,#eef4ff 100%);padding:12px 16px 18px;position:relative;text-align:center;border-bottom:1px solid rgba(123,63,212,0.1);}
@@ -318,7 +318,8 @@ body::after{display:none;}
 .cp-name{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:4px;}
 .cp-cat-badge{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#7b3fd4;background:rgba(123,63,212,0.1);border-radius:20px;padding:2px 10px;margin-bottom:6px;}
 .cp-tagline{font-size:12px;color:var(--text2);line-height:1.4;max-width:320px;margin:0 auto;}
-.cp-body{padding:14px 16px 8px;}
+.cp-body{padding:14px 16px 8px;flex:1;overflow-y:auto;}
+.cp-cart-footer{flex-shrink:0;padding:10px 16px 20px;background:var(--white);border-top:1px solid var(--border);}
 .cp-section-title{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);margin:14px 0 6px;}
 .cp-dose-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;}
 .cp-dose-table th{text-align:left;color:var(--text3);font-weight:500;padding:4px 0;border-bottom:1px solid var(--border);}
@@ -516,6 +517,7 @@ body::after{display:none;}
       <div id="cpVariants"></div>
     </div>
     <div class="cp-body" id="cpBody"></div>
+    <div class="cp-cart-footer" id="cpCartFooter"></div>
   </div>
 </div>
 <div class="modal-overlay" id="coaModal" onclick="closeCOA()"><div onclick="event.stopPropagation()" style="position:relative;max-width:600px;width:100%;max-height:90vh;overflow-y:auto;border-radius:10px;background:var(--white);"><button onclick="closeCOA()" style="position:sticky;top:10px;float:right;margin:10px 10px 0 0;z-index:10;background:var(--bg);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);">&#215;</button><img id="coaImage" src="" alt="Test Report" style="width:100%;display:block;border-radius:10px;"></div></div>
@@ -1380,18 +1382,71 @@ var CAT_COLORS={
 };
 function vialSVG(name,cat){
   var c=CAT_COLORS[cat]||CAT_COLORS['Cognitive'];
-  return '<svg class="cp-vial-svg" viewBox="0 0 100 150" xmlns="http://www.w3.org/2000/svg">'+
-    '<ellipse cx="50" cy="12" rx="23" ry="5.5" fill="'+c.lo+'"/>'+
-    '<rect x="27" y="12" width="46" height="16" rx="3" fill="'+c.mid+'"/>'+
-    '<ellipse cx="50" cy="28" rx="23" ry="5.5" fill="'+c.hi+'"/>'+
-    '<rect x="31" y="28" width="38" height="9" fill="rgba(180,210,245,0.7)"/>'+
-    '<rect x="26" y="37" width="48" height="88" rx="8" fill="rgba(210,230,255,0.28)" stroke="rgba(140,180,230,0.7)" stroke-width="1.5"/>'+
-    '<rect x="29" y="40" width="8" height="82" rx="4" fill="rgba(255,255,255,0.5)"/>'+
-    '<rect x="29" y="55" width="42" height="52" rx="3" fill="white"/>'+
-    '<rect x="26" y="122" width="48" height="7" fill="'+c.mid+'"/>'+
-    '<rect x="26" y="115" width="48" height="7" fill="'+c.hi+'" opacity="0.5"/>'+
-    '<ellipse cx="50" cy="129" rx="24" ry="7" fill="'+c.mid+'"/>'+
-    '<ellipse cx="50" cy="127" rx="19" ry="4" fill="'+c.shine+'"/>'+
+  var id=Math.random().toString(36).slice(2,7);
+  return '<svg class="cp-vial-svg" viewBox="0 0 100 160" xmlns="http://www.w3.org/2000/svg">'+
+    '<defs>'+
+      '<linearGradient id="cg'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
+        '<stop offset="0%" stop-color="'+c.hi+'" stop-opacity="0.9"/>'+
+        '<stop offset="18%" stop-color="'+c.lo+'" stop-opacity="0.95"/>'+
+        '<stop offset="45%" stop-color="'+c.mid+'"/>'+
+        '<stop offset="80%" stop-color="'+c.hi+'"/>'+
+        '<stop offset="100%" stop-color="'+c.mid+'" stop-opacity="0.85"/>'+
+      '</linearGradient>'+
+      '<radialGradient id="ct'+id+'" cx="38%" cy="30%" r="65%">'+
+        '<stop offset="0%" stop-color="'+c.lo+'" stop-opacity="0.95"/>'+
+        '<stop offset="55%" stop-color="'+c.mid+'"/>'+
+        '<stop offset="100%" stop-color="'+c.hi+'"/>'+
+      '</radialGradient>'+
+      '<linearGradient id="gg'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
+        '<stop offset="0%" stop-color="rgba(200,225,250,0.18)"/>'+
+        '<stop offset="7%" stop-color="rgba(255,255,255,0.72)"/>'+
+        '<stop offset="18%" stop-color="rgba(210,232,255,0.08)"/>'+
+        '<stop offset="78%" stop-color="rgba(180,210,245,0.05)"/>'+
+        '<stop offset="92%" stop-color="rgba(255,255,255,0.18)"/>'+
+        '<stop offset="100%" stop-color="rgba(160,200,235,0.22)"/>'+
+      '</linearGradient>'+
+      '<linearGradient id="bg'+id+'" x1="0%" y1="0%" x2="100%" y2="0%">'+
+        '<stop offset="0%" stop-color="'+c.hi+'" stop-opacity="0.95"/>'+
+        '<stop offset="20%" stop-color="'+c.lo+'" stop-opacity="0.85"/>'+
+        '<stop offset="55%" stop-color="'+c.mid+'" stop-opacity="0.9"/>'+
+        '<stop offset="100%" stop-color="'+c.hi+'" stop-opacity="0.8"/>'+
+      '</linearGradient>'+
+    '</defs>'+
+    // Drop shadow
+    '<ellipse cx="50" cy="152" rx="26" ry="5" fill="rgba(0,0,0,0.12)"/>'+
+    // Neck
+    '<rect x="34" y="30" width="32" height="10" rx="2" fill="url(#cg'+id+')"/>'+
+    // Cap cylinder
+    '<rect x="26" y="10" width="48" height="22" rx="5" fill="url(#cg'+id+')"/>'+
+    // Cap top (metallic ellipse)
+    '<ellipse cx="50" cy="10" rx="24" ry="6" fill="url(#ct'+id+')"/>'+
+    // Cap top specular highlight
+    '<ellipse cx="42" cy="7" rx="11" ry="3.5" fill="rgba(255,255,255,0.38)" transform="rotate(-10,42,7)"/>'+
+    // Cap bottom shadow
+    '<ellipse cx="50" cy="32" rx="16" ry="4" fill="rgba(0,0,0,0.18)"/>'+
+    // Glass body shape
+    '<rect x="28" y="40" width="44" height="104" rx="9" fill="rgba(215,235,255,0.14)" stroke="rgba(160,200,235,0.45)" stroke-width="1.2"/>'+
+    // Glass gradient overlay
+    '<rect x="28" y="40" width="44" height="104" rx="9" fill="url(#gg'+id+')"/>'+
+    // White label
+    '<rect x="30" y="60" width="40" height="50" rx="2" fill="white" opacity="0.96"/>'+
+    // Label top rule
+    '<line x1="30" y1="66" x2="70" y2="66" stroke="rgba(0,0,0,0.07)" stroke-width="0.8"/>'+
+    // Label bottom rule
+    '<line x1="30" y1="104" x2="70" y2="104" stroke="rgba(0,0,0,0.07)" stroke-width="0.8"/>'+
+    // Bottom band 1
+    '<rect x="28" y="136" width="44" height="8" fill="url(#bg'+id+')" rx="0"/>'+
+    // Bottom rounded cap
+    '<rect x="28" y="140" width="44" height="8" rx="0" fill="url(#bg'+id+')"/>'+
+    '<ellipse cx="50" cy="148" rx="22" ry="6" fill="url(#bg'+id+')"/>'+
+    // Bottom specular
+    '<ellipse cx="50" cy="146" rx="12" ry="2.5" fill="rgba(255,255,255,0.2)"/>'+
+    // Left glass highlight
+    '<rect x="30" y="42" width="5" height="96" rx="2.5" fill="rgba(255,255,255,0.55)"/>'+
+    // Secondary left highlight
+    '<rect x="37" y="46" width="2.5" height="86" rx="1.2" fill="rgba(255,255,255,0.22)"/>'+
+    // Right edge shimmer
+    '<rect x="65" y="44" width="4" height="92" rx="2" fill="rgba(255,255,255,0.1)"/>'+
     '</svg>'+
     '<div class="cp-vial-label-text" id="cpVialLabel">'+name+'</div>';
 }
@@ -1485,7 +1540,7 @@ function renderCPCartBtn(code){
   } else {
     div.innerHTML='<button class="cp-add-btn" onclick="event.stopPropagation();cpAddToCart()">+ ADD TO ORDER</button>';
   }
-  document.getElementById('cpBody').appendChild(div);
+  document.getElementById('cpCartFooter').innerHTML='';document.getElementById('cpCartFooter').appendChild(div);
 }
 function cpAddToCart(){if(!_cpCode)return;addToCart(_cpCode);renderCPCartBtn(_cpCode);}
 function cpQty(delta){if(!_cpCode)return;changeQty(_cpCode,delta);renderCPCartBtn(_cpCode);}

@@ -1580,7 +1580,7 @@ function openCPPanel(code){
   document.getElementById('cpName').textContent=p.name;
   document.getElementById('cpTagline').textContent=info.tagline||'';
   var varHtml='';
-  var inStockVariants=allVariants.filter(function(v){var st=inventory&&inventory[v.code]?inventory[v.code].stock:null;return st===null||st>0;});
+  var inStockVariants=allVariants.filter(function(v){var st=inventory&&inventory[v.code]?inventory[v.code].stock:0;return st>0;});
   if(inStockVariants.length>1){
     varHtml='<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px;">';
     inStockVariants.forEach(function(v){varHtml+='<button class="cp-var-pill cp-var-btn'+(v.code===code?' active':'')+'" data-vcode="'+v.code+'" onclick="event.stopPropagation();switchCPVariant(this.dataset.vcode)">'+v.spec+'</button>';});

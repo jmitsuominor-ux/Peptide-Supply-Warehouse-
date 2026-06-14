@@ -1476,17 +1476,28 @@ function vialSVG(name,cat){
   return s;
 }
 var VIAL_IMG={
-  '5-amino-1mq':'5-amino-1mq.png',
-  'AOD9604':'AOD9604.png',
-  'BPC-157':'BPC-157.png',
-  'CJC-1295 (no DAC)':'CJC-1295 (no DAC).png',
-  'CJC-1295 (with DAC)':'CJC-1295 (with DAC).png',
-  'Thymosin Beta-4':' Thymosin Beta-4.png',
-  'Acetic Acid Water':' Acetic acid water.png',
+  '5-amino-1mq':          {p:'5-amino-1mq.png'},
+  'AOD9604':              {p:'AOD9604.png'},
+  'BPC-157':              {p:'BPC-157.png'},
+  'CJC-1295 (no DAC)':   {p:'CJC-1295 (no DAC).png'},
+  'CJC-1295 (with DAC)': {p:'CJC-1295 (with DAC).png'},
+  'Thymosin Beta-4':      {p:' Thymosin Beta-4.png'},
+  'Acetic Acid Water':    {p:' Acetic acid water.png'},
+  'DSIP':                 {p:'DSIP.png'},
+  'Epithalon':            {p:'Epithalon.png'},
+  'Follistatin 344':      {p:'Follistatin 344.png'},
+  'GHK-Cu':              {p:'GHK-CU.png'},
+  'GHRP-2':              {p:'GHRP-2.png'},
+  'GHRP-6':              {p:'GHRP-6 .png'},
+  'Dihexa':              {p:'img/vials/Dihexa.png'},
 };
 function vialDisplay(name,cat){
-  var f=VIAL_IMG[name];
-  if(f)return '<img src="./'+encodeURIComponent(f)+'" class="cp-vial-photo" alt="'+name+'">';
+  var e=VIAL_IMG[name];
+  if(e){
+    var parts=e.p.split('/');
+    var encoded=parts.map(encodeURIComponent).join('/');
+    return '<img src="./'+encoded+'" class="cp-vial-photo" alt="'+name+'">';
+  }
   return vialSVG(name,cat);
 }
 

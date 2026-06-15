@@ -1620,28 +1620,35 @@ function openCPPanel(code){
 }
 
 function renderCPCartBtn(code){
-  var p=PRODUCTS.find(function(x){return x.code===code;})||ALL_PRODUCTS.find(function(x){return x.code===code;});
   var stock=inventory&&inventory[code]?inventory[code].stock:null;
   var isOut=stock===null||stock===0;
   var qty=cart[code]||0;
-  var existing=document.getElementById('cpCartArea');
-  if(existing)existing.remove();
+  var footer=document.getElementById('cpCartFooter');
+  footer.innerHTML='';
+  footer.style.display=isOut?'none':'';
+  if(isOut)return;
   var div=document.createElement('div');
   div.id='cpCartArea';
-  document.getElementById('cpCartFooter').style.display=isOut?'none':'';
-  if(isOut){
-    document.getElementById('cpCartFooter').innerHTML='';return;
-  } else if(qty>0){
-    div.innerHTML='<div class="cp-qty-row"><button onclick="event.stopPropagation();cpQty(-1)">&#8722;</button><span>'+qty+'</span><button onclick="event.stopPropagation();cpQty(1)">+</button></div>';
+  if(qty>0){
+    div.innerHTML='<div class="cp-qty-row"><button data-cp-action="minus">&#8722;</button><span>'+qty+'</span><button data-cp-action="plus">+</button></div>';
   } else {
-    div.innerHTML='<button class="cp-add-btn" onclick="event.stopPropagation();cpAddToCart()">+ ADD TO ORDER</button>';
+    div.innerHTML='<button class="cp-add-btn" data-cp-action="add">+ ADD TO ORDER</button>';
   }
-  document.getElementById('cpCartFooter').innerHTML='';document.getElementById('cpCartFooter').appendChild(div);
+  footer.appendChild(div);
 }
 function cpAddToCart(){if(!_cpCode)return;addToCart(_cpCode);renderCPCartBtn(_cpCode);}
 function cpQty(delta){if(!_cpCode)return;changeQty(_cpCode,delta);renderCPCartBtn(_cpCode);}
 function switchCPVariant(code){_cpCode=code;openCPPanel(code);}
 function closeCPPanel(e){if(e&&e.target!==document.getElementById('cpOverlay'))return;document.getElementById('cpOverlay').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('cpCartFooter').addEventListener('click',function(e){
+  e.stopPropagation();
+  var btn=e.target.closest('[data-cp-action]');
+  if(!btn)return;
+  var a=btn.dataset.cpAction;
+  if(a==='add')cpAddToCart();
+  else if(a==='minus')cpQty(-1);
+  else if(a==='plus')cpQty(1);
+});
 
 var COA_MAP={'MOTS-C':'mots-c'};
 function openCOA(name,e){if(e)e.stopPropagation();var key=COA_MAP[name];if(!key)return;document.getElementById('coaImage').src='./coa/'+key+'.jpg';document.getElementById('coaModal').classList.add('open');document.body.style.overflow='hidden';}

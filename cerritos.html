@@ -308,6 +308,7 @@ body::after{display:none;}
 .pc-variant-pill.out{opacity:0.4;}
 .pc-variant-pill.in-cart-v{border-color:var(--green);color:var(--green);}
 .pc-variant-pill.active.in-cart-v{background:var(--green);border-color:transparent;color:#fff;}
+.pc-variant-pill.no-switch{cursor:default;}
 
 .cp-panel-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.55);z-index:600;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
 .cp-panel-overlay.open{display:flex;}
@@ -1169,16 +1170,19 @@ function getActiveVariant(group){
 }
 function selectVariant(name,code){selectedVariants[name]=code;renderProducts();}
 function buildVariantPills(group,activeCode){
-  if(group.length<=1)return '';
+  var inStock=group.filter(function(v){return inventory[v.code]?inventory[v.code].stock>0:false;});
+  if(inStock.length===0)return '';
   var html='<div class="pc-variants">';
-  group.forEach(function(v){
-    var vs=inventory[v.code]?inventory[v.code].stock:0;
-    if(vs===0)return; // skip out-of-stock variants
+  inStock.forEach(function(v){
     var cls='pc-variant-pill';
     if(v.code===activeCode)cls+=' active';
     if(cart[v.code])cls+=' in-cart-v';
     var lbl=v.spec.replace(/\/vials?/i,'').trim();
-    html+='<button class="'+cls+'" onclick="event.stopPropagation();selectVariant(this.dataset.variantName,this.dataset.variantCode)" data-variant-name="'+v.name.replace(/"/g,'&quot;')+'" data-variant-code="'+v.code+'">'+lbl+'</button>';
+    if(inStock.length===1){
+      html+='<span class="'+cls+' no-switch">'+lbl+'</span>';
+    } else {
+      html+='<button class="'+cls+'" onclick="event.stopPropagation();selectVariant(this.dataset.variantName,this.dataset.variantCode)" data-variant-name="'+v.name.replace(/"/g,'&quot;')+'" data-variant-code="'+v.code+'">'+lbl+'</button>';
+    }
   });
   html+='</div>';
   return html;

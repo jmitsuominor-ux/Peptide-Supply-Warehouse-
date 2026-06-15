@@ -1008,13 +1008,12 @@ function renderAffiliates(){
     const net = total - paid;
     const count = affOrderCount(a);
     const history = affPayments(a);
-    const historyHtml = history.length ? history.map(p=>`
-      <div class="aff-pay-row">
-        <span class="aff-pay-date">${new Date(p.date).toLocaleDateString()}</span>
-        <span class="aff-pay-amt">$${parseFloat(p.amount).toFixed(2)}</span>
-        ${p.method?`<span style="font-family:var(--mono);font-size:9px;background:var(--surface3);border-radius:4px;padding:1px 5px;color:var(--text2);">${p.method}</span>`:''}
-        ${p.note?`<span class="aff-pay-note">${p.note}</span>`:''}
-      </div>`).join('') : '<div class="aff-pay-empty">No payouts recorded yet.</div>';
+    const historyHtml = history.length ? history.map(p=>{
+      const dateStr = p.date ? new Date(p.date).toLocaleDateString() : '—';
+      const methodTag = p.method ? '<span style="font-family:var(--mono);font-size:9px;background:var(--surface3);border-radius:4px;padding:1px 5px;color:var(--text2);">'+p.method+'</span>' : '';
+      const noteTag = p.note ? '<span class="aff-pay-note">'+p.note+'</span>' : '';
+      return '<div class="aff-pay-row"><span class="aff-pay-date">'+dateStr+'</span><span class="aff-pay-amt">$'+parseFloat(p.amount).toFixed(2)+'</span>'+methodTag+noteTag+'</div>';
+    }).join('') : '<div class="aff-pay-empty">No payouts recorded yet.</div>';
     return `<div class="aff-card">
       <div class="aff-code">${a.code}</div>
       <div class="aff-name">${a.name}</div>

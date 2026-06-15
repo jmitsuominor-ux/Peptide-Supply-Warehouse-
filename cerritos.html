@@ -1677,9 +1677,9 @@ function renderCPCartBtn(code){
   if(isOut){
     document.getElementById('cpCartFooter').innerHTML='';return;
   } else if(qty>0){
-    div.innerHTML='<div class="cp-qty-row"><button onclick="cpQty(-1)">&#8722;</button><span>'+qty+'</span><button onclick="cpQty(1)">+</button></div>';
+    div.innerHTML='<div class="cp-qty-row"><button onclick="event.stopPropagation();cpQty(-1)">&#8722;</button><span>'+qty+'</span><button onclick="event.stopPropagation();cpQty(1)">+</button></div>';
   } else {
-    div.innerHTML='<button class="cp-add-btn" onclick="cpAddToCart()">+ ADD TO ORDER</button>';
+    div.innerHTML='<button class="cp-add-btn" onclick="event.stopPropagation();cpAddToCart()">+ ADD TO ORDER</button>';
   }
   document.getElementById('cpCartFooter').innerHTML='';document.getElementById('cpCartFooter').appendChild(div);
 }

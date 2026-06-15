@@ -1330,6 +1330,122 @@ function renderProducts(){
   });
   grid.innerHTML=cards.join('');
 }
+
+function addToCart(code){cart[code]=(cart[code]||0)+1;saveCart();updateCartUI();renderProducts();}
+function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);saveCart();updateCartUI();renderProducts();}
+function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;saveCart();updateCartUI();renderProducts();}
+function removeItem(code){delete cart[code];saveCart();updateCartUI();renderProducts();}
+function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();closeCart();}
+function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS.find(p=>p.code===c)||ALL_PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}
+function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
+function updateStorefrontProgress(){
+  const strip=document.getElementById('sfProgressStrip');if(!strip)return;
+  const total=cartTotal();const count=cartCount();
+  if(count===0){strip.style.display='none';return;}
+  strip.style.display='flex';
+  const pct=Math.min(100,(total/MIN_ORDER)*100);
+  const met=total>=MIN_ORDER;const freeShip=total>=FREE_SHIP_THRESHOLD;
+  const fill=document.getElementById('sfProgressFill2');
+  const label=document.getElementById('sfProgressLabel');
+  fill.style.width=(freeShip?100:pct)+'%';
+  fill.className='sf-progress-fill2'+(met?' met':'');
+  if(freeShip){label.textContent=T[lang].freeShipUnlocked;label.style.color='var(--green)';}
+  else if(met){label.textContent=T[lang].minMet;label.style.color='var(--green)';}
+  else{const rem=(MIN_ORDER-total).toFixed(2);label.textContent='$'+total.toFixed(2)+(lang==='es'?' de ':' of ')+'$'+MIN_ORDER+' · $'+rem+(lang==='es'?' para desbloquear':' to go');label.style.color='var(--text2)';}
+}
+function updateCartUI(){const count=cartCount();const badge=document.getElementById('cartBadge');if(count>0){badge.textContent=count;badge.style.display='flex';}else badge.style.display='none';updateStorefrontProgress();renderDrawer();}
+function openCart(){renderDrawer();document.getElementById('drawerOverlay').classList.add('open');document.getElementById('cartDrawer').classList.add('open');document.body.style.overflow='hidden';}
+function closeCart(){document.getElementById('drawerOverlay').classList.remove('open');document.getElementById('cartDrawer').classList.remove('open');document.body.style.overflow='';}
+function renderDrawer(){
+  const keys=Object.keys(cart);const body=document.getElementById('drawerBody');const footer=document.getElementById('drawerFooter');
+  if(!keys.length){body.innerHTML=`<div class="cart-empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>${T[lang].orderEmpty}<br>${T[lang].addBelow}</p></div>`;footer.innerHTML='';return;}
+  const total=cartTotal();
+  body.innerHTML=keys.map(code=>{const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="cart-item"><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-spec">${p.code} · ${p.spec}</div><div class="ci-line-price">$${(p.price*qty).toFixed(2)}</div></div><div class="ci-controls"><button class="qty-btn" onclick="event.stopPropagation();changeQty('${code}',-1)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="event.stopPropagation();changeQty('${code}',1)">+</button><button class="ci-remove" onclick="event.stopPropagation();removeItem('${code}')">×</button></div></div>`;}).join('');
+  const remaining=Math.max(0,MIN_ORDER-total);const pct=Math.min(100,(total/MIN_ORDER)*100);const met=total>=MIN_ORDER;
+  const effectiveShipping=total>=FREE_SHIP_THRESHOLD?0:shippingRate;
+  footer.innerHTML=`<div class="cart-totals"><div class="ct-row"><span class="ct-label">${cartCount()} ${cartCount()!==1?T[lang].items:T[lang].item}</span></div><div class="ct-divider"></div><div class="ct-row"><span class="ct-label">${T[lang].subtotal}</span><span class="ct-value">$${total.toFixed(2)}</span></div><div class="ct-row"><span class="ct-label">${T[lang].shipping}</span><span class="ct-value">${effectiveShipping===0?'<span style="color:var(--green);font-weight:500;">'+T[lang].freeOver500+'</span>':'$'+effectiveShipping.toFixed(2)}</span></div><div class="ct-divider"></div><div class="ct-row ct-total"><span class="ct-label">${T[lang].orderTotal}</span><span class="ct-value">$${(total+effectiveShipping).toFixed(2)}</span></div><div class="min-progress"><div class="min-progress-header"><span>${met?T[lang].minMet:T[lang].orderMin}</span><span>$${total.toFixed(2)} / $${MIN_ORDER}</span></div><div class="min-progress-track"><div class="min-progress-fill${met?' met':''}" style="width:${pct}%"></div></div>${!met?`<div class="min-progress-msg">${lang==='es'?'Agrega $'+remaining.toFixed(2)+' más para desbloquear el pago':'Add $'+remaining.toFixed(2)+' more to unlock checkout'}</div>`:''}</div></div><button class="checkout-btn${met?'':' locked'}" ${met?'':'disabled'} onclick="${met?'openCheckout()':''}">` + T[lang].proceedCheckout + `</button><button class="clear-cart-btn" onclick="clearCartFn()">${T[lang].clearOrder}</button>`;
+}
+function openCheckout(){
+  closeCart();const subtotal=cartTotal();const keys=Object.keys(cart);
+  const checkoutShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
+  const orderRows=keys.map(code=>{const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="or-item"><span class="or-name">${p.name} <span style="color:var(--text3);font-size:10px;">${p.spec}</span></span><span class="or-qty">×${qty}</span><span class="or-price">$${(p.price*qty).toFixed(2)}</span></div>`;}).join('');
+  document.getElementById('modalContent').innerHTML=`<div class="modal-header"><div class="modal-title">${T[lang].completeOrder}</div><div class="modal-close" onclick="closeCheckout()">×</div></div><div class="modal-body"><div class="modal-section-title">${T[lang].orderSummary}</div><div class="order-review">${orderRows}<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">$${subtotal.toFixed(2)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>${T[lang].shipping}</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?'FREE (Over $500)':'$'+checkoutShipping.toFixed(2)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">$${(subtotal+checkoutShipping).toFixed(2)}</span></div></div><div class="modal-section-title">Your Information</div><div class="form-field"><label class="form-label">${T[lang].fullName} <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="${T[lang].namePlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].emailAddress} <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="${T[lang].emailPlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].phoneNumber} <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="${T[lang].phonePlaceholder}"></div><div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">${T[lang].localPickup}</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes $${checkoutShipping.toFixed(2)} shipping)</span>`:''}</label></div><div class="form-field" id="addressField"><label class="form-label">${T[lang].shippingAddress} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custAddress" placeholder="${T[lang].addressPlaceholder}"></textarea></div><div class="form-field"><label class="form-label">${T[lang].additionalNotes} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custNotes" placeholder="${T[lang].notesPlaceholder}" style="min-height:60px;"></textarea></div><div class="form-field"><label class="form-label">${T[lang].promoCode} <span class="opt">${T[lang].optional}</span></label><input type="text" class="form-input" id="promoCode" placeholder="${T[lang].promoPlaceholder}" style="text-transform:uppercase;width:100%;" oninput="this.value=this.value.toUpperCase();autoApplyPromo()"><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div><div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">${lang==='es'?'📧 Te contactaremos dentro de 24 horas para confirmar y coordinar el envío. ¿Preguntas? WhatsApp +1-310-683-0049':'📧 We\'ll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +1-310-683-0049'}</div><button class="submit-btn" id="submitBtn" onclick="submitOrder()">${T[lang].placeOrder}</button></div>`;
+  document.getElementById('checkoutModal').classList.add('open');document.body.style.overflow='hidden';
+}
+function togglePickup(){
+  const pickup=document.getElementById('localPickup').checked;
+  const subtotal=cartTotal();
+  const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
+  const shipping=pickup?0:baseShipping;
+  document.getElementById('shippingVal').textContent=pickup?T[lang].freeLocalPickup:(baseShipping===0?T[lang].freeOver500:'$'+baseShipping.toFixed(2));
+  document.getElementById('shippingVal').style.color=(shipping===0)?'var(--green)':'inherit';
+  document.getElementById('checkoutTotal').textContent='$'+(subtotal+shipping).toFixed(2);
+  const addrField=document.getElementById('addressField');
+  if(addrField)addrField.style.display=pickup?'none':'block';
+}
+function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';appliedAffiliate=null;}
+let _promoDebounce=null;
+function autoApplyPromo(){
+  if(appliedAffiliate)return;
+  clearTimeout(_promoDebounce);
+  _promoDebounce=setTimeout(function(){
+    const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
+    if(!code)return;
+    const aff=affiliates.find(a=>String(a.code).toUpperCase()===code);
+    if(aff)applyPromo();
+  },400);
+}
+function applyPromo(){
+  if(appliedAffiliate){document.getElementById('promoMsg').innerHTML='<span style="color:var(--green);font-size:11px;">✓ Code already applied.</span>';return;}
+  const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
+  const msg=document.getElementById('promoMsg');
+  if(!code){msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoEnterFirst+'</span>';return;}
+  const aff=affiliates.find(a=>String(a.code).toUpperCase()===code);
+  if(!aff){appliedAffiliate=null;msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoInvalid+'</span>';return;}
+  appliedAffiliate=aff;
+  const discount=parseFloat(aff.customerDiscount)||0;
+  msg.innerHTML='<span style="color:var(--green);font-size:11px;">'+(lang==='es'?'✓ Código aplicado — ¡'+discount+'% de descuento!':'✓ Code applied — '+discount+'% off your order!')+'</span>';
+  const subtotal=cartTotal();
+  const pickup=(document.getElementById('localPickup')||{}).checked||false;
+  const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
+  const shipping=pickup?0:baseShipping;
+  const discountAmt=subtotal*(discount/100);
+  const newTotal=subtotal-discountAmt+shipping;
+  const totalEl=document.getElementById('checkoutTotal');
+  if(totalEl)totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--text3);font-size:12px;">$'+(subtotal+shipping).toFixed(2)+'</span> <span style="color:var(--green);">$'+newTotal.toFixed(2)+'</span>';
+  const discountRow=document.getElementById('discountRow');
+  if(discountRow)discountRow.style.display='flex';
+  const discountVal=document.getElementById('discountVal');
+  if(discountVal)discountVal.textContent='-$'+discountAmt.toFixed(2)+' ('+discount+'% off)';
+}
+async function submitOrder(){
+  const name=document.getElementById('custName').value.trim();const email=document.getElementById('custEmail').value.trim();const phone=document.getElementById('custPhone').value.trim();const address=document.getElementById('custAddress').value.trim();const notes=document.getElementById('custNotes').value.trim();
+  if(!name){flash('custName',T[lang].enterName);return;}if(!email||!email.includes('@')){flash('custEmail',T[lang].enterEmail);return;}if(!phone){flash('custPhone',T[lang].enterPhone);return;}
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> '+T[lang].sending;
+  const pickup=(document.getElementById('localPickup')||{}).checked||false;
+  const items=Object.entries(cart).map(([code,qty])=>{const p=PRODUCTS.find(p=>p.code===code);return{code,name:p?p.name:code,spec:p?p.spec:'',qty,price:p?p.price:0};});
+  const subtotal=cartTotal();const effectiveShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;const shipping=pickup?0:effectiveShipping;
+  const discountPct=appliedAffiliate?parseFloat(appliedAffiliate.customerDiscount)||0:0;
+  const discountAmt=subtotal*(discountPct/100);
+  const total=subtotal-discountAmt+shipping;
+  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+(discountAmt>0?'\nDiscount ('+discountPct+'% off): -$'+discountAmt.toFixed(2):'')+'\nShipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2));
+  const order={id:'ORD-'+Date.now(),status:'pending',createdAt:Date.now(),subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',shippingMethod:pickup?'pickup':'delivery',total,customer:{name,email,phone,address:pickup?'LOCAL PICKUP':address,notes},items};
+  try{const params=new URLSearchParams({action:'saveOrder',order:encodeURIComponent(JSON.stringify(order))});await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',API+'?'+params.toString(),true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();});}catch(e){console.warn('Could not save to sheets:',e);}
+  try{const deductURL=API+'?action=deductInventory&items='+encodeURIComponent(JSON.stringify(items))+'&t='+Date.now();await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',deductURL,true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();setTimeout(()=>resolve(),8000);});}catch(e){console.warn('Inventory deduct failed:',e);}
+  const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:pickup?'LOCAL PICKUP':(address||'Not provided'),customer_notes:notes||'None',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
+  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);}catch(e){console.error('EmailJS customer send failed:',e);}
+  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));}catch(e){console.error('EmailJS fulfiller send failed:',e);}
+  if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
+    const commissionPct=parseFloat(appliedAffiliate.commission)||0;
+    const commissionAmt=(subtotal*(commissionPct/100)).toFixed(2);
+    try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_AFFILIATE_ID,{to_email:appliedAffiliate.email,affiliate_name:appliedAffiliate.name,promo_code:appliedAffiliate.code,order_summary:orderSummary,order_total:'$'+total.toFixed(2),commission_rate:commissionPct+'%',commission_amount:'$'+commissionAmt,customer_name:name});}catch(e){console.error('Affiliate email failed:',e);}
+  }
+  appliedAffiliate=null;
+  Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();
+  document.getElementById('modalContent').innerHTML=`<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">${T[lang].orderReceived}</div><div class="success-sub">${lang==='es'?'Gracias, '+name+'. Tu pedido ha sido enviado.':'Thank you, '+name+'. Your order has been submitted.'}</div><div class="success-note">${lang==='es'?'Te contactaremos en <strong>24 horas</strong> para confirmar y coordinar el envío.<br>¿Preguntas? WhatsApp <strong>+1-310-683-0049</strong>':'We\'ll reach out within <strong>24 hours</strong> to confirm and arrange fulfillment.<br>Questions? WhatsApp <strong>+1-310-683-0049</strong>'}</div><button class="success-done-btn" onclick="closeCheckout()">${T[lang].backToCatalog}</button></div>`;
+}
+function flash(id,msg){const el=document.getElementById(id);el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);}
+document.addEventListener('click',function(e){var coaBtn=e.target.closest('.coa-btn');if(coaBtn){openCOA(coaBtn.dataset.compound,e);return;}var varBtn=e.target.closest('.cp-var-btn');if(varBtn){switchCPVariant(varBtn.dataset.vcode);return;}});
 var COMPOUND_INFO={
   'Tirzepatide':{category:'Weight Loss',tagline:'Dual GIP + GLP-1 agonist — strongest approved weight loss medication',evidence:5,lo:'2.5 mg/wk × 4 wks → 5 mg/wk × 4 wks (hold at 5mg maintenance)',mid:'2.5→5→7.5→10 mg/wk (4 wks per step) — standard FDA titration',hi:'2.5→5→7.5→10→12.5→15 mg/wk (4 wks per step) — maximum FDA dose',schedule:'Once weekly SubQ injection — same day each week, any time of day',cycle:'20+ weeks minimum — long-term use for maximum benefit',benefits:['20.2% average body weight loss vs 13.7% semaglutide (SURMOUNT-5 head-to-head 2025)','Superior to semaglutide in SURPASS-2 and SURMOUNT-5','Reduces visceral and abdominal fat preferentially','Improves HbA1c, blood pressure, triglycerides']},
   'Semaglutide':{category:'Weight Loss',tagline:'GLP-1 agonist — gold standard weight loss with cardiovascular benefit',evidence:5,lo:'0.25 mg/wk → 0.5 mg/wk (starting/titration)',mid:'0.25→0.5→1.0→2.4 mg/wk (standard 4-step titration)',hi:'2.4mg → 7.2mg/wk (Wegovy HD — FDA approved March 2026)',schedule:'Once weekly SubQ injection. 7.2mg requires tolerating 2.4mg for ≥4 weeks first.',cycle:'20+ weeks',benefits:['15–17% average body weight loss at 2.4mg (STEP-1)','20.7% average weight loss at 7.2mg Wegovy HD (STEP UP, 2025)','21% reduction in major cardiovascular events (SELECT trial)','FDA-approved for T2D, obesity, and MASH liver disease']},

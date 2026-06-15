@@ -1617,6 +1617,9 @@ function openCPPanel(code){
   body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=tj" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">Full Reference →</a></div>';
   document.getElementById('cpBody').innerHTML=body;
   renderCPCartBtn(code);
+  var _f=document.getElementById('cpCartFooter');
+  _f.ontouchend=function(e){var b=e.target.closest('[data-cp-action]');if(!b)return;e.stopPropagation();e.preventDefault();var a=b.dataset.cpAction;if(a==='add')cpAddToCart();else if(a==='minus')cpQty(-1);else if(a==='plus')cpQty(1);};
+  _f.onclick=function(e){var b=e.target.closest('[data-cp-action]');if(!b)return;e.stopPropagation();var a=b.dataset.cpAction;if(a==='add')cpAddToCart();else if(a==='minus')cpQty(-1);else if(a==='plus')cpQty(1);};
   document.getElementById('cpOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }

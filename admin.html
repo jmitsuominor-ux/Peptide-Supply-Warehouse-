@@ -333,14 +333,23 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 <div class="modal-overlay" id="markPaidModal">
   <div class="modal-box" style="max-width:420px;">
-    <div class="modal-hdr"><h3>Mark Payment</h3><div class="modal-x" onclick="closeMarkPaid()">×</div></div>
+    <div class="modal-hdr"><h3>Record Payout</h3><div class="modal-x" onclick="closeMarkPaid()">×</div></div>
     <div class="modal-body-inner">
       <input type="hidden" id="markPaidCode">
       <div class="mf"><label>AFFILIATE</label><input type="text" id="markPaidName" disabled style="opacity:0.7;"></div>
-      <div class="mf"><label>NET OWED</label><input type="text" id="markPaidOwed" disabled style="opacity:0.7;font-weight:700;"></div>
-      <div class="mf"><label>AMOUNT PAID ($)</label><input type="number" id="markPaidAmount" placeholder="e.g. 50.00" min="0" step="0.01"></div>
-      <div class="mf"><label>NOTE (optional)</label><input type="text" id="markPaidNote" placeholder="e.g. Venmo sent 6/5"></div>
-      <button class="modal-save-btn" onclick="savePayment()">Record Payment</button>
+      <div class="mf"><label>NET OWED</label><input type="text" id="markPaidOwed" disabled style="opacity:0.7;font-weight:700;color:var(--purple);"></div>
+      <div class="mf"><label>AMOUNT ($) — partial OK</label><input type="number" id="markPaidAmount" placeholder="e.g. 25.00" min="0" step="0.01"></div>
+      <div class="mf"><label>METHOD</label>
+        <select id="markPaidMethod" style="width:100%;padding:9px 10px;border:1px solid var(--border2);border-radius:8px;font-family:var(--mono);font-size:12px;background:var(--surface);color:var(--text);">
+          <option value="Venmo">Venmo</option>
+          <option value="PayPal">PayPal</option>
+          <option value="Cash">Cash</option>
+          <option value="Product Credit">Product Credit</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="mf"><label>NOTE (optional)</label><input type="text" id="markPaidNote" placeholder="e.g. sent 6/15, TB-500 trade"></div>
+      <button class="modal-save-btn" onclick="savePayment()">Record Payout</button>
     </div>
   </div>
 </div>
@@ -1003,8 +1012,9 @@ function renderAffiliates(){
       <div class="aff-pay-row">
         <span class="aff-pay-date">${new Date(p.date).toLocaleDateString()}</span>
         <span class="aff-pay-amt">$${parseFloat(p.amount).toFixed(2)}</span>
+        ${p.method?`<span style="font-family:var(--mono);font-size:9px;background:var(--surface3);border-radius:4px;padding:1px 5px;color:var(--text2);">${p.method}</span>`:''}
         ${p.note?`<span class="aff-pay-note">${p.note}</span>`:''}
-      </div>`).join('') : '<div class="aff-pay-empty">No payments recorded yet.</div>';
+      </div>`).join('') : '<div class="aff-pay-empty">No payouts recorded yet.</div>';
     return `<div class="aff-card">
       <div class="aff-code">${a.code}</div>
       <div class="aff-name">${a.name}</div>
@@ -1027,7 +1037,7 @@ function renderAffiliates(){
       </div>
       <div class="aff-actions">
         <button class="aff-edit-btn" onclick="editAffiliate('${a.code}')">✏ Edit</button>
-        <button class="aff-pay-btn" onclick="openMarkPaid('${a.code}')">💰 Mark Paid</button>
+        <button class="aff-pay-btn" onclick="openMarkPaid('${a.code}')">💰 Record Payout</button>
         <button class="aff-del-btn" onclick="deleteAffiliate('${a.code}')">Delete</button>
       </div>
     </div>`;
@@ -1098,7 +1108,8 @@ function openMarkPaid(code){
   document.getElementById('markPaidCode').value = a.code;
   document.getElementById('markPaidName').value = a.name + ' (' + a.code + ')';
   document.getElementById('markPaidOwed').value = '$' + net.toFixed(2);
-  document.getElementById('markPaidAmount').value = net > 0 ? net.toFixed(2) : '';
+  document.getElementById('markPaidAmount').value = '';
+  document.getElementById('markPaidMethod').value = 'Venmo';
   document.getElementById('markPaidNote').value = '';
   document.getElementById('markPaidModal').classList.add('open');
 }
@@ -1110,13 +1121,14 @@ function closeMarkPaid(){
 async function savePayment(){
   const code = document.getElementById('markPaidCode').value;
   const amount = parseFloat(document.getElementById('markPaidAmount').value);
+  const method = document.getElementById('markPaidMethod').value;
   const note = document.getElementById('markPaidNote').value.trim();
   if(!amount || amount <= 0){showToast('Enter a valid amount','red');return;}
-  await apiPost({action:'savePayment', affiliateCode:code, amount, note});
+  await apiPost({action:'savePayment', affiliateCode:code, amount, method, note});
   await loadAffiliates();
   closeMarkPaid();
   renderAffiliates();
-  showToast('Payment recorded — $'+amount.toFixed(2),'green');
+  showToast('Payout recorded — $'+amount.toFixed(2)+' via '+method,'green');
 }
 </script>
 </body>

@@ -511,7 +511,7 @@ body::after{display:none;}
 <div class="modal-overlay" id="checkoutModal"><div class="modal" id="modalContent"></div></div>
 <div class="modal-overlay" id="doseModal" onclick="closeDoseInfo()"><div class="modal" id="doseModalContent" onclick="event.stopPropagation()"></div></div>
 <div class="cp-panel-overlay" id="cpOverlay" onclick="closeCPPanel(event)">
-  <div class="cp-panel" id="cpPanel">
+  <div class="cp-panel" id="cpPanel" onclick="event.stopPropagation()">
     <div class="cp-handle"></div>
     <div class="cp-vial-header">
       <button class="cp-close" onclick="closeCPPanel()">&#215;</button>
@@ -1621,14 +1621,6 @@ function openCPPanel(code){
   document.body.style.overflow='hidden';
 }
 
-function _cpBtn(label,cls,action){
-  var b=document.createElement('button');
-  if(cls)b.className=cls;
-  b.innerHTML=label;
-  b.addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();if(action==='add')cpAddToCart();else if(action==='minus')cpQty(-1);else cpQty(1);},{passive:false});
-  b.addEventListener('click',function(e){e.stopPropagation();if(action==='add')cpAddToCart();else if(action==='minus')cpQty(-1);else cpQty(1);});
-  return b;
-}
 function renderCPCartBtn(code){
   var stock=inventory&&inventory[code]?inventory[code].stock:null;
   var isOut=stock===null||stock===0;
@@ -1637,21 +1629,28 @@ function renderCPCartBtn(code){
   footer.innerHTML='';
   footer.style.display=isOut?'none':'';
   if(isOut)return;
+  var div=document.createElement('div');
+  div.id='cpCartArea';
   if(qty>0){
-    var row=document.createElement('div');row.className='cp-qty-row';
-    row.appendChild(_cpBtn('&#8722;','','minus'));
-    var sp=document.createElement('span');sp.textContent=qty;row.appendChild(sp);
-    row.appendChild(_cpBtn('+','','plus'));
-    footer.appendChild(row);
+    div.innerHTML='<div class="cp-qty-row"><button data-cp-action="minus">&#8722;</button><span>'+qty+'</span><button data-cp-action="plus">+</button></div>';
   } else {
-    footer.appendChild(_cpBtn('+ ADD TO ORDER','cp-add-btn','add'));
+    div.innerHTML='<button class="cp-add-btn" data-cp-action="add">+ ADD TO ORDER</button>';
   }
+  footer.appendChild(div);
 }
 function cpAddToCart(){if(!_cpCode)return;addToCart(_cpCode);renderCPCartBtn(_cpCode);}
 function cpQty(delta){if(!_cpCode)return;changeQty(_cpCode,delta);renderCPCartBtn(_cpCode);}
 function switchCPVariant(code){_cpCode=code;openCPPanel(code);}
 function closeCPPanel(e){if(e&&e.target!==document.getElementById('cpOverlay'))return;document.getElementById('cpOverlay').classList.remove('open');document.body.style.overflow='';}
-document.getElementById('cpPanel').addEventListener('click',function(e){e.stopPropagation();});
+document.getElementById('cpCartFooter').addEventListener('click',function(e){
+  e.stopPropagation();
+  var btn=e.target.closest('[data-cp-action]');
+  if(!btn)return;
+  var a=btn.dataset.cpAction;
+  if(a==='add')cpAddToCart();
+  else if(a==='minus')cpQty(-1);
+  else if(a==='plus')cpQty(1);
+});
 
 var COA_MAP={'MOTS-C':'mots-c'};
 function openCOA(name,e){if(e)e.stopPropagation();var key=COA_MAP[name];if(!key)return;document.getElementById('coaImage').src='./coa/'+key+'.jpg';document.getElementById('coaModal').classList.add('open');document.body.style.overflow='hidden';}

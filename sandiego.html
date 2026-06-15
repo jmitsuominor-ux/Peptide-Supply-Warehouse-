@@ -1623,8 +1623,8 @@ function _cpBtn(label,cls,action){
   var b=document.createElement('button');
   if(cls)b.className=cls;
   b.innerHTML=label;
-  b.addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();if(action==='add')cpAddToCart();else if(action==='minus')cpQty(-1);else cpQty(1);},{passive:false});
-  b.addEventListener('click',function(e){e.stopPropagation();if(action==='add')cpAddToCart();else if(action==='minus')cpQty(-1);else cpQty(1);});
+  b.addEventListener('touchstart',function(e){e.preventDefault();e.stopPropagation();alert('touchstart: action='+action+' _cpCode='+_cpCode);if(action==='add')cpAddToCart();else if(action==='minus')cpQty(-1);else cpQty(1);},{passive:false});
+  b.addEventListener('click',function(e){e.stopPropagation();alert('click: action='+action+' _cpCode='+_cpCode);if(action==='add')cpAddToCart();else if(action==='minus')cpQty(-1);else cpQty(1);});
   return b;
 }
 function renderCPCartBtn(code){

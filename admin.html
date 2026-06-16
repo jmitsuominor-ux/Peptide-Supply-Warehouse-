@@ -120,6 +120,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .action-btn.cancel{background:var(--red-dim);border-color:var(--red-border);color:var(--red);}
 .action-btn.cancel:hover{background:var(--red);color:#fff;}
 .action-btn.pending-btn{background:var(--amber-dim);border-color:rgba(196,122,30,0.3);color:var(--amber);}
+.action-btn.paid-notify-btn{background:rgba(92,61,158,0.08);border-color:rgba(92,61,158,0.3);color:var(--purple);}
+.action-btn.paid-notify-btn:hover{background:var(--purple);color:#fff;}
+.action-btn.paid-notify-btn-done{background:var(--surface3);border-color:var(--border);color:var(--text3);cursor:default;}
 .action-btn:active{transform:scale(0.97);}
 .order-notes{background:var(--amber-dim);border:1px solid rgba(196,122,30,0.2);border-radius:6px;padding:8px 11px;font-size:11px;color:var(--amber);margin-bottom:10px;}
 .order-notes strong{display:block;font-family:var(--mono);font-size:9px;letter-spacing:0.06em;margin-bottom:2px;}
@@ -374,9 +377,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 // CONFIG
 // ════════════════════════════════════════
 const MARKET_CONFIGS = {
-  cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec', email:'pswcerritos.orders@gmail.com', fulfillTemplate:'template_fo19x6g' },
-  tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com',  fulfillTemplate:'template_frbqrjh' },
-  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com', fulfillTemplate:'template_fp119xp' },
+  cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec', email:'pswcerritos.orders@gmail.com', fulfillTemplate:'template_fo19x6g', paidTemplate:'' },
+  tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com',  fulfillTemplate:'template_frbqrjh', paidTemplate:'' },
+  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com', fulfillTemplate:'template_fp119xp', paidTemplate:'' },
 };
 const _mkt = new URLSearchParams(window.location.search).get('market') || 'cerritos';
 const _cfg = MARKET_CONFIGS[_mkt] || MARKET_CONFIGS.cerritos;
@@ -652,8 +655,11 @@ function orderCardHTML(order){
       <table class="order-items-table"><thead><tr><th>CODE</th><th>PRODUCT</th><th>SPEC</th><th>QTY</th><th>TOTAL</th></tr></thead><tbody>${itemRows}</tbody></table>
       <div class="order-actions">
         ${order.status==='pending'
-          ?`<button class="action-btn fulfill" data-action="fulfill">✓ Mark Fulfilled</button>
-             <button class="action-btn cancel" data-action="cancel">✗ Cancel</button>`
+          ?`<button class="action-btn paid-notify-btn${order.paidNotified?'-done':''}" data-action="paidnotify" ${order.paidNotified?'disabled':''}>
+              ${order.paidNotified?'✓ Paid Notified':'💳 Mark Paid'}
+            </button>
+            <button class="action-btn fulfill" data-action="fulfill">✓ Mark Fulfilled</button>
+            <button class="action-btn cancel" data-action="cancel">✗ Cancel</button>`
           :`<button class="action-btn pending-btn" data-action="pending">↩ Revert to Pending</button>`
         }
       </div>
@@ -678,6 +684,7 @@ document.addEventListener('click', function(e) {
     if(action === 'fulfill') fulfillOrder(safeId);
     if(action === 'cancel') cancelOrder(safeId);
     if(action === 'pending') setPendingOrder(safeId);
+    if(action === 'paidnotify') markPaidNotify(safeId);
     return;
   }
 
@@ -810,6 +817,40 @@ async function setPendingOrder(safeId){
   updateCounts();
   renderFulfilledOrders();
   showToast('Order restored to pending','');
+}
+
+async function markPaidNotify(safeId){
+  const card=document.getElementById('ocard-'+safeId);
+  const originalId=card?card.dataset.orderId:safeId;
+  const order=orders.find(o=>o.id===originalId);
+  if(!order||order.paidNotified)return;
+  const tpl=_cfg.paidTemplate;
+  if(!tpl){showToast('Paid template not set in MARKET_CONFIGS yet','red');return;}
+  const items=Array.isArray(order.items)?order.items:[];
+  const orderSummary=items.map(i=>i.name+' ('+i.spec+') x'+i.qty+' — $'+(i.price*i.qty).toFixed(2)).join('\n');
+  const custName=(order.customer&&order.customer.name)||order.name||'Customer';
+  const custEmail=(order.customer&&order.customer.email)||order.email||'';
+  const custPhone=(order.customer&&order.customer.phone)||order.phone||'—';
+  const custAddr=(order.customer&&order.customer.address)||order.address||'—';
+  try{
+    await emailjs.send(_cfg.fulfillTemplate?EMAILJS_SERVICE_ID:EMAILJS_SERVICE_ID, tpl, {
+      to_email: _cfg.email,
+      from_name: custName,
+      from_email: custEmail,
+      from_phone: custPhone,
+      shipping_address: custAddr,
+      order_summary: orderSummary,
+      order_total: '$'+parseFloat(order.total||0).toFixed(2),
+      order_id: order.id,
+    });
+    order.paidNotified=true;
+    await apiPost({action:'updateOrderStatus',id:order.id,paidNotified:true});
+    renderPendingOrders();
+    showToast('✓ Paid notification sent to '+_cfg.email,'green');
+  }catch(e){
+    const msg=e&&e.text?e.text:(e&&e.message?e.message:JSON.stringify(e));
+    showToast('Email failed: '+msg,'red');
+  }
 }
 
 // ════════════════════════════════════════

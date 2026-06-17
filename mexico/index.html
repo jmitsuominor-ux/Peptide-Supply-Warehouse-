@@ -512,6 +512,7 @@ function fmtShip(usd){
   if(lang==='es'&&exchangeRate>1)return 'MX$'+Math.round(usd*exchangeRate).toLocaleString('es-MX');
   return '$'+usd.toFixed(2);
 }
+var T={
 en:{
   announceBar:'⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500',
   researchCompounds:'Research Compounds',

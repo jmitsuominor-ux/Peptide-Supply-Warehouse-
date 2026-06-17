@@ -112,12 +112,13 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 
 /* ORDERS TABLE */
 .orders-table{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
-.orders-table-hdr{display:grid;grid-template-columns:1fr 110px 100px 100px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);}
+.orders-table-hdr{display:grid;grid-template-columns:1fr 1fr 110px 100px 100px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);}
 .orders-table-hdr span{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;}
-.order-row{display:grid;grid-template-columns:1fr 110px 100px 100px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background 0.12s;}
+.order-row{display:grid;grid-template-columns:1fr 1fr 110px 100px 100px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background 0.12s;}
 .order-row:last-child{border-bottom:none;}
 .order-row:hover{background:var(--surface2);}
 .order-id{font-family:var(--mono);font-size:11px;color:var(--blue);font-weight:500;}
+.order-name{font-size:12px;color:var(--text2);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .order-date{font-family:var(--mono);font-size:11px;color:var(--text3);}
 .order-total{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text2);}
 .order-commission{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--purple);}
@@ -144,6 +145,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   .pay-table-hdr,.pay-row{grid-template-columns:90px 90px 1fr;}
   .pay-table-hdr span:last-child,.pay-note{display:none;}
   .orders-table-hdr,.order-row{grid-template-columns:1fr 90px 90px;}
+  .orders-table-hdr span:nth-child(1),.order-id,
   .orders-table-hdr span:last-child,.order-commission{display:none;}
 }
 </style>
@@ -493,6 +495,7 @@ function renderOrders() {
     return `
       <div class="order-row">
         <span class="order-id"><span class="order-status-dot ${status}"></span>${o.id || '—'}</span>
+        <span class="order-name">${(o.customer && (o.customer.name || o.customer)) || '—'}</span>
         <span class="order-date">${dateStr}</span>
         <span class="order-total">${fmt(o.total)}</span>
         <span class="order-commission">${fmt(commission)}</span>
@@ -503,6 +506,7 @@ function renderOrders() {
     <div class="orders-table">
       <div class="orders-table-hdr">
         <span>ORDER ID</span>
+        <span>NAME</span>
         <span>DATE</span>
         <span>TOTAL</span>
         <span>COMMISSION</span>

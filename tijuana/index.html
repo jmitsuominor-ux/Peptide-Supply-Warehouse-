@@ -366,7 +366,7 @@ body::after{display:none;}
     </div>
     <a href="/orders.html?lang=es" class="orders-nav-btn" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border2);border-radius:6px;padding:8px 14px;color:var(--text2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.06em;text-decoration:none;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-      MIS PEDIDOS
+      <span id="ordersNavBtn">MIS PEDIDOS</span>
     </a>
     <button class="cart-btn" onclick="openCart()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
@@ -375,7 +375,7 @@ body::after{display:none;}
     </button>
   </div>
 </div>
-<div class="orders-mobile-bar"><a href="/orders.html?lang=es">📋 MIS PEDIDOS</a></div>
+<div class="orders-mobile-bar"><a href="/orders.html?lang=es" id="ordersMobileBtn">📋 MIS PEDIDOS</a></div>
 <div class="sf-progress-strip" id="sfProgressStrip">
   <div class="sf-progress-track2"><div class="sf-progress-fill2" id="sfProgressFill2"></div></div>
   <span class="sf-progress-label" id="sfProgressLabel"></span>
@@ -542,6 +542,7 @@ en:{
   announceBar:'⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500',
   researchCompounds:'Research Compounds',
   searchPlaceholder:'Search compounds, codes…',
+  myOrders:'MY ORDERS',
   checkout:'CHECKOUT',
   heroEyebrow:'Research Grade Peptides',
   heroTagline:'we supply your favorite doctors',
@@ -579,6 +580,7 @@ es:{
   announceBar:'⚠ Pedido mínimo $250 &nbsp;·&nbsp; Envío gratis en pedidos sobre $500',
   researchCompounds:'Compuestos de Investigación',
   searchPlaceholder:'Buscar compuestos, códigos…',
+  myOrders:'MIS PEDIDOS',
   checkout:'PAGAR',
   heroEyebrow:'Péptidos de Grado Investigación',
   heroTagline:'abastecemos a tus médicos favoritos',
@@ -633,6 +635,8 @@ function applyTranslations(){
   el=document.getElementById('bysBannerSub');if(el)el.textContent=t.bysSub;
   el=document.getElementById('footerDisc');if(el)el.innerHTML=t.footerDisc;
   el=document.getElementById('cartBtnText');if(el)el.textContent=t.checkout;
+  el=document.getElementById('ordersNavBtn');if(el)el.textContent=t.myOrders;
+  el=document.getElementById('ordersMobileBtn');if(el)el.textContent='📋 '+t.myOrders;
   el=document.getElementById('drawerTitle');if(el)el.textContent=t.yourOrder;
   el=document.getElementById('searchInput');if(el)el.placeholder=t.searchPlaceholder;
   // update ref tile names

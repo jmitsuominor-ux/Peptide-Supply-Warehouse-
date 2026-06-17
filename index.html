@@ -213,7 +213,10 @@ body::after{display:none;}
 .ref-tile-icon{font-size:15px;margin-bottom:4px;line-height:1;}
 .ref-tile-name{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text);line-height:1.25;margin-bottom:3px;}
 .ref-tile-count{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.08em;}
-@media(max-width:480px){.product-grid{grid-template-columns:repeat(2,1fr);}.hero-title{font-size:24px;}.cart-drawer{max-width:100%;}}
+@media(max-width:480px){.product-grid{grid-template-columns:repeat(2,1fr);}.hero-title{font-size:24px;}.cart-drawer{max-width:100%;}.orders-nav-btn{display:none!important;}}
+.orders-mobile-bar{display:none;text-align:center;padding:6px 16px;background:var(--surface);border-bottom:1px solid var(--border);}
+.orders-mobile-bar a{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--text2);text-decoration:none;letter-spacing:0.06em;}
+@media(max-width:480px){.orders-mobile-bar{display:block;}}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 /* ── Build Your Stack ──────────────────────────── */
 .bys-banner{background:linear-gradient(135deg,#1756a9,#0d3d8a);cursor:pointer;padding:14px 20px;transition:filter 0.15s;position:relative;z-index:1;border-bottom:1px solid var(--border);}
@@ -361,7 +364,7 @@ body::after{display:none;}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Search compounds, codes…" oninput="filterProducts()">
     </div>
-    <a href="./orders.html" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border2);border-radius:6px;padding:8px 14px;color:var(--text2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.06em;text-decoration:none;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+    <a href="/orders.html" class="orders-nav-btn" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border2);border-radius:6px;padding:8px 14px;color:var(--text2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.06em;text-decoration:none;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
       MY ORDERS
     </a>
@@ -372,6 +375,7 @@ body::after{display:none;}
     </button>
   </div>
 </div>
+<div class="orders-mobile-bar"><a href="/orders.html">📋 MY ORDERS</a></div>
 <div class="sf-progress-strip" id="sfProgressStrip">
   <div class="sf-progress-track2"><div class="sf-progress-fill2" id="sfProgressFill2"></div></div>
   <span class="sf-progress-label" id="sfProgressLabel"></span>
@@ -1338,8 +1342,8 @@ function renderProducts(){
 }
 
 function addToCart(code){cart[code]=(cart[code]||0)+1;saveCart();updateCartUI();renderProducts();}
-function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);saveCart();updateCartUI();renderProducts();}
-function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}cart[code]=n;saveCart();updateCartUI();renderProducts();}
+function changeQty(code,delta){if(!cart[code])return;const maxStock=inventory[code]?inventory[code].stock:999;cart[code]=Math.min(maxStock,Math.max(1,cart[code]+delta));saveCart();updateCartUI();renderProducts();}
+function setQty(code,val){const n=parseInt(val);if(!n||n<1){if(cart[code])renderProducts();return;}const maxStock=inventory[code]?inventory[code].stock:999;cart[code]=Math.min(maxStock,n);saveCart();updateCartUI();renderProducts();}
 function removeItem(code){delete cart[code];saveCart();updateCartUI();renderProducts();}
 function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();closeCart();}
 function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=PRODUCTS.find(p=>p.code===c)||ALL_PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}

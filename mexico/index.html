@@ -501,7 +501,7 @@ var exchangeRate=1;
 (function fetchRate(){
   fetch('https://api.frankfurter.app/latest?from=USD&to=MXN')
     .then(r=>r.json()).then(d=>{
-      if(d&&d.rates&&d.rates.MXN){exchangeRate=d.rates.MXN;renderProducts();renderDrawer();}
+      if(d&&d.rates&&d.rates.MXN){exchangeRate=d.rates.MXN;if(Object.keys(inventory).length>0&&lang==='es'){renderProducts();renderDrawer();}}
     }).catch(()=>{});
 })();
 function fmtPrice(usd){

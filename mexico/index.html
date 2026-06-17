@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Peptide Supply Warehouse – San Diego</title>
+<title>Peptide Supply Warehouse – Cerritos</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <style>
@@ -107,6 +107,7 @@ body::after{display:none;}
 .in-cart-dot{position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--green);display:none;}
 .pc-info-btn{position:absolute;top:6px;right:8px;width:22px;height:22px;border-radius:50%;background:rgba(0,180,216,0.12);border:1px solid rgba(0,180,216,0.3);color:var(--blue);font-size:12px;display:flex;align-items:center;justify-content:center;text-decoration:none;font-weight:700;line-height:1;z-index:2;}
 .pc-info-btn:hover{background:rgba(0,180,216,0.25);}
+.product-card.in-cart .in-cart-dot{display:block;}
 .pc-qty-controls{display:flex;align-items:center;margin-top:7px;border:1px solid rgba(13,115,119,0.3);border-radius:6px;overflow:hidden;width:100%;}
 .pc-qty-btn{width:36px;height:34px;background:var(--green-dim);color:var(--green);border:none;cursor:pointer;font-size:18px;font-family:var(--mono);display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
 .pc-qty-btn:hover{background:var(--green);color:#fff;}
@@ -114,7 +115,6 @@ body::after{display:none;}
 .pc-qty-input{flex:1;text-align:center;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--green);background:var(--green-dim);border:none;border-left:1px solid rgba(13,115,119,0.15);border-right:1px solid rgba(13,115,119,0.15);outline:none;width:44px;height:34px;-moz-appearance:textfield;}.pc-qty-input::-webkit-outer-spin-button,.pc-qty-input::-webkit-inner-spin-button{-webkit-appearance:none;}
 .pc-remove-item{width:30px;height:34px;background:transparent;color:var(--text3);border:none;border-left:1px solid rgba(13,115,119,0.2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
 .pc-remove-item:hover{background:var(--red-dim);color:var(--red);}
-.product-card.in-cart .in-cart-dot{display:block;}
 .no-results{text-align:center;padding:60px 20px;color:var(--text3);font-family:var(--mono);}
 .drawer-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.3);z-index:300;display:none;backdrop-filter:blur(4px);}
 .drawer-overlay.open{display:block;}
@@ -309,6 +309,7 @@ body::after{display:none;}
 .pc-variant-pill.in-cart-v{border-color:var(--green);color:var(--green);}
 .pc-variant-pill.active.in-cart-v{background:var(--green);border-color:transparent;color:#fff;}
 .pc-variant-pill.no-switch{cursor:default;}
+
 .cp-panel-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.55);z-index:600;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
 .cp-panel-overlay.open{display:flex;}
 .cp-panel{background:var(--white);width:100%;max-width:540px;max-height:90vh;border-radius:20px 20px 0 0;overflow:hidden;display:flex;flex-direction:column;animation:slideUp 0.28s cubic-bezier(.32,.72,0,1);}
@@ -344,7 +345,6 @@ body::after{display:none;}
 .cp-var-pill.active{background:var(--blue);color:#fff;border-color:transparent;}
 .cp-qty-row span{flex:1;text-align:center;font-family:var(--mono);font-size:16px;font-weight:500;color:var(--green);}
 
-
 </style>
 </head>
 <body>
@@ -361,9 +361,9 @@ body::after{display:none;}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Search compounds, codes…" oninput="filterProducts()">
     </div>
-    <a href="./orders.html" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border2);border-radius:6px;padding:8px 14px;color:var(--text2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.06em;text-decoration:none;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+    <a href="./orders.html?lang=es" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border2);border-radius:6px;padding:8px 14px;color:var(--text2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.06em;text-decoration:none;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-      MY ORDERS
+      MIS PEDIDOS
     </a>
     <button class="cart-btn" onclick="openCart()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
@@ -382,6 +382,7 @@ body::after{display:none;}
   <div class="hero-content">
     <div class="hero-eyebrow" id="heroEyebrow">Research Grade Peptides</div>
     <h1 class="hero-title">Peptide Supply<br><span>Warehouse</span></h1>
+    <div class="hero-eyebrow" style="margin-top:10px;color:#00b4d8;">MEXICO</div>
     <div class="hero-tagline" id="heroTagline">we supply your favorite doctors</div>
     <div class="hero-sub" id="heroSub"></div>
   </div>
@@ -391,56 +392,16 @@ body::after{display:none;}
 <div class="ref-section">
   <div class="ref-heading" id="refHeading">COMPOUND REFERENCE GUIDE</div>
   <div class="ref-scroll">
-    <a class="ref-tile" style="--ta:#00b4d8" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#weight">
-      <div class="ref-tile-icon">⚖️</div>
-      <div class="ref-tile-name">Weight Loss</div>
-      <div class="ref-tile-count">27 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#9c79ff" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#gh">
-      <div class="ref-tile-icon">📈</div>
-      <div class="ref-tile-name">Growth Hormone</div>
-      <div class="ref-tile-count">14 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#00c896" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#healing">
-      <div class="ref-tile-icon">🩹</div>
-      <div class="ref-tile-name">Healing & Recovery</div>
-      <div class="ref-tile-count">7 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#f0c040" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#antiaging">
-      <div class="ref-tile-icon">✨</div>
-      <div class="ref-tile-name">Anti-Aging & Immune</div>
-      <div class="ref-tile-count">8 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#ff9f43" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#mito">
-      <div class="ref-tile-icon">⚡</div>
-      <div class="ref-tile-name">Mitochondrial</div>
-      <div class="ref-tile-count">9 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#00b4d8" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#muscle">
-      <div class="ref-tile-icon">💪</div>
-      <div class="ref-tile-name">Muscle & IGF</div>
-      <div class="ref-tile-count">3 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#f06292" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#hormonal">
-      <div class="ref-tile-icon">🧬</div>
-      <div class="ref-tile-name">Hormonal</div>
-      <div class="ref-tile-count">8 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#9c79ff" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#neuro">
-      <div class="ref-tile-icon">🧠</div>
-      <div class="ref-tile-name">Cognitive</div>
-      <div class="ref-tile-count">6 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#00c896" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#immune">
-      <div class="ref-tile-icon">🛡️</div>
-      <div class="ref-tile-name">Immune</div>
-      <div class="ref-tile-count">3 CMPDS</div>
-    </a>
-    <a class="ref-tile" style="--ta:#8aafd4" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=sandiego#recon">
-      <div class="ref-tile-icon">💧</div>
-      <div class="ref-tile-name">Reconstitution</div>
-      <div class="ref-tile-count">3 CMPDS</div>
-    </a>
+    <a class="ref-tile" style="--ta:#00b4d8" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#weight"><div class="ref-tile-icon">⚖️</div><div class="ref-tile-name">Weight Loss</div><div class="ref-tile-count">27 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#9c79ff" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#gh"><div class="ref-tile-icon">📈</div><div class="ref-tile-name">Growth Hormone</div><div class="ref-tile-count">14 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#00c896" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#healing"><div class="ref-tile-icon">🩹</div><div class="ref-tile-name">Healing & Recovery</div><div class="ref-tile-count">7 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#f0c040" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#antiaging"><div class="ref-tile-icon">✨</div><div class="ref-tile-name">Anti-Aging & Immune</div><div class="ref-tile-count">8 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#ff9f43" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#mito"><div class="ref-tile-icon">⚡</div><div class="ref-tile-name">Mitochondrial</div><div class="ref-tile-count">9 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#00b4d8" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#muscle"><div class="ref-tile-icon">💪</div><div class="ref-tile-name">Muscle & IGF</div><div class="ref-tile-count">3 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#f06292" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#hormonal"><div class="ref-tile-icon">🧬</div><div class="ref-tile-name">Hormonal</div><div class="ref-tile-count">8 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#9c79ff" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#neuro"><div class="ref-tile-icon">🧠</div><div class="ref-tile-name">Cognitive</div><div class="ref-tile-count">6 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#00c896" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#immune"><div class="ref-tile-icon">🛡️</div><div class="ref-tile-name">Immune</div><div class="ref-tile-count">3 CMPDS</div></a>
+    <a class="ref-tile" style="--ta:#8aafd4" href="https://jmitsuominor-ux.github.io/peptide-reference/?from=cerritos#recon"><div class="ref-tile-icon">💧</div><div class="ref-tile-name">Reconstitution</div><div class="ref-tile-count">3 CMPDS</div></a>
   </div>
 </div>
 
@@ -512,6 +473,7 @@ body::after{display:none;}
 
 <div class="modal-overlay" id="checkoutModal"><div class="modal" id="modalContent"></div></div>
 <div class="modal-overlay" id="doseModal" onclick="closeDoseInfo()"><div class="modal" id="doseModalContent" onclick="event.stopPropagation()"></div></div>
+
 <div class="cp-panel-overlay" id="cpOverlay" onclick="closeCPPanel(event)">
   <div class="cp-panel" id="cpPanel" onclick="event.stopPropagation()">
     <div class="cp-handle"></div>
@@ -565,7 +527,7 @@ en:{
   bysCycle:'Cycle:',bysWks:'wks',bysBackToStacks:'← Back to stacks',
   bysAddAll:'Add All Items to Order',bysAdded:'✓ Added to Order',
   bysOutOfStock:'Out of stock',bysNotInCatalog:'Not in current catalog',bysDeduped:'✓ deduped across stacks',
-  bysNote:'Tap a card to select · tap <strong>ⓘ</strong> to see dose details · If two stacks share a compound, only the higher quantity is ordered — you won\'t be charged twice.',
+  bysNote:'Tap a card to select · tap <strong>ⓘ</strong> to see dose details · If two stacks share a compound, only the higher quantity is ordered — you won’t be charged twice.',
   bysDoseGuide:'Dose Guide',bysCycleLength:'APPROX. CYCLE LENGTH',bysCompound:'Compound',
   refTiles:{'Weight Loss':'Weight Loss','Growth Hormone':'Growth Hormone','Healing & Recovery':'Healing & Recovery','Anti-Aging & Immune':'Anti-Aging & Immune','Mitochondrial':'Mitochondrial','Muscle & IGF':'Muscle & IGF','Hormonal':'Hormonal','Cognitive':'Cognitive','Immune':'Immune','Reconstitution':'Reconstitution'}
 },
@@ -888,7 +850,7 @@ function bysRenderSelect(){
     var unavail=!hasStock?' unavailable':'';
     var clickHandler=hasStock?' onclick="bysToggleStack('+i+')"':'';
     html+='<div class="bys-stack-card'+(sel?' selected':'')+unavail+'"'+clickHandler+'>';
-    html+='<a class="bys-info-btn" href="https://jmitsuominor-ux.github.io/peptide-reference/?stack='+encodeURIComponent(s.name.replace(/\s*\([^)]*\).*$/,'').trim())+'&store=sd" target="_blank" onclick="event.stopPropagation()" title="View in PeptideRef">i</a>';
+    html+='<a class="bys-info-btn" href="https://jmitsuominor-ux.github.io/peptide-reference/?stack='+encodeURIComponent(s.name.replace(/\s*\([^)]*\).*$/,'').trim())+'&store=cerritos" target="_blank" onclick="event.stopPropagation()" title="View in PeptideRef">i</a>';
     html+='<div class="bys-stack-emoji">'+s.emoji+'</div>';
     html+='<div class="bys-stack-name">'+s.name+'</div>';
     html+='<div class="bys-stack-goal">'+s.goal+'</div>';
@@ -1042,33 +1004,16 @@ window.bysAddAll=function(btn){
 })();
 </script>
 <script>
-// ════════════════════════════════════════
-// EMAILJS CONFIG
-// ════════════════════════════════════════
-const EMAILJS_PUBLIC_KEY  = '8hJqb4uIKB0RP-u4y';
-const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
-const EMAILJS_TEMPLATE_ID = 'template_6pb3ehw';
-const EMAILJS_FULFILLER_TEMPLATE_ID = 'template_fp119xp';
-const FULFILLER_EMAIL     = 'pswsandiego.orders@gmail.com';
-const LOW_STOCK_TEMPLATE_ID = ''; // fill in after creating EmailJS template
-const LOW_STOCK_THRESHOLD   = 8;
-
-// ════════════════════════════════════════
-// GOOGLE SHEETS API URL
-// ════════════════════════════════════════
-const API = 'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec';
-
-// ════════════════════════════════════════
-// INIT EMAILJS (deferred — waits for script)
-// ════════════════════════════════════════
-window.addEventListener('load', () => {
-  if(typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
-});
-
-// ════════════════════════════════════════
-// FULL PRODUCT CATALOG
-// ════════════════════════════════════════
-const ALL_PRODUCTS = [
+const EMAILJS_PUBLIC_KEY='8hJqb4uIKB0RP-u4y';
+const EMAILJS_SERVICE_ID='service_x0hxs0b';
+const EMAILJS_TEMPLATE_ID = 'template_bd3i3oh';
+const EMAILJS_FULFILLER_TEMPLATE_ID = 'template_fo19x6g';
+const FULFILLER_EMAIL='pswcerritos.orders@gmail.com';
+const LOW_STOCK_TEMPLATE_ID=''; // fill in after creating EmailJS template
+const LOW_STOCK_THRESHOLD=8;
+const API='https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec';
+window.addEventListener('load',()=>{if(typeof emailjs!=='undefined')emailjs.init(EMAILJS_PUBLIC_KEY);});
+const ALL_PRODUCTS=[
   {code:'TR5',name:'Tirzepatide',cat:'Weight Loss',spec:'5mg/vial',price:12.61},
   {code:'TR10',name:'Tirzepatide',cat:'Weight Loss',spec:'10mg/vial',price:18.02},
   {code:'TR15',name:'Tirzepatide',cat:'Weight Loss',spec:'15mg/vial',price:22.52},
@@ -1158,14 +1103,9 @@ const ALL_PRODUCTS = [
   {code:'WA10',name:'BAC Water',cat:'Reconstitution',spec:'10ml/vial',price:3.00},
   {code:'AA',name:'Acetic Acid Water',cat:'Reconstitution',spec:'3ml/vial',price:1.50},
 ];
-
 const CAT_ORDER=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging & Immune','Mitochondrial','Muscle & IGF','Hormonal','Cognitive','Immune','Reconstitution'];
-
-// ════════════════════════════════════════
-// STATE
-// ════════════════════════════════════════
-function saveCart(){try{localStorage.setItem('psw_cart_sandiego',JSON.stringify(cart));}catch(e){}}
-function loadSavedCart(){try{var s=localStorage.getItem('psw_cart_sandiego');if(s){var d=JSON.parse(s);Object.assign(cart,d);}}catch(e){}}
+function saveCart(){try{localStorage.setItem('psw_cart_cerritos',JSON.stringify(cart));}catch(e){}}
+function loadSavedCart(){try{var s=localStorage.getItem('psw_cart_cerritos');if(s){var d=JSON.parse(s);Object.assign(cart,d);}}catch(e){}}
 const cart={};
 loadSavedCart();
 const MIN_ORDER=250;
@@ -1177,53 +1117,30 @@ let shippingRate=30;
 let affiliates=[];
 let appliedAffiliate=null;
 const EMAILJS_AFFILIATE_ID='';// Add your affiliate notification template ID here
-
-// ════════════════════════════════════════
-// HIDDEN ADMIN TRIGGER
-// ════════════════════════════════════════
 let adminTapCount=0,adminTapTimer;
-function adminTapped(){
-  adminTapCount++;
-  clearTimeout(adminTapTimer);
-  if(adminTapCount>=3){adminTapCount=0;window.location.href='admin.html?market=sandiego';}
-  else adminTapTimer=setTimeout(()=>adminTapCount=0,800);
-}
-document.addEventListener('keydown',(e)=>{
-  if(e.ctrlKey&&e.shiftKey&&e.key==='A') window.location.href='admin.html?market=sandiego';
-});
-
-// ════════════════════════════════════════
-// LOAD INVENTORY FROM GOOGLE SHEETS
-// ════════════════════════════════════════
+function adminTapped(){adminTapCount++;clearTimeout(adminTapTimer);if(adminTapCount>=3){adminTapCount=0;window.location.href='admin.html?market=cerritos';}else adminTapTimer=setTimeout(()=>adminTapCount=0,800);}
+document.addEventListener('keydown',(e)=>{if(e.ctrlKey&&e.shiftKey&&e.key==='A')window.location.href='admin.html?market=cerritos';});
 async function loadInventory(){
   try{
-    const data = await new Promise((resolve) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', API+'?action=getInventory&t='+Date.now(), true);
-      xhr.onload = () => { try { resolve(JSON.parse(xhr.responseText)); } catch(e) { resolve({}); } };
-      xhr.onerror = () => resolve({});
+    const data=await new Promise((resolve)=>{
+      const xhr=new XMLHttpRequest();
+      xhr.open('GET',API+'?action=getInventory&t='+Date.now(),true);
+      xhr.onload=()=>{try{resolve(JSON.parse(xhr.responseText));}catch(e){resolve({});}};
+      xhr.onerror=()=>resolve({});
       xhr.send();
-      // 8 second timeout — show all products if Sheets is slow
-      setTimeout(() => resolve({}), 8000);
+      setTimeout(()=>resolve({}),8000);
     });
     if(Array.isArray(data)){inventory={};data.forEach(item=>{if(item.code)inventory[item.code]=item;});}else{inventory=data||{};}
     if(inventory['SHIPPING']&&inventory['SHIPPING'].price>0)shippingRate=inventory['SHIPPING'].price;
-    // Show all products; map price from inventory when available; sort in-stock first
-    PRODUCTS=ALL_PRODUCTS
-      .filter(p=>p.code!=='SHIPPING')
-      .map(p=>({
-        ...p,
-        price: (inventory[p.code]&&inventory[p.code].price>0) ? inventory[p.code].price : p.price
-      }))
-      .sort((a,b)=>{
-        var sa=inventory[a.code]?inventory[a.code].stock:0;
-        var sb=inventory[b.code]?inventory[b.code].stock:0;
-        return (sb>0?0:1)-(sa>0?0:1);
-      });
-  }catch(e){
-    console.warn('Could not load inventory');
-    PRODUCTS=[];
-  }
+    if(inventory&&Object.keys(inventory).length>0){
+      // Show all products; sort in-stock first
+      PRODUCTS=ALL_PRODUCTS
+        .filter(p=>p.code!=='SHIPPING')
+        .map(p=>({...p,price:(inventory[p.code]&&inventory[p.code].price>0)?inventory[p.code].price:p.price}))
+        .sort((a,b)=>{var sa=inventory[a.code]?inventory[a.code].stock:0;var sb=inventory[b.code]?inventory[b.code].stock:0;return (sb>0?0:1)-(sa>0?0:1);});
+    }else{PRODUCTS=ALL_PRODUCTS.filter(p=>p.code!=='SHIPPING').map(p=>({...p}));}
+  }catch(e){console.warn('Could not load inventory');PRODUCTS=[];}
+  // Load affiliates for promo code validation
   try{
     const xhr2=new XMLHttpRequest();
     xhr2.open('GET',API+'?action=getAffiliates&t='+Date.now(),true);
@@ -1232,13 +1149,9 @@ async function loadInventory(){
   }catch(e){}
   document.getElementById('loadingState').style.display='none';
   document.getElementById('productGrid').style.display='grid';
-  buildCatNav();
-  renderProducts();
+  buildCatNav();renderProducts();
+  if(document.getElementById('bysOverlay').classList.contains('open'))bysRenderSelect();
 }
-
-// ════════════════════════════════════════
-// CATEGORY NAV
-// ════════════════════════════════════════
 function buildCatNav(){
   const cats=['All',...CAT_ORDER.filter(c=>PRODUCTS.some(p=>p.cat===c))];
   document.getElementById('catNav').innerHTML=cats.map(c=>{
@@ -1248,12 +1161,7 @@ function buildCatNav(){
 }
 function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();
   if(document.getElementById('bysOverlay').classList.contains('open'))bysRenderSelect();}
-
-// ════════════════════════════════════════
-// PRODUCTS
-// ════════════════════════════════════════
 function filterProducts(){renderProducts();}
-
 const selectedVariants={};
 function groupByName(arr){
   var m=new Map();
@@ -1332,7 +1240,7 @@ function renderProducts(){
     var specLine=group.length===1?'<div class="pc-spec">'+p.spec+'</div>':'';
     var cardCls='product-card'+(inCart?' in-cart':'')+(isOut?' out-of-stock-card':'');
     var cardStyle=isOut?'opacity:0.5;filter:grayscale(0.85);':'';
-    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'" onclick="if(!event.target.closest(\'button,input\')){openCPPanel(this.dataset.code);}"><div class="in-cart-dot"></div><a class="pc-info-btn" href="https://jmitsuominor-ux.github.io/peptide-reference/?compound='+encodeURIComponent((typeof PR_MAP!=='undefined'&&PR_MAP[p.name])?PR_MAP[p.name]:p.name)+'&store=sd" target="_blank" onclick="event.stopPropagation()">i</a><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+'<div class="pc-price">$'+p.price.toFixed(2)+'</div><div class="pc-stock '+stockClass+'">'+stockLabel+'</div>'+btnHtml+'</div>';
+    return '<div class="'+cardCls+'" id="card-'+p.code+'" data-code="'+p.code+'" style="'+cardStyle+'" onclick="if(!event.target.closest(\'button,input\')){openCPPanel(this.dataset.code);}"><div class="in-cart-dot"></div><a class="pc-info-btn" href="https://jmitsuominor-ux.github.io/peptide-reference/?compound='+encodeURIComponent((typeof PR_MAP!=='undefined'&&PR_MAP[p.name])?PR_MAP[p.name]:p.name)+'&store=cerritos" target="_blank" onclick="event.stopPropagation()">i</a><div class="pc-cat">'+(T[lang].cats&&T[lang].cats[p.cat]?T[lang].cats[p.cat]:p.cat)+'</div><div class="pc-code">'+p.code+'</div><div class="pc-name">'+p.name+'</div>'+variantHtml+'<div class="pc-price">$'+p.price.toFixed(2)+'</div><div class="pc-stock '+stockClass+'">'+stockLabel+'</div>'+btnHtml+'</div>';
   });
   grid.innerHTML=cards.join('');
 }
@@ -1411,6 +1319,7 @@ function applyPromo(){
   appliedAffiliate=aff;
   const discount=parseFloat(aff.customerDiscount)||0;
   msg.innerHTML='<span style="color:var(--green);font-size:11px;">'+(lang==='es'?'✓ Código aplicado — ¡'+discount+'% de descuento!':'✓ Code applied — '+discount+'% off your order!')+'</span>';
+  // Update totals display
   const subtotal=cartTotal();
   const pickup=(document.getElementById('localPickup')||{}).checked||false;
   const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
@@ -1424,38 +1333,16 @@ function applyPromo(){
   const discountVal=document.getElementById('discountVal');
   if(discountVal)discountVal.textContent='-$'+discountAmt.toFixed(2)+' ('+discount+'% off)';
 }
-async function checkLowStock(orderedItems) {
-  if (!LOW_STOCK_TEMPLATE_ID) return;
-  try {
-    const inv = await new Promise((resolve) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', API + '?action=getInventory&t=' + Date.now(), true);
-      xhr.onload = () => { try { resolve(JSON.parse(xhr.responseText)); } catch(e) { resolve({}); } };
-      xhr.onerror = () => resolve({});
-      xhr.send();
-      setTimeout(() => resolve({}), 8000);
-    });
-    const invMap = {};
-    if (Array.isArray(inv)) { inv.forEach(item => { if (item.code) invMap[item.code] = item; }); }
-    else { Object.assign(invMap, inv || {}); }
-    const lowItems = orderedItems.filter(i => {
-      const s = invMap[i.code];
-      return s && s.stock <= LOW_STOCK_THRESHOLD && s.stock > 0;
-    });
-    if (!lowItems.length) return;
-    const lowStockText = lowItems.map(i => {
-      const s = invMap[i.code];
-      return i.name + ' (' + i.code + ') — ' + s.stock + ' units remaining';
-    }).join('\n');
-    await emailjs.send(EMAILJS_SERVICE_ID, LOW_STOCK_TEMPLATE_ID, {
-      to_email: FULFILLER_EMAIL,
-      market_name: 'PSW San Diego',
-      low_stock_items: lowStockText,
-      item_count: lowItems.length,
-    });
-  } catch(e) {
-    console.warn('Low stock check failed:', e);
-  }
+async function checkLowStock(orderedItems){
+  if(!LOW_STOCK_TEMPLATE_ID)return;
+  try{
+    const inv=await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',API+'?action=getInventory&t='+Date.now(),true);xhr.onload=()=>{try{resolve(JSON.parse(xhr.responseText));}catch(e){resolve({});}};xhr.onerror=()=>resolve({});xhr.send();setTimeout(()=>resolve({}),8000);});
+    const invMap={};if(Array.isArray(inv)){inv.forEach(item=>{if(item.code)invMap[item.code]=item;});}else{Object.assign(invMap,inv||{});}
+    const lowItems=orderedItems.filter(i=>{const s=invMap[i.code];return s&&s.stock<=LOW_STOCK_THRESHOLD&&s.stock>0;});
+    if(!lowItems.length)return;
+    const lowStockText=lowItems.map(i=>{const s=invMap[i.code];return i.name+' ('+i.code+') — '+s.stock+' units remaining';}).join('\n');
+    await emailjs.send(EMAILJS_SERVICE_ID,LOW_STOCK_TEMPLATE_ID,{to_email:FULFILLER_EMAIL,market_name:'PSW Cerritos',low_stock_items:lowStockText,item_count:lowItems.length});
+  }catch(e){console.warn('Low stock check failed:',e);}
 }
 async function submitOrder(){
   const name=document.getElementById('custName').value.trim();const email=document.getElementById('custEmail').value.trim();const phone=document.getElementById('custPhone').value.trim();const address=document.getElementById('custAddress').value.trim();const notes=document.getElementById('custNotes').value.trim();
@@ -1472,20 +1359,32 @@ async function submitOrder(){
   try{const params=new URLSearchParams({action:'saveOrder',order:encodeURIComponent(JSON.stringify(order))});await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',API+'?'+params.toString(),true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();});}catch(e){console.warn('Could not save to sheets:',e);}
   try{const deductURL=API+'?action=deductInventory&items='+encodeURIComponent(JSON.stringify(items))+'&t='+Date.now();await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',deductURL,true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();setTimeout(()=>resolve(),8000);});}catch(e){console.warn('Inventory deduct failed:',e);}
   const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:pickup?'LOCAL PICKUP':(address||'Not provided'),customer_notes:notes||'None',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
-  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);}catch(e){console.error('EmailJS customer send failed:',e);}
-  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));}catch(e){console.error('EmailJS fulfiller send failed:',e);}
+  console.log('EmailJS params:', JSON.stringify(emailParams), 'customer:', email, 'fulfiller:', FULFILLER_EMAIL);
+  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);console.log('EmailJS customer send OK to',email);}catch(e){console.error('EmailJS customer send failed:',JSON.stringify(e),e);showToast('Customer email failed: '+JSON.stringify(e),'red');}
+  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));console.log('EmailJS fulfiller send OK to',FULFILLER_EMAIL);}catch(e){console.error('EmailJS fulfiller send failed:',JSON.stringify(e),e);showToast('Fulfiller email failed: '+JSON.stringify(e),'red');}
   if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
     const commissionPct=parseFloat(appliedAffiliate.commission)||0;
     const commissionAmt=(subtotal*(commissionPct/100)).toFixed(2);
-    try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_AFFILIATE_ID,{to_email:appliedAffiliate.email,affiliate_name:appliedAffiliate.name,promo_code:appliedAffiliate.code,order_summary:orderSummary,order_total:'$'+total.toFixed(2),commission_rate:commissionPct+'%',commission_amount:'$'+commissionAmt,customer_name:name});}catch(e){console.error('Affiliate email failed:',e);}
+    try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_AFFILIATE_ID,{
+      to_email:appliedAffiliate.email,
+      affiliate_name:appliedAffiliate.name,
+      promo_code:appliedAffiliate.code,
+      order_summary:orderSummary,
+      order_total:'$'+total.toFixed(2),
+      commission_rate:commissionPct+'%',
+      commission_amount:'$'+commissionAmt,
+      customer_name:name,
+    });}catch(e){console.error('Affiliate email failed:',e);}
   }
   appliedAffiliate=null;
   Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();
   document.getElementById('modalContent').innerHTML=`<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">${T[lang].orderReceived}</div><div class="success-sub">${lang==='es'?'Gracias, '+name+'. Tu pedido ha sido enviado.':'Thank you, '+name+'. Your order has been submitted.'}</div><div class="success-note">${lang==='es'?'Te contactaremos en <strong>24 horas</strong> para confirmar y coordinar el envío.<br>¿Preguntas? WhatsApp <strong>+1-310-683-0049</strong>':'We\'ll reach out within <strong>24 hours</strong> to confirm and arrange fulfillment.<br>Questions? WhatsApp <strong>+1-310-683-0049</strong>'}</div><button class="success-done-btn" onclick="closeCheckout()">${T[lang].backToCatalog}</button></div>`;
-  checkLowStock(items).catch(() => {});
+  checkLowStock(items).catch(()=>{});
 }
 function flash(id,msg){const el=document.getElementById(id);el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);}
-document.addEventListener('click',function(e){var coaBtn=e.target.closest('.coa-btn');if(coaBtn){openCOA(coaBtn.dataset.compound,e);return;}var varBtn=e.target.closest('.cp-var-btn');if(varBtn){switchCPVariant(varBtn.dataset.vcode);return;}});
+document.addEventListener('click',function(e){var coaBtn=e.target.closest('.coa-btn');if(coaBtn){openCOA(coaBtn.dataset.compound,e);return;}var varBtn=e.target.closest('.cp-var-btn');if(varBtn){switchCPVariant(varBtn.dataset.vcode);return;}
+
+});
 var COMPOUND_INFO={
   'Tirzepatide':{category:'Weight Loss',tagline:'Dual GIP + GLP-1 agonist — strongest approved weight loss medication',evidence:5,lo:'2.5 mg/wk × 4 wks → 5 mg/wk × 4 wks (hold at 5mg maintenance)',mid:'2.5→5→7.5→10 mg/wk (4 wks per step) — standard FDA titration',hi:'2.5→5→7.5→10→12.5→15 mg/wk (4 wks per step) — maximum FDA dose',schedule:'Once weekly SubQ injection — same day each week, any time of day',cycle:'20+ weeks minimum — long-term use for maximum benefit',benefits:['20.2% average body weight loss vs 13.7% semaglutide (SURMOUNT-5 head-to-head 2025)','Superior to semaglutide in SURPASS-2 and SURMOUNT-5','Reduces visceral and abdominal fat preferentially','Improves HbA1c, blood pressure, triglycerides']},
   'Semaglutide':{category:'Weight Loss',tagline:'GLP-1 agonist — gold standard weight loss with cardiovascular benefit',evidence:5,lo:'0.25 mg/wk → 0.5 mg/wk (starting/titration)',mid:'0.25→0.5→1.0→2.4 mg/wk (standard 4-step titration)',hi:'2.4mg → 7.2mg/wk (Wegovy HD — FDA approved March 2026)',schedule:'Once weekly SubQ injection. 7.2mg requires tolerating 2.4mg for ≥4 weeks first.',cycle:'20+ weeks',benefits:['15–17% average body weight loss at 2.4mg (STEP-1)','20.7% average weight loss at 7.2mg Wegovy HD (STEP UP, 2025)','21% reduction in major cardiovascular events (SELECT trial)','FDA-approved for T2D, obesity, and MASH liver disease']},
@@ -1531,6 +1430,7 @@ var COMPOUND_INFO={
   'Acetic Acid Water':{category:'Reconstitution',tagline:'Acidic reconstitution solvent for pH-sensitive peptides',evidence:5,lo:'2 ml per vial',mid:'2 ml per vial',hi:'2 ml per vial',schedule:'Add 2ml to vial then dilute with BAC water',cycle:'N/A',benefits:['Reconstitution of IGF-1 LR3, IGF DES','Proper dissolution prevents degradation']},
   'MOTS-C':{category:'Mitochondrial',tagline:'Mitochondrial-derived peptide — metabolic health, fat loss, insulin sensitivity',evidence:3,lo:'5 mg/week SubQ',mid:'10 mg/week SubQ — most common protocol',hi:'10 mg 2x/week SubQ (advanced)',schedule:'SubQ 1–2x per week, AM preferred',cycle:'8–12 weeks / 4 wks off',benefits:['Improved insulin sensitivity and glucose metabolism','Mitochondrial biogenesis','Exercise mimetic — benefits without exercise','Fat loss via metabolic activation']},
 };
+
 var CAT_COLORS={
   'Weight Loss':   {hi:'#007fa0',mid:'#00b4d8',lo:'#4dd4f0',shine:'rgba(77,212,240,0.4)'},
   'Growth Hormone':{hi:'#901818',mid:'#c02828',lo:'#e86060',shine:'rgba(232,96,96,0.4)'},
@@ -1734,12 +1634,14 @@ function openCPPanel(code){
   var p=PRODUCTS.find(function(x){return x.code===code;})||ALL_PRODUCTS.find(function(x){return x.code===code;});
   if(!p)return;
   _cpCode=code;
+  // Find all variants of this compound
   var allVariants=(PRODUCTS.length?PRODUCTS:ALL_PRODUCTS).filter(function(x){return x.name===p.name;});
   var prName=(typeof PR_MAP!=='undefined'&&PR_MAP[p.name])?PR_MAP[p.name]:p.name;
   var info=COMPOUND_INFO[prName]||COMPOUND_INFO[p.name]||{};
   document.getElementById('cpCat').textContent=info.category||p.cat||'';
   document.getElementById('cpName').textContent=p.name;
   document.getElementById('cpTagline').textContent=info.tagline||'';
+  // Variant selector
   var varHtml='';
   var inStockVariants=allVariants.filter(function(v){var st=inventory&&inventory[v.code]?inventory[v.code].stock:0;return st>0;});
   if(inStockVariants.length>1){
@@ -1750,6 +1652,7 @@ function openCPPanel(code){
   document.getElementById('cpVariants').innerHTML=varHtml;
   document.getElementById('cpVialContainer').innerHTML=vialDisplay(p.name,info.category||p.cat||'');
   var body='';
+  // Dosing
   if(info.lo||info.mid||info.hi){
     body+='<div class="cp-section-title">Dosing</div>';
     body+='<table class="cp-dose-table"><thead><tr><th>Tier</th><th>Dose</th></tr></thead><tbody>';
@@ -1758,23 +1661,27 @@ function openCPPanel(code){
     if(info.hi)body+='<tr><td class="t-hi">HIGH</td><td>'+info.hi+'</td></tr>';
     body+='</tbody></table>';
   }
+  // Schedule & cycle
   if(info.schedule){
     body+='<div class="cp-section-title">Schedule</div><div class="cp-schedule">'+info.schedule+(info.cycle?' &nbsp;·&nbsp; Cycle: '+info.cycle:'')+'</div>';
   }
+  // Benefits
   if(info.benefits&&info.benefits.length){
     body+='<div class="cp-section-title">Benefits</div>';
     info.benefits.forEach(function(b){body+='<div class="cp-benefit">'+b+'</div>';});
   }
+  // COA
   if(COA_MAP[p.name]){
     body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'" onclick="openCOA(this.dataset.compound,event)">🔬 Purity Verified &nbsp;·&nbsp; View Lab Certificate</button>';
   }
-  body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=sd" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">Full Reference →</a></div>';
+  // PR link
+  body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=cerritos" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">Full Reference →</a></div>';
   document.getElementById('cpBody').innerHTML=body;
+  // Add to cart button
   renderCPCartBtn(code);
   document.getElementById('cpOverlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
-
 function renderCPCartBtn(code){
   var stock=inventory&&inventory[code]?inventory[code].stock:null;
   var isOut=stock===null||stock===0;

@@ -285,7 +285,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="admin-title">Peptide Supply Warehouse</div>
       <div class="admin-badge">ADMIN</div>
     </div>
-    <a href="#" onclick="var m=new URLSearchParams(location.search).get('market');location.href=m==='tijuana'?'tijuana.html':m==='sandiego'?'sandiego.html':'cerritos.html';return false;" class="store-btn">← Store</a>
+    <a href="#" onclick="var m=new URLSearchParams(location.search).get('market');location.href=m==='tijuana'?'/tijuana/':m==='sandiego'?'/':'/mexico/';return false;" class="store-btn">← Store</a>
     <div class="logout-btn" onclick="logout()">Lock →</div>
   </div>
   <div class="admin-nav">

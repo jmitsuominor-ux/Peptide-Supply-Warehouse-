@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Order Status – Peptide Supply Warehouse</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#f0f4f9;--white:#ffffff;
+  --blue:#1756a9;--blue2:#1348a0;
+  --text:#0a1628;--text2:#3a4a5c;--text3:#7a8fa8;
+  --border:#dde3ec;--border2:#c5d0e0;
+  --green:#0d7377;--green-dim:rgba(13,115,119,0.08);
+  --amber:#c47a1e;--amber-dim:rgba(196,122,30,0.09);
+  --red:#b83228;--red-dim:rgba(184,50,40,0.08);
+  --purple:#5c3d9e;--purple-dim:rgba(92,61,158,0.08);
+  --surface:#ffffff;--surface2:#f0f4f9;--surface3:#e4eaf3;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;pointer-events:none;z-index:0;}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
+.topbar-inner{max-width:900px;margin:0 auto;padding:0 20px;height:54px;display:flex;align-items:center;gap:14px;}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.brand-logo{font-family:var(--mono);font-size:18px;font-weight:500;color:var(--text);letter-spacing:0.04em;text-decoration:none;}
+.brand-logo span{color:var(--blue);}
+.brand-divider{width:1px;height:20px;background:var(--border2);}
+.brand-sub{font-size:10px;color:var(--text3);letter-spacing:0.1em;font-family:var(--mono);text-transform:uppercase;}
+.topbar-spacer{flex:1;}
+.back-btn{display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border2);border-radius:6px;padding:7px 14px;cursor:pointer;color:var(--text2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.06em;text-decoration:none;transition:all 0.15s;}
+.back-btn:hover{border-color:var(--blue);color:var(--blue);}
+.back-btn svg{width:12px;height:12px;}
+
+/* MAIN */
+.main{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:40px 20px 60px;}
+
+/* LOOKUP CARD */
+.lookup-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:32px 28px;margin-bottom:32px;}
+.lookup-title{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--text);letter-spacing:0.03em;margin-bottom:6px;}
+.lookup-sub{font-size:13px;color:var(--text3);margin-bottom:24px;line-height:1.5;}
+.lookup-form{display:flex;gap:10px;flex-wrap:wrap;}
+.lookup-input{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:11px 14px;font-family:var(--sans);font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.lookup-input:focus{border-color:var(--blue);}
+.lookup-input::placeholder{color:var(--text3);}
+.lookup-btn{background:var(--blue);border:none;border-radius:8px;padding:11px 22px;color:#fff;font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:0.06em;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.lookup-btn:hover{background:var(--blue2);}
+.lookup-btn:active{transform:scale(0.97);}
+.lookup-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+
+/* LOADING */
+.loading-state{text-align:center;padding:48px 20px;}
+.loading-spinner{width:30px;height:30px;border:2px solid var(--border2);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.08em;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:48px 20px;background:var(--white);border:1px solid var(--border);border-radius:12px;}
+.empty-icon{font-size:36px;margin-bottom:14px;opacity:0.5;}
+.empty-title{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text2);margin-bottom:6px;}
+.empty-sub{font-size:13px;color:var(--text3);}
+
+/* RESULTS HEADER */
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;}
+.results-count{font-family:var(--mono);font-size:12px;color:var(--text3);letter-spacing:0.06em;}
+.results-email{font-family:var(--mono);font-size:12px;color:var(--blue);letter-spacing:0.03em;}
+
+/* ORDER CARD */
+.order-card{background:var(--white);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;transition:box-shadow 0.15s;}
+.order-card:hover{box-shadow:0 2px 16px rgba(10,22,40,0.07);}
+.order-header{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.order-id{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);letter-spacing:0.03em;}
+.order-date{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.03em;margin-left:auto;}
+.order-market{font-family:var(--mono);font-size:10px;color:var(--text3);background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;letter-spacing:0.06em;text-transform:uppercase;}
+.status-badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:4px 10px;border-radius:20px;}
+.status-badge.pending{color:var(--amber);background:var(--amber-dim);border:1px solid rgba(196,122,30,0.2);}
+.status-badge.paid{color:var(--purple);background:var(--purple-dim);border:1px solid rgba(92,61,158,0.2);}
+.status-badge.fulfilled{color:var(--green);background:var(--green-dim);border:1px solid rgba(13,115,119,0.2);}
+.status-badge.cancelled{color:var(--red);background:var(--red-dim);border:1px solid rgba(184,50,40,0.2);}
+
+.order-body{padding:16px 20px;}
+.status-note{font-size:12px;color:var(--text2);background:var(--surface2);border-left:3px solid var(--border2);padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:14px;line-height:1.5;}
+.status-note.pending{border-left-color:var(--amber);}
+.status-note.paid{border-left-color:var(--purple);}
+.status-note.fulfilled{border-left-color:var(--green);}
+.status-note.cancelled{border-left-color:var(--red);}
+
+.items-label{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+.item-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px solid var(--border);}
+.item-row:first-child{border-top:none;}
+.item-info{flex:1;}
+.item-name{font-size:13px;font-weight:500;color:var(--text);}
+.item-spec{font-size:11px;color:var(--text3);margin-top:1px;font-family:var(--mono);}
+.item-qty{font-family:var(--mono);font-size:11px;color:var(--text2);white-space:nowrap;padding-top:2px;}
+.item-price{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;padding-top:2px;}
+
+.order-footer{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:12px 20px;background:var(--surface2);border-top:1px solid var(--border);}
+.order-total-label{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;}
+.order-total{font-family:var(--mono);font-size:16px;font-weight:500;color:var(--text);}
+
+/* ERROR */
+.error-msg{background:var(--red-dim);border:1px solid rgba(184,50,40,0.2);color:var(--red);border-radius:8px;padding:12px 16px;font-family:var(--mono);font-size:12px;margin-top:12px;display:none;}
+
+@media(max-width:600px){
+  .lookup-card{padding:20px 16px;}
+  .order-header{padding:12px 14px;}
+  .order-body{padding:12px 14px;}
+  .order-footer{padding:10px 14px;}
+  .order-date{margin-left:0;width:100%;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <a class="brand-logo" href="index.html">PSW<span>·</span></a>
+      <div class="brand-divider"></div>
+      <div class="brand-sub" id="pageTitle">Order Status</div>
+    </div>
+    <div class="topbar-spacer"></div>
+    <a class="back-btn" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      <span id="backBtnText">BACK</span>
+    </a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="lookup-card">
+    <div class="lookup-title" id="lookupTitle">Order Status</div>
+    <div class="lookup-sub" id="lookupSub">Enter your email address to look up all your orders.</div>
+    <div class="lookup-form">
+      <input class="lookup-input" type="email" id="emailInput" placeholder="your@email.com" autocomplete="email" inputmode="email">
+      <button class="lookup-btn" id="lookupBtn" onclick="lookupOrders()"><span id="lookupBtnText">LOOK UP ORDERS</span></button>
+    </div>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div id="resultsArea"></div>
+</div>
+
+<script>
+const APIS = [
+  { url: 'https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec', market: 'Cerritos' },
+  { url: 'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec', market: 'Tijuana' },
+  { url: 'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', market: 'San Diego' },
+];
+
+const params = new URLSearchParams(window.location.search);
+const lang = params.get('lang') === 'es' ? 'es' : 'en';
+
+const T = {
+  en: {
+    pageTitle: 'Order Status',
+    lookupTitle: 'Order Status',
+    lookupSub: 'Enter your email address to look up all your orders.',
+    inputPlaceholder: 'your@email.com',
+    btnText: 'LOOK UP ORDERS',
+    btnLoading: 'SEARCHING…',
+    backBtn: 'BACK',
+    loading: 'SEARCHING ALL MARKETS…',
+    noOrders: 'No Orders Found',
+    noOrdersSub: 'No orders were found for that email address.',
+    ordersFound: (n) => `${n} order${n!==1?'s':''} found`,
+    items: 'ITEMS',
+    qty: (q) => `×${q}`,
+    total: 'TOTAL',
+    market: 'MARKET',
+    statusLabel: { pending: 'Awaiting Payment', paid: 'Paid', fulfilled: 'Fulfilled', cancelled: 'Cancelled' },
+    statusNote: {
+      pending: 'Payment not yet received — please send payment to proceed.',
+      paid: 'Payment confirmed — your order is being prepared.',
+      fulfilled: 'Your order has been shipped!',
+      cancelled: 'This order has been cancelled.',
+    },
+    errorFetch: 'Unable to retrieve orders. Please try again.',
+    errorEmail: 'Please enter a valid email address.',
+  },
+  es: {
+    pageTitle: 'Estado de Pedido',
+    lookupTitle: 'Estado de Pedido',
+    lookupSub: 'Ingresa tu correo electrónico para consultar todos tus pedidos.',
+    inputPlaceholder: 'tu@correo.com',
+    btnText: 'BUSCAR PEDIDOS',
+    btnLoading: 'BUSCANDO…',
+    backBtn: 'REGRESAR',
+    loading: 'BUSCANDO EN TODAS LAS TIENDAS…',
+    noOrders: 'No Se Encontraron Pedidos',
+    noOrdersSub: 'No se encontraron pedidos para ese correo electrónico.',
+    ordersFound: (n) => `${n} pedido${n!==1?'s':''} encontrado${n!==1?'s':''}`,
+    items: 'ARTÍCULOS',
+    qty: (q) => `×${q}`,
+    total: 'TOTAL',
+    market: 'TIENDA',
+    statusLabel: { pending: 'En Espera de Pago', paid: 'Pagado', fulfilled: 'Enviado', cancelled: 'Cancelado' },
+    statusNote: {
+      pending: 'Pago aún no recibido — por favor envía el pago para continuar.',
+      paid: 'Pago confirmado — tu pedido está siendo preparado.',
+      fulfilled: '¡Tu pedido ha sido enviado!',
+      cancelled: 'Este pedido ha sido cancelado.',
+    },
+    errorFetch: 'No se pudieron recuperar los pedidos. Por favor intenta de nuevo.',
+    errorEmail: 'Por favor ingresa un correo electrónico válido.',
+  },
+};
+
+const t = T[lang];
+
+// Apply translations
+if (lang === 'es') document.documentElement.lang = 'es';
+document.title = t.pageTitle + ' – Peptide Supply Warehouse';
+document.getElementById('pageTitle').textContent = t.pageTitle;
+document.getElementById('lookupTitle').textContent = t.lookupTitle;
+document.getElementById('lookupSub').textContent = t.lookupSub;
+document.getElementById('emailInput').placeholder = t.inputPlaceholder;
+document.getElementById('lookupBtnText').textContent = t.btnText;
+document.getElementById('backBtnText').textContent = t.backBtn;
+
+// Allow Enter key
+document.getElementById('emailInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') lookupOrders();
+});
+
+function getStatusKey(order) {
+  if (order.status === 'cancelled') return 'cancelled';
+  if (order.status === 'fulfilled') return 'fulfilled';
+  if (order.paidNotified === true || order.status === 'paid') return 'paid';
+  return 'pending';
+}
+
+function formatDate(val) {
+  if (!val) return '—';
+  const d = new Date(val);
+  if (isNaN(d)) return val;
+  return d.toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-US', { year:'numeric', month:'short', day:'numeric' });
+}
+
+function formatMoney(val) {
+  const n = parseFloat(val);
+  if (isNaN(n)) return val || '—';
+  return '$' + n.toFixed(2);
+}
+
+async function fetchMarket(api) {
+  const res = await fetch(api.url + '?action=getOrders');
+  const data = await res.json();
+  const orders = Array.isArray(data) ? data : (data.orders || []);
+  return orders.map(o => ({ ...o, _market: api.market }));
+}
+
+async function lookupOrders() {
+  const email = document.getElementById('emailInput').value.trim().toLowerCase();
+  const errEl = document.getElementById('errorMsg');
+  errEl.style.display = 'none';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    errEl.textContent = t.errorEmail;
+    errEl.style.display = 'block';
+    return;
+  }
+
+  const btn = document.getElementById('lookupBtn');
+  btn.disabled = true;
+  document.getElementById('lookupBtnText').textContent = t.btnLoading;
+
+  const resultsArea = document.getElementById('resultsArea');
+  resultsArea.innerHTML = `<div class="loading-state"><div class="loading-spinner"></div><div class="loading-text">${t.loading}</div></div>`;
+
+  try {
+    const results = await Promise.allSettled(APIS.map(fetchMarket));
+    let all = [];
+    results.forEach(r => { if (r.status === 'fulfilled') all = all.concat(r.value); });
+
+    const matched = all.filter(o => {
+      const oe = (o.email || o.customerEmail || '').toLowerCase();
+      return oe === email;
+    });
+
+    // Sort newest first
+    matched.sort((a, b) => {
+      const da = new Date(a.date || a.createdAt || a.timestamp || 0);
+      const db = new Date(b.date || b.createdAt || b.timestamp || 0);
+      return db - da;
+    });
+
+    renderResults(matched, email);
+  } catch(e) {
+    resultsArea.innerHTML = '';
+    errEl.textContent = t.errorFetch;
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    document.getElementById('lookupBtnText').textContent = t.btnText;
+  }
+}
+
+function renderResults(orders, email) {
+  const resultsArea = document.getElementById('resultsArea');
+
+  if (orders.length === 0) {
+    resultsArea.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <div class="empty-title">${t.noOrders}</div>
+        <div class="empty-sub">${t.noOrdersSub}</div>
+      </div>`;
+    return;
+  }
+
+  let html = `<div class="results-header">
+    <span class="results-count">${t.ordersFound(orders.length)}</span>
+    <span class="results-email">${escHtml(email)}</span>
+  </div>`;
+
+  orders.forEach(order => {
+    const statusKey = getStatusKey(order);
+    const statusLabel = t.statusLabel[statusKey];
+    const statusNote = t.statusNote[statusKey];
+    const orderId = order.id || order.orderId || order._id || '—';
+    const dateVal = order.date || order.createdAt || order.timestamp || '';
+    const items = order.items || order.cart || [];
+    const total = order.total || order.totalAmount;
+
+    html += `<div class="order-card">
+      <div class="order-header">
+        <span class="order-id">#${escHtml(String(orderId))}</span>
+        <span class="status-badge ${statusKey}">${statusLabel}</span>
+        <span class="order-market">${escHtml(order._market)}</span>
+        <span class="order-date">${formatDate(dateVal)}</span>
+      </div>
+      <div class="order-body">
+        <div class="status-note ${statusKey}">${statusNote}</div>`;
+
+    if (items.length > 0) {
+      html += `<div class="items-label">${t.items}</div>`;
+      items.forEach(item => {
+        const name = item.name || item.productName || item.product || '—';
+        const spec = item.spec || item.size || item.variant || '';
+        const qty = item.qty || item.quantity || 1;
+        const price = item.price || item.unitPrice || item.total;
+        html += `<div class="item-row">
+          <div class="item-info">
+            <div class="item-name">${escHtml(String(name))}</div>
+            ${spec ? `<div class="item-spec">${escHtml(String(spec))}</div>` : ''}
+          </div>
+          <div class="item-qty">${t.qty(qty)}</div>
+          <div class="item-price">${formatMoney(price)}</div>
+        </div>`;
+      });
+    }
+
+    html += `</div>
+      <div class="order-footer">
+        <span class="order-total-label">${t.total}</span>
+        <span class="order-total">${formatMoney(total)}</span>
+      </div>
+    </div>`;
+  });
+
+  resultsArea.innerHTML = html;
+}
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

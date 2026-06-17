@@ -361,6 +361,10 @@ body::after{display:none;}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="searchInput" placeholder="Search compounds, codes…" oninput="filterProducts()">
     </div>
+    <a href="./orders.html?lang=es" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border2);border-radius:6px;padding:8px 14px;color:var(--text2);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.06em;text-decoration:none;white-space:nowrap;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text2)'">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      MIS PEDIDOS
+    </a>
     <button class="cart-btn" onclick="openCart()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
       <span id="cartBtnText">CHECKOUT</span>
@@ -1048,6 +1052,8 @@ const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
 const EMAILJS_TEMPLATE_ID = 'template_yu17kbb';
 const EMAILJS_FULFILLER_TEMPLATE_ID = 'template_frbqrjh';
 const FULFILLER_EMAIL     = 'pswtijuana.orders@gmail.com';
+const LOW_STOCK_TEMPLATE_ID = ''; // fill in after creating EmailJS template
+const LOW_STOCK_THRESHOLD   = 8;
 
 // ════════════════════════════════════════
 // GOOGLE SHEETS API URL
@@ -1420,6 +1426,39 @@ function applyPromo(){
   const discountVal=document.getElementById('discountVal');
   if(discountVal)discountVal.textContent='-$'+discountAmt.toFixed(2)+' ('+discount+'% off)';
 }
+async function checkLowStock(orderedItems) {
+  if (!LOW_STOCK_TEMPLATE_ID) return;
+  try {
+    const inv = await new Promise((resolve) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', API + '?action=getInventory&t=' + Date.now(), true);
+      xhr.onload = () => { try { resolve(JSON.parse(xhr.responseText)); } catch(e) { resolve({}); } };
+      xhr.onerror = () => resolve({});
+      xhr.send();
+      setTimeout(() => resolve({}), 8000);
+    });
+    const invMap = {};
+    if (Array.isArray(inv)) { inv.forEach(item => { if (item.code) invMap[item.code] = item; }); }
+    else { Object.assign(invMap, inv || {}); }
+    const lowItems = orderedItems.filter(i => {
+      const s = invMap[i.code];
+      return s && s.stock <= LOW_STOCK_THRESHOLD && s.stock > 0;
+    });
+    if (!lowItems.length) return;
+    const lowStockText = lowItems.map(i => {
+      const s = invMap[i.code];
+      return i.name + ' (' + i.code + ') — ' + s.stock + ' units remaining';
+    }).join('\n');
+    await emailjs.send(EMAILJS_SERVICE_ID, LOW_STOCK_TEMPLATE_ID, {
+      to_email: FULFILLER_EMAIL,
+      market_name: 'PSW Tijuana',
+      low_stock_items: lowStockText,
+      item_count: lowItems.length,
+    });
+  } catch(e) {
+    console.warn('Low stock check failed:', e);
+  }
+}
 async function submitOrder(){
   const name=document.getElementById('custName').value.trim();const email=document.getElementById('custEmail').value.trim();const phone=document.getElementById('custPhone').value.trim();const address=document.getElementById('custAddress').value.trim();const notes=document.getElementById('custNotes').value.trim();
   if(!name){flash('custName',T[lang].enterName);return;}if(!email||!email.includes('@')){flash('custEmail',T[lang].enterEmail);return;}if(!phone){flash('custPhone',T[lang].enterPhone);return;}
@@ -1445,6 +1484,7 @@ async function submitOrder(){
   appliedAffiliate=null;
   Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();
   document.getElementById('modalContent').innerHTML=`<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">${T[lang].orderReceived}</div><div class="success-sub">${lang==='es'?'Gracias, '+name+'. Tu pedido ha sido enviado.':'Thank you, '+name+'. Your order has been submitted.'}</div><div class="success-note">${lang==='es'?'Te contactaremos en <strong>24 horas</strong> para confirmar y coordinar el envío.<br>¿Preguntas? WhatsApp <strong>+1-310-683-0049</strong>':'We\'ll reach out within <strong>24 hours</strong> to confirm and arrange fulfillment.<br>Questions? WhatsApp <strong>+1-310-683-0049</strong>'}</div><button class="success-done-btn" onclick="closeCheckout()">${T[lang].backToCatalog}</button></div>`;
+  checkLowStock(items).catch(() => {});
 }
 function flash(id,msg){const el=document.getElementById(id);el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);}
 document.addEventListener('click',function(e){var coaBtn=e.target.closest('.coa-btn');if(coaBtn){openCOA(coaBtn.dataset.compound,e);return;}var varBtn=e.target.closest('.cp-var-btn');if(varBtn){switchCPVariant(varBtn.dataset.vcode);return;}});

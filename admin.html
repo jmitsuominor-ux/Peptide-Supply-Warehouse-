@@ -229,6 +229,29 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .toast.green{border-color:var(--green-border);color:var(--green);}
 .toast.red{border-color:var(--red-border);color:var(--red);}
 
+/* RESTOCK LIST */
+.restock-section{background:var(--amber-dim);border:1px solid rgba(196,122,30,0.3);border-radius:10px;padding:16px;margin-bottom:16px;display:none;}
+.restock-section.show{display:block;}
+.restock-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.restock-hdr h3{font-size:13px;font-weight:600;color:var(--amber);flex:1;}
+.restock-clear-btn{font-family:var(--mono);font-size:10px;color:var(--text3);background:transparent;border:1px solid var(--border2);border-radius:5px;padding:4px 10px;cursor:pointer;transition:all 0.15s;}
+.restock-clear-btn:hover{color:var(--red);border-color:var(--red-border);background:var(--red-dim);}
+.restock-email-btn{font-family:var(--sans);font-size:12px;font-weight:500;color:#fff;background:var(--amber);border:none;border-radius:6px;padding:7px 14px;cursor:pointer;transition:all 0.15s;}
+.restock-email-btn:hover{background:#b56c12;}
+.restock-email-btn:active{transform:scale(0.97);}
+.restock-table{width:100%;border-collapse:collapse;font-size:12px;}
+.restock-table th{font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:0.08em;text-transform:uppercase;padding:6px 10px;border-bottom:1px solid rgba(196,122,30,0.25);text-align:left;}
+.restock-table td{padding:8px 10px;border-bottom:1px solid rgba(196,122,30,0.15);color:var(--text2);vertical-align:middle;}
+.restock-table tr:last-child td{border-bottom:none;}
+.restock-qty-input{width:70px;background:var(--surface);border:1px solid rgba(196,122,30,0.3);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:12px;padding:4px 8px;text-align:center;outline:none;transition:border-color 0.15s;}
+.restock-qty-input:focus{border-color:var(--amber);}
+.restock-unflag-btn{background:transparent;border:1px solid rgba(196,122,30,0.3);color:var(--amber);border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;transition:all 0.15s;font-family:var(--mono);}
+.restock-unflag-btn:hover{background:var(--red-dim);border-color:var(--red-border);color:var(--red);}
+.flag-btn{width:100%;margin-top:6px;background:transparent;border:1px solid rgba(196,122,30,0.3);color:var(--amber);border-radius:6px;padding:5px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;letter-spacing:0.03em;}
+.flag-btn:hover{background:var(--amber-dim);border-color:var(--amber);}
+.flag-btn.flagged{background:var(--amber-dim);border-color:var(--amber);color:var(--amber);font-weight:500;}
+.flag-btn:active{transform:scale(0.97);}
+
 ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 .order-card{animation:fadeUp 0.2s ease forwards;}
@@ -297,6 +320,17 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   </div>
 
   <div class="admin-page" id="page-inventory">
+    <div class="restock-section" id="restockSection">
+      <div class="restock-hdr">
+        <h3>🔖 RESTOCK LIST</h3>
+        <button class="restock-clear-btn" onclick="clearRestockList()">Clear List</button>
+        <button class="restock-email-btn" onclick="emailRestockList()">📧 Email Restock List</button>
+      </div>
+      <table class="restock-table">
+        <thead><tr><th>Product</th><th>Code</th><th>Current Stock</th><th>Desired Qty</th><th></th></tr></thead>
+        <tbody id="restockTableBody"></tbody>
+      </table>
+    </div>
     <div class="inv-toolbar">
       <input type="text" class="inv-search" id="invSearch" placeholder="Search inventory…" oninput="renderInventory()">
       <button class="add-stock-btn" onclick="openAddStock()">+ Add Item</button>
@@ -390,6 +424,7 @@ const EMAILJS_PUBLIC_KEY  = '8hJqb4uIKB0RP-u4y';
 const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
 const EMAILJS_TEMPLATE_ID = 'template_bd3i3oh';
 const EMAILJS_FULFILL_ID  = _cfg.fulfillTemplate;
+const RESTOCK_TEMPLATE_ID = '';
 
 window.addEventListener('load', () => {
   if(typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -491,6 +526,7 @@ const PRODUCTS = [
 // ════════════════════════════════════════
 let orders=[];
 let inventory={};
+let restockFlags={};
 let pinBuffer='';
 
 // ════════════════════════════════════════
@@ -886,6 +922,7 @@ function renderInventory(){
   else banner.classList.remove('show');
   const grid=document.getElementById('invGrid');
   if(!keys.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No inventory items yet — click + Add Item to get started</p></div>';return;}
+  renderRestockSection();
   grid.innerHTML=keys.map(code=>{
     const item=inventory[code];
     const _prod=PRODUCTS.find(p=>p.code===code)||{};
@@ -916,6 +953,7 @@ function renderInventory(){
           <input type="number" step="0.01" min="0" class="stock-input" style="font-size:14px;" value="${price.toFixed(2)}" onchange="savePrice('${code}',this.value)" id="priceInput-${code}">
         </div>
       </div>
+      <button class="flag-btn${restockFlags[code]!==undefined?' flagged':''}" onclick="toggleRestockFlag('${code}')" id="flagBtn-${code}">${restockFlags[code]!==undefined?'🔖 Flagged for Restock':'🔖 Flag for Restock'}</button>
       <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${_name}')">✕ Remove from inventory</button>
     </div>`;
   }).join('');
@@ -994,6 +1032,77 @@ async function saveNewInventoryItem(){
   renderInventory();
   updateCounts();
   showToast('✓ Inventory updated','green');
+}
+
+// ════════════════════════════════════════
+// RESTOCK LIST
+// ════════════════════════════════════════
+function toggleRestockFlag(code){
+  if(restockFlags[code]!==undefined){
+    delete restockFlags[code];
+  }else{
+    restockFlags[code]=0;
+  }
+  renderRestockSection();
+  renderInventory();
+}
+
+function renderRestockSection(){
+  const section=document.getElementById('restockSection');
+  const tbody=document.getElementById('restockTableBody');
+  if(!section||!tbody)return;
+  const flaggedCodes=Object.keys(restockFlags);
+  if(!flaggedCodes.length){section.classList.remove('show');return;}
+  section.classList.add('show');
+  tbody.innerHTML=flaggedCodes.map(code=>{
+    const item=inventory[code]||{};
+    const _prod=PRODUCTS.find(p=>p.code===code)||{};
+    const _name=item.name||_prod.name||code;
+    const stock=item.stock||0;
+    const desiredQty=restockFlags[code]||0;
+    return `<tr>
+      <td style="font-weight:500;color:var(--text);">${_name}<span style="font-family:var(--mono);font-size:9px;color:var(--text3);margin-left:6px;">${item.spec||_prod.spec||''}</span></td>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--text3);">${code}</td>
+      <td style="font-family:var(--mono);font-weight:600;color:${stock===0?'var(--red)':stock<=(item.threshold||5)?'var(--amber)':'var(--green)'};">${stock}</td>
+      <td><input type="number" class="restock-qty-input" value="${desiredQty}" min="0" placeholder="Qty" oninput="restockFlags['${code}']=parseInt(this.value)||0"></td>
+      <td><button class="restock-unflag-btn" onclick="toggleRestockFlag('${code}')">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function clearRestockList(){
+  restockFlags={};
+  renderRestockSection();
+  renderInventory();
+  showToast('Restock list cleared','');
+}
+
+async function emailRestockList(){
+  const flaggedCodes=Object.keys(restockFlags);
+  if(!flaggedCodes.length){showToast('No items in restock list','red');return;}
+  if(!RESTOCK_TEMPLATE_ID){showToast('Set RESTOCK_TEMPLATE_ID in config first','red');return;}
+  const lines=flaggedCodes.map(code=>{
+    const item=inventory[code]||{};
+    const _prod=PRODUCTS.find(p=>p.code===code)||{};
+    const _name=item.name||_prod.name||code;
+    const _spec=item.spec||_prod.spec||'';
+    const stock=item.stock||0;
+    const qty=restockFlags[code]||0;
+    return `${_name} (${_spec}) [${code}] — Current: ${stock} | Reorder: ${qty}`;
+  });
+  const restockList=lines.join('\n');
+  try{
+    if(typeof emailjs==='undefined')throw new Error('EmailJS not loaded');
+    await emailjs.send(EMAILJS_SERVICE_ID,RESTOCK_TEMPLATE_ID,{
+      to_email:_cfg.email,
+      market_name:_cfg.name,
+      restock_list:restockList,
+    });
+    showToast('✓ Restock list emailed to '+_cfg.email,'green');
+  }catch(e){
+    const msg=e&&e.text?e.text:(e&&e.message?e.message:JSON.stringify(e));
+    showToast('Email failed: '+msg,'red');
+  }
 }
 
 // ════════════════════════════════════════

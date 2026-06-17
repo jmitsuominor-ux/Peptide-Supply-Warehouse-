@@ -1181,6 +1181,7 @@ let inventory={};
 let affiliates=[];
 let appliedAffiliate=null;
 const EMAILJS_AFFILIATE_ID='';// Add your affiliate notification template ID here
+const CREDIT_CODE='STAFFCREDIT';
 let PRODUCTS=[];
 let shippingRate=30;
 
@@ -1403,8 +1404,7 @@ function autoApplyPromo(){
   _promoDebounce=setTimeout(function(){
     const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
     if(!code)return;
-    const aff=affiliates.find(a=>String(a.code).toUpperCase()===code);
-    if(aff)applyPromo();
+    if(code===CREDIT_CODE||affiliates.find(a=>String(a.code).toUpperCase()===code))applyPromo();
   },400);
 }
 function applyPromo(){
@@ -1412,6 +1412,22 @@ function applyPromo(){
   const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
   const msg=document.getElementById('promoMsg');
   if(!code){msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoEnterFirst+'</span>';return;}
+  if(code===CREDIT_CODE){
+    appliedAffiliate={code:CREDIT_CODE,customerDiscount:100,commission:0,isCreditOrder:true,name:'Staff Credit'};
+    const subtotal=cartTotal();
+    const pickup=(document.getElementById('localPickup')||{}).checked||false;
+    const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
+    const shipping=pickup?0:baseShipping;
+    const originalTotal=subtotal+shipping;
+    msg.innerHTML='<span style="color:var(--green);font-size:11px;">✓ Staff credit applied — order is on the house!</span>';
+    const totalEl=document.getElementById('checkoutTotal');
+    if(totalEl)totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--text3);font-size:12px;">$'+originalTotal.toFixed(2)+'</span> <span style="color:var(--green);font-weight:600;">$0.00</span>';
+    const discountRow=document.getElementById('discountRow');
+    if(discountRow)discountRow.style.display='flex';
+    const discountVal=document.getElementById('discountVal');
+    if(discountVal)discountVal.textContent='-$'+originalTotal.toFixed(2)+' (100% staff credit)';
+    return;
+  }
   const aff=affiliates.find(a=>String(a.code).toUpperCase()===code);
   if(!aff){appliedAffiliate=null;msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoInvalid+'</span>';return;}
   appliedAffiliate=aff;
@@ -1474,16 +1490,19 @@ async function submitOrder(){
   const discountAmt=subtotal*(discountPct/100);
   const total=subtotal-discountAmt+shipping;
   const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+(discountAmt>0?'\nDiscount ('+discountPct+'% off): -$'+discountAmt.toFixed(2):'')+'\nShipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2));
-  const order={id:'ORD-'+Date.now(),status:'pending',createdAt:Date.now(),subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',shippingMethod:pickup?'pickup':'delivery',total,customer:{name,email,phone,address:pickup?'LOCAL PICKUP':address,notes},items};
+  const isCreditOrder=!!(appliedAffiliate&&appliedAffiliate.isCreditOrder);
+  const order={id:'ORD-'+Date.now(),status:'pending',createdAt:Date.now(),subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',creditOrder:isCreditOrder,shippingMethod:pickup?'pickup':'delivery',total,customer:{name,email,phone,address:pickup?'LOCAL PICKUP':address,notes},items};
   try{const params=new URLSearchParams({action:'saveOrder',order:encodeURIComponent(JSON.stringify(order))});await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',API+'?'+params.toString(),true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();});}catch(e){console.warn('Could not save to sheets:',e);}
   try{const deductURL=API+'?action=deductInventory&items='+encodeURIComponent(JSON.stringify(items))+'&t='+Date.now();await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',deductURL,true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();setTimeout(()=>resolve(),8000);});}catch(e){console.warn('Inventory deduct failed:',e);}
-  const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:pickup?'LOCAL PICKUP':(address||'Not provided'),customer_notes:notes||'None',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
-  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);}catch(e){console.error('EmailJS customer send failed:',e);}
-  try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));}catch(e){console.error('EmailJS fulfiller send failed:',e);}
-  if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
-    const commissionPct=parseFloat(appliedAffiliate.commission)||0;
-    const commissionAmt=(subtotal*(commissionPct/100)).toFixed(2);
-    try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_AFFILIATE_ID,{to_email:appliedAffiliate.email,affiliate_name:appliedAffiliate.name,promo_code:appliedAffiliate.code,order_summary:orderSummary,order_total:'$'+total.toFixed(2),commission_rate:commissionPct+'%',commission_amount:'$'+commissionAmt,customer_name:name});}catch(e){console.error('Affiliate email failed:',e);}
+  if(!isCreditOrder){
+    const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:pickup?'LOCAL PICKUP':(address||'Not provided'),customer_notes:notes||'None',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
+    try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);}catch(e){console.error('EmailJS customer send failed:',e);}
+    try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));}catch(e){console.error('EmailJS fulfiller send failed:',e);}
+    if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
+      const commissionPct=parseFloat(appliedAffiliate.commission)||0;
+      const commissionAmt=(subtotal*(commissionPct/100)).toFixed(2);
+      try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_AFFILIATE_ID,{to_email:appliedAffiliate.email,affiliate_name:appliedAffiliate.name,promo_code:appliedAffiliate.code,order_summary:orderSummary,order_total:'$'+total.toFixed(2),commission_rate:commissionPct+'%',commission_amount:'$'+commissionAmt,customer_name:name});}catch(e){console.error('Affiliate email failed:',e);}
+    }
   }
   appliedAffiliate=null;
   Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();

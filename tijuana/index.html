@@ -1187,11 +1187,11 @@ let adminTapCount=0,adminTapTimer;
 function adminTapped(){
   adminTapCount++;
   clearTimeout(adminTapTimer);
-  if(adminTapCount>=3){adminTapCount=0;window.location.href='admin.html?market=tijuana';}
+  if(adminTapCount>=3){adminTapCount=0;window.location.href='/admin.html?market=tijuana';}
   else adminTapTimer=setTimeout(()=>adminTapCount=0,800);
 }
 document.addEventListener('keydown',(e)=>{
-  if(e.ctrlKey&&e.shiftKey&&e.key==='A') window.location.href='admin.html?market=tijuana';
+  if(e.ctrlKey&&e.shiftKey&&e.key==='A') window.location.href='/admin.html?market=tijuana';
 });
 
 // ════════════════════════════════════════

@@ -943,6 +943,12 @@ function renderInventory(){
   });
   const lowItems=Object.values(inventory).filter(i=>i.stock<=i.threshold&&i.stock>0);
   const outItems=Object.values(inventory).filter(i=>i.stock===0);
+  // auto-flag items at or below threshold
+  Object.entries(inventory).forEach(([code,item])=>{
+    if(item.stock<=(item.threshold||5)&&restockFlags[code]===undefined){
+      restockFlags[code]=0;
+    }
+  });
   const banner=document.getElementById('lowStockBanner');
   const msgs=[];
   if(outItems.length)msgs.push(outItems.length+' item'+(outItems.length!==1?'s':'')+' out of stock');

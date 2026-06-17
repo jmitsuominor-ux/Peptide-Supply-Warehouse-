@@ -817,7 +817,7 @@ async function fulfillOrder(safeId){
         venmo_handle:     '@Mike-Mattarocci',
         cashapp_handle:   '$MichaelMattarocci',
         payment_note:     'Venmo: @Mike-Mattarocci | Cash App: $MichaelMattarocci',
-      });
+      }, EMAILJS_PUBLIC_KEY);
       showToast('✓ Order fulfilled — confirmation email sent to customer','green');
     } else {
       showToast('✓ Order fulfilled','green');
@@ -879,7 +879,7 @@ async function markPaidNotify(safeId){
   const custPhone=(order.customer&&order.customer.phone)||order.phone||'—';
   const custAddr=(order.customer&&order.customer.address)||order.address||'—';
   try{
-    await emailjs.send(_cfg.fulfillTemplate?EMAILJS_SERVICE_ID:EMAILJS_SERVICE_ID, tpl, {
+    await emailjs.send(EMAILJS_SERVICE_ID, tpl, {
       to_email: _cfg.email,
       from_name: custName,
       from_email: custEmail,
@@ -888,7 +888,7 @@ async function markPaidNotify(safeId){
       order_summary: orderSummary,
       order_total: '$'+parseFloat(order.total||0).toFixed(2),
       order_id: order.id,
-    });
+    }, EMAILJS_PUBLIC_KEY);
     order.paidNotified=true;
     await apiPost({action:'updateOrderStatus',id:order.id,paidNotified:true});
     renderPendingOrders();

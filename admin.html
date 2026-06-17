@@ -718,13 +718,17 @@ document.addEventListener('click', function(e) {
   if(btn) {
     e.stopPropagation();
     const action = btn.dataset.action;
-    // Gray out all action buttons on this card immediately
-    if(action === 'fulfill' || action === 'cancel' || action === 'paidnotify') {
+    // Gray out only the clicked button immediately; fulfill/cancel gray all since they change card state
+    if(action === 'fulfill' || action === 'cancel') {
       card.querySelectorAll('[data-action]').forEach(b => {
         b.disabled = true;
         b.style.opacity = '0.45';
         b.style.cursor = 'not-allowed';
       });
+    } else if(action === 'paidnotify') {
+      btn.disabled = true;
+      btn.style.opacity = '0.45';
+      btn.style.cursor = 'not-allowed';
     }
     if(action === 'fulfill') fulfillOrder(safeId);
     if(action === 'cancel') cancelOrder(safeId);

@@ -1116,22 +1116,34 @@ async function emailRestockList(){
   const flaggedCodes=Object.keys(restockFlags);
   if(!flaggedCodes.length){showToast('No items in restock list','red');return;}
   if(!RESTOCK_TEMPLATE_ID){showToast('Set RESTOCK_TEMPLATE_ID in config first','red');return;}
-  const lines=flaggedCodes.map(code=>{
+  const rows=flaggedCodes.map(code=>{
     const item=inventory[code]||{};
     const _prod=PRODUCTS.find(p=>p.code===code)||{};
     const _name=item.name||_prod.name||code;
     const _spec=item.spec||_prod.spec||'';
     const stock=item.stock||0;
     const qty=restockFlags[code]||0;
-    return `${_name} (${_spec}) [${code}] — Current: ${stock} | Reorder: ${qty}`;
-  });
-  const restockList=lines.join('\n');
+    const stockColor=stock===0?'#c0392b':stock<=(item.threshold||5)?'#e67e22':'#27ae60';
+    return `<tr>
+      <td style="padding:10px 14px;border-bottom:1px solid #f0f0f0;color:#222;font-weight:500;">${_name}<span style="color:#999;font-size:11px;margin-left:6px;">${_spec}</span></td>
+      <td style="padding:10px 14px;border-bottom:1px solid #f0f0f0;font-family:monospace;text-align:center;font-weight:700;color:${stockColor};">${stock}</td>
+      <td style="padding:10px 14px;border-bottom:1px solid #f0f0f0;font-family:monospace;text-align:center;color:#555;">${qty||'—'}</td>
+    </tr>`;
+  }).join('');
+  const restockHtml=`<table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:#f5f5f5;">
+      <th style="padding:8px 14px;text-align:left;color:#888;font-size:11px;letter-spacing:0.05em;border-bottom:2px solid #e0e0e0;">PRODUCT</th>
+      <th style="padding:8px 14px;text-align:center;color:#888;font-size:11px;letter-spacing:0.05em;border-bottom:2px solid #e0e0e0;">CURRENT</th>
+      <th style="padding:8px 14px;text-align:center;color:#888;font-size:11px;letter-spacing:0.05em;border-bottom:2px solid #e0e0e0;">REORDER QTY</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
   try{
     if(typeof emailjs==='undefined')throw new Error('EmailJS not loaded');
     await emailjs.send(EMAILJS_SERVICE_ID,RESTOCK_TEMPLATE_ID,{
       to_email:_cfg.email,
       market_name:_cfg.name,
-      restock_list:restockList,
+      restock_html:restockHtml,
     });
     showToast('✓ Restock list emailed to '+_cfg.email,'green');
   }catch(e){

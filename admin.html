@@ -718,6 +718,14 @@ document.addEventListener('click', function(e) {
   if(btn) {
     e.stopPropagation();
     const action = btn.dataset.action;
+    // Gray out all action buttons on this card immediately
+    if(action === 'fulfill' || action === 'cancel' || action === 'paidnotify') {
+      card.querySelectorAll('[data-action]').forEach(b => {
+        b.disabled = true;
+        b.style.opacity = '0.45';
+        b.style.cursor = 'not-allowed';
+      });
+    }
     if(action === 'fulfill') fulfillOrder(safeId);
     if(action === 'cancel') cancelOrder(safeId);
     if(action === 'pending') setPendingOrder(safeId);

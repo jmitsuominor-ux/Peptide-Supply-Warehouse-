@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PSW – Supplier Pricing</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#f0f4f9;--white:#ffffff;--navy2:#f8fafc;--navy3:#f0f4f9;
+  --blue:#1756a9;--blue2:#1348a0;--blue-bright:#2563eb;
+  --cyan:#1756a9;--cyan-dim:rgba(23,86,169,0.08);
+  --text:#0a1628;--text2:#3a4a5c;--text3:#7a8fa8;
+  --border:#dde3ec;--border2:#c5d0e0;
+  --gold:#9a7000;--green:#0d7377;--green-dim:rgba(13,115,119,0.08);
+  --red:#b83228;--red-dim:rgba(184,50,40,0.08);
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  --script:'Dancing Script',cursive;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;pointer-events:none;z-index:0;}
+.announce-bar{background:var(--blue);color:#fff;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.12em;text-align:center;padding:9px 20px;text-transform:uppercase;position:relative;z-index:201;}
+.topbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,0.97);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);}
+.topbar-inner{max-width:1200px;margin:0 auto;padding:0 20px;height:54px;display:flex;align-items:center;gap:14px;}
+.topbar-search-row{display:none;padding:0 20px 10px;}
+.brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.brand-logo{font-family:var(--mono);font-size:18px;font-weight:500;color:var(--text);letter-spacing:0.04em;user-select:none;}
+.brand-logo span{color:var(--blue);}
+.brand-divider{width:1px;height:20px;background:var(--border2);}
+.brand-sub{font-size:10px;color:var(--text3);letter-spacing:0.1em;font-family:var(--mono);text-transform:uppercase;}
+.topbar-search{flex:1;max-width:340px;background:var(--bg);border:1px solid var(--border2);border-radius:6px;display:flex;align-items:center;padding:0 12px;gap:8px;transition:border-color 0.2s;}
+.topbar-search:focus-within{border-color:var(--blue);}
+.topbar-search svg{width:13px;height:13px;color:var(--text3);flex-shrink:0;}
+.topbar-search input{background:transparent;border:none;outline:none;color:var(--text);font-family:var(--sans);font-size:13px;width:100%;padding:9px 0;}
+.topbar-search input::placeholder{color:var(--text3);}
+.cart-btn{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--blue);border:none;border-radius:6px;padding:8px 16px;cursor:pointer;transition:all 0.15s;color:#fff;font-family:var(--mono);font-size:13px;font-weight:500;white-space:nowrap;letter-spacing:0.04em;}
+.cart-btn:hover{background:var(--blue2);}
+.cart-btn:active{transform:scale(0.97);}
+.cart-btn svg{width:14px;height:14px;}
+.cart-badge{background:var(--text);color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;font-family:var(--mono);flex-shrink:0;}
+.hero{position:relative;z-index:1;padding:48px 20px 52px;text-align:center;background:var(--white);border-bottom:1px solid var(--border);}
+.hero-content{position:relative;z-index:1;max-width:700px;margin:0 auto;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--blue);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:18px;}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';height:1px;background:var(--border2);width:32px;}
+.hero-title{font-family:var(--mono);font-size:clamp(26px,6vw,48px);font-weight:500;color:var(--text);letter-spacing:0.03em;text-transform:uppercase;line-height:1.1;margin-bottom:12px;}
+.hero-title span{color:var(--blue);}
+.hero-tagline{font-family:var(--script);font-size:clamp(18px,3.5vw,26px);color:var(--text2);margin-bottom:6px;opacity:0.85;}
+.hero-sub{font-size:13px;color:var(--text3);letter-spacing:0.04em;margin-bottom:24px;}
+.hero-contact{display:inline-flex;flex-direction:column;gap:7px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 24px;margin-bottom:20px;}
+.contact-row{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);letter-spacing:0.03em;}
+.contact-icon{font-size:16px;}
+.contact-label{font-size:10px;color:var(--text3);letter-spacing:0.08em;margin-right:4px;}
+.mj-sig{font-family:var(--script);font-size:28px;color:var(--blue);display:block;margin-bottom:4px;}
+.cat-strip{position:relative;z-index:1;background:var(--white);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0 20px;}
+.cat-strip-inner{max-width:1200px;margin:0 auto;display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
+.cat-strip-inner::-webkit-scrollbar{display:none;}
+.cat-pill{padding:12px 16px;font-family:var(--mono);font-size:11px;font-weight:500;color:var(--text3);letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0;}
+.cat-pill:hover{color:var(--text2);}
+.cat-pill.active{color:var(--blue);border-bottom-color:var(--blue);}
+.main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:24px 20px;}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px;}
+.product-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 13px;display:flex;flex-direction:column;gap:5px;transition:box-shadow 0.15s,border-color 0.15s;position:relative;overflow:hidden;}
+.product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--blue);opacity:0;transition:opacity 0.15s;}
+.product-card:hover{box-shadow:0 2px 12px rgba(10,22,40,0.08);}
+.product-card.in-cart{border-color:rgba(13,115,119,0.4);}
+.product-card.in-cart::before{background:var(--green);opacity:1;}
+.pc-cat{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;}
+.pc-code{font-family:var(--mono);font-size:10px;color:var(--blue);background:var(--cyan-dim);border:1px solid rgba(23,86,169,0.15);border-radius:3px;padding:2px 7px;width:fit-content;letter-spacing:0.05em;}
+.pc-name{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--text);line-height:1.2;letter-spacing:0.01em;}
+.pc-spec{font-size:12px;color:var(--text3);margin-top:2px;}
+.pc-per-vial{font-family:var(--mono);font-size:10px;font-weight:500;margin-top:4px;padding:2px 7px;border-radius:4px;width:fit-content;color:var(--text3);background:var(--bg);border:1px solid var(--border);}
+.pc-price{font-family:var(--mono);font-size:20px;font-weight:500;color:var(--blue);margin-top:auto;padding-top:8px;letter-spacing:0.01em;}
+.pc-box-price{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:1px;}
+.pc-add{width:100%;background:var(--cyan-dim);color:var(--blue);border:1px solid rgba(23,86,169,0.2);border-radius:6px;padding:9px;font-family:var(--mono);font-size:11px;font-weight:500;cursor:pointer;transition:all 0.15s;margin-top:7px;display:flex;align-items:center;justify-content:center;gap:5px;letter-spacing:0.05em;text-transform:uppercase;}
+.pc-add:hover{background:var(--blue);color:#fff;border-color:transparent;}
+.pc-add.in-cart{background:var(--green-dim);color:var(--green);border-color:rgba(13,115,119,0.25);}
+.pc-add.in-cart:hover{background:var(--green);color:#fff;}
+.pc-add:active{transform:scale(0.96);}
+.pc-btn-row{display:flex;gap:5px;margin-top:7px;}
+.pc-btn-row .pc-add{margin-top:0;flex:1;}
+.pc-add-box{flex-shrink:0;background:var(--bg);color:var(--text2);border:1px solid var(--border2);border-radius:6px;padding:9px 10px;font-family:var(--mono);font-size:10px;font-weight:500;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;letter-spacing:0.03em;white-space:nowrap;}
+.pc-add-box:hover{background:var(--blue);color:#fff;border-color:transparent;}
+.pc-add-box:active{transform:scale(0.96);}
+.in-cart-dot{position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--green);display:none;}
+.product-card.in-cart .in-cart-dot{display:block;}
+.pc-qty-controls{display:flex;align-items:center;margin-top:7px;border:1px solid rgba(13,115,119,0.3);border-radius:6px;overflow:hidden;width:100%;}
+.pc-qty-btn{width:36px;height:34px;background:var(--green-dim);color:var(--green);border:none;cursor:pointer;font-size:18px;font-family:var(--mono);display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.pc-qty-btn:hover{background:var(--green);color:#fff;}
+.pc-qty-num{flex:1;text-align:center;font-family:var(--mono);font-size:14px;font-weight:500;color:var(--green);background:var(--green-dim);line-height:34px;border-left:1px solid rgba(13,115,119,0.15);border-right:1px solid rgba(13,115,119,0.15);}
+.pc-remove-item{width:30px;height:34px;background:transparent;color:var(--text3);border:none;border-left:1px solid rgba(13,115,119,0.2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.15s;flex-shrink:0;}
+.pc-remove-item:hover{background:var(--red-dim);color:var(--red);}
+.no-results{text-align:center;padding:60px 20px;color:var(--text3);font-family:var(--mono);}
+.drawer-overlay{position:fixed;inset:0;background:rgba(10,22,40,0.3);z-index:300;display:none;backdrop-filter:blur(4px);}
+.drawer-overlay.open{display:block;}
+.cart-drawer{position:fixed;top:0;right:0;bottom:0;width:100%;max-width:420px;background:var(--white);border-left:1px solid var(--border);z-index:400;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(10,22,40,0.1);}
+.cart-drawer.open{transform:translateX(0);}
+.drawer-header{padding:16px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.drawer-title{font-family:var(--mono);font-size:14px;font-weight:500;letter-spacing:0.06em;color:var(--text);flex:1;}
+.drawer-close{width:30px;height:30px;background:var(--bg);border:1px solid var(--border);border-radius:5px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text3);transition:all 0.15s;}
+.drawer-close:hover{background:var(--red-dim);color:var(--red);}
+.drawer-body{flex:1;overflow-y:auto;padding:14px 20px;}
+.drawer-footer{padding:14px 20px;border-top:1px solid var(--border);}
+.cart-empty-state{text-align:center;padding:50px 20px;color:var(--text3);}
+.cart-empty-state svg{width:40px;height:40px;color:var(--text3);margin-bottom:12px;opacity:0.3;}
+.cart-empty-state p{font-family:var(--mono);font-size:11px;letter-spacing:0.06em;}
+.cart-item{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border);}
+.cart-item:last-child{border-bottom:none;}
+.ci-info{flex:1;min-width:0;}
+.ci-name{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);letter-spacing:0.01em;}
+.ci-spec{font-size:11px;color:var(--text3);margin-top:2px;}
+.ci-line-price{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--blue);margin-top:4px;}
+.ci-controls{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.qty-btn{width:24px;height:24px;border-radius:4px;background:var(--bg);border:1px solid var(--border2);color:var(--text2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;font-family:var(--mono);}
+.qty-btn:active{transform:scale(0.88);}
+.qty-num{font-family:var(--mono);font-size:13px;font-weight:500;min-width:18px;text-align:center;color:var(--text);}
+.ci-remove{width:24px;height:24px;border-radius:4px;background:var(--red-dim);border:1px solid rgba(184,50,40,0.15);color:var(--red);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.12s;}
+.ci-remove:active{transform:scale(0.88);}
+.cart-totals{background:var(--cyan-dim);border:1px solid rgba(23,86,169,0.15);border-radius:8px;padding:12px;margin-bottom:12px;}
+.ct-row{display:flex;justify-content:space-between;padding:3px 0;}
+.ct-label{font-size:13px;color:var(--text2);}
+.ct-value{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--text);}
+.ct-total .ct-label{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--text);}
+.ct-total .ct-value{font-size:18px;color:var(--blue);}
+.ct-divider{height:1px;background:var(--border);margin:7px 0;}
+.clear-cart-btn{width:100%;background:transparent;color:var(--text3);border:1px solid var(--border);border-radius:7px;padding:10px;font-size:11px;font-family:var(--mono);cursor:pointer;margin-top:8px;letter-spacing:0.04em;transition:color 0.15s;}
+.clear-cart-btn:hover{color:var(--red);border-color:rgba(184,50,40,0.3);}
+.share-btn{width:100%;background:var(--green-dim);color:var(--green);border:1px solid rgba(13,115,119,0.25);border-radius:7px;padding:11px;font-family:var(--mono);font-size:12px;font-weight:500;cursor:pointer;margin-top:8px;letter-spacing:0.05em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:7px;transition:all 0.15s;}
+.share-btn:hover{background:var(--green);color:#fff;}
+.share-btn:active{transform:scale(0.98);}
+@media print{
+  .announce-bar,.topbar,.cat-strip,.hero,.footer,.drawer-overlay,.cart-drawer{display:none!important;}
+  body{background:#fff;}
+  body::before{display:none;}
+  #printArea{display:block!important;}
+}
+#printArea{display:none;}
+.footer{position:relative;z-index:1;background:var(--white);border-top:1px solid var(--border);padding:28px 20px;text-align:center;margin-top:40px;}
+.footer-name{font-family:var(--script);font-size:24px;color:var(--blue);margin-bottom:10px;}
+.footer-contacts{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;}
+.footer-contact{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);letter-spacing:0.03em;}
+.footer-contact .icon{font-size:15px;}
+.footer-disc{font-size:11px;color:var(--text3);line-height:1.7;max-width:600px;margin:0 auto;}
+@media(max-width:600px){
+  .brand{display:none;}
+  .topbar-search{max-width:none;}
+  .product-grid{grid-template-columns:repeat(2,1fr);}
+  .hero-title{font-size:24px;}
+  .cart-drawer{max-width:100%;}
+}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="announce-bar">SUPPLIER COST REFERENCE &nbsp;·&nbsp; Per vial pricing &nbsp;·&nbsp; Personal use only</div>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-logo">PSW<span>·</span></div>
+      <div class="brand-divider"></div>
+      <div class="brand-sub">Supplier Pricing</div>
+    </div>
+    <div class="topbar-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Search compounds, codes…" oninput="filterProducts()">
+    </div>
+    <button class="cart-btn" onclick="openCart()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      COST TALLY
+      <div class="cart-badge" id="cartBadge" style="display:none">0</div>
+    </button>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Peptide Supply<br><span>Warehouse</span></h1>
+    <div class="hero-eyebrow" style="margin-top:10px;color:#00b4d8;">SUPPLIER PRICING</div>
+  </div>
+</div>
+
+<div class="cat-strip"><div class="cat-strip-inner" id="catNav"></div></div>
+
+<div class="main">
+  <div class="product-grid" id="productGrid"></div>
+  <div class="no-results" id="noResults" style="display:none">No products match "<span id="noResultsQuery"></span>"</div>
+</div>
+
+<div class="footer">
+  <div class="footer-disc">Supplier cost reference — personal use only.</div>
+</div>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="drawer-header"><div class="drawer-title">COST TALLY</div><div class="drawer-close" onclick="closeCart()">×</div></div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-footer" id="drawerFooter"></div>
+</div>
+
+<script>
+const ALL_PRODUCTS=[
+  // Weight Loss
+  {code:'TR5',  name:'Tirzepatide',             cat:'Weight Loss',        spec:'5mg/vial',                        price:4.20,  box:42},
+  {code:'TR10', name:'Tirzepatide',             cat:'Weight Loss',        spec:'10mg/vial',                       price:6.00,  box:60},
+  {code:'TR15', name:'Tirzepatide',             cat:'Weight Loss',        spec:'15mg/vial',                       price:7.50,  box:75},
+  {code:'TR20', name:'Tirzepatide',             cat:'Weight Loss',        spec:'20mg/vial',                       price:9.50,  box:95},
+  {code:'TR30', name:'Tirzepatide',             cat:'Weight Loss',        spec:'30mg/vial',                       price:12.00, box:120},
+  {code:'TR40', name:'Tirzepatide',             cat:'Weight Loss',        spec:'40mg/vial',                       price:14.50, box:145},
+  {code:'TR50', name:'Tirzepatide',             cat:'Weight Loss',        spec:'50mg/vial',                       price:17.50, box:175},
+  {code:'TR60', name:'Tirzepatide',             cat:'Weight Loss',        spec:'60mg/vial',                       price:19.80, box:198},
+  {code:'SM5',  name:'Semaglutide',             cat:'Weight Loss',        spec:'5mg/vial',                        price:3.80,  box:38},
+  {code:'SM10', name:'Semaglutide',             cat:'Weight Loss',        spec:'10mg/vial',                       price:5.50,  box:55},
+  {code:'SM15', name:'Semaglutide',             cat:'Weight Loss',        spec:'15mg/vial',                       price:7.00,  box:70},
+  {code:'SM20', name:'Semaglutide',             cat:'Weight Loss',        spec:'20mg/vial',                       price:9.50,  box:95},
+  {code:'SM30', name:'Semaglutide',             cat:'Weight Loss',        spec:'30mg/vial',                       price:12.00, box:120},
+  {code:'RT5',  name:'Retatrutide',             cat:'Weight Loss',        spec:'5mg/vial',                        price:6.50,  box:65},
+  {code:'RT10', name:'Retatrutide',             cat:'Weight Loss',        spec:'10mg/vial',                       price:9.80,  box:98},
+  {code:'RT15', name:'Retatrutide',             cat:'Weight Loss',        spec:'15mg/vial',                       price:13.00, box:130},
+  {code:'RT20', name:'Retatrutide',             cat:'Weight Loss',        spec:'20mg/vial',                       price:16.00, box:160},
+  {code:'RT30', name:'Retatrutide',             cat:'Weight Loss',        spec:'30mg/vial',                       price:22.00, box:220},
+  {code:'RT40', name:'Retatrutide',             cat:'Weight Loss',        spec:'40mg/vial',                       price:27.50, box:275},
+  {code:'RT50', name:'Retatrutide',             cat:'Weight Loss',        spec:'50mg/vial',                       price:32.00, box:320},
+  {code:'RT60', name:'Retatrutide',             cat:'Weight Loss',        spec:'60mg/vial',                       price:38.00, box:380},
+  {code:'LC216',name:'Lipo-C',                  cat:'Weight Loss',        spec:'10ml/vial',                       price:8.00,  box:80},
+  {code:'CGL5', name:'Cagrilintide',            cat:'Weight Loss',        spec:'5mg/vial',                        price:11.00, box:110},
+  {code:'CGL10',name:'Cagrilintide',            cat:'Weight Loss',        spec:'10mg/vial',                       price:20.00, box:200},
+  {code:'CS5',  name:'CagriSema Combo',         cat:'Weight Loss',        spec:'Sema 2.5mg + Cagri 2.5mg',        price:9.50,  box:95},
+  {code:'CS10', name:'CagriSema Combo',         cat:'Weight Loss',        spec:'Sema 5mg + Cagri 5mg',            price:17.00, box:170},
+  {code:'5AD',  name:'AOD-9604',                cat:'Weight Loss',        spec:'5mg/vial',                        price:11.00, box:110},
+  // Growth Hormone
+  {code:'CD5',  name:'CJC-1295 With DAC',       cat:'Growth Hormone',     spec:'5mg/vial',                        price:16.50, box:165},
+  {code:'CND5', name:'CJC-1295 Without DAC',    cat:'Growth Hormone',     spec:'5mg/vial',                        price:8.00,  box:80},
+  {code:'CND10',name:'CJC-1295 Without DAC',    cat:'Growth Hormone',     spec:'10mg/vial',                       price:14.00, box:140},
+  {code:'IP5',  name:'Ipamorelin',              cat:'Growth Hormone',     spec:'5mg/vial',                        price:4.50,  box:45},
+  {code:'IP10', name:'Ipamorelin',              cat:'Growth Hormone',     spec:'10mg/vial',                       price:7.50,  box:75},
+  {code:'CP10', name:'CJC-1295 + Ipamorelin',   cat:'Growth Hormone',     spec:'CJC 5mg + IPA 5mg',               price:11.00, box:110},
+  {code:'SMO5', name:'Sermorelin Acetate',       cat:'Growth Hormone',     spec:'5mg/vial',                        price:8.00,  box:80},
+  {code:'SMO10',name:'Sermorelin Acetate',       cat:'Growth Hormone',     spec:'10mg/vial',                       price:13.50, box:135},
+  {code:'TSM5', name:'Tesamorelin',             cat:'Growth Hormone',     spec:'5mg/vial',                        price:11.00, box:110},
+  {code:'TSM10',name:'Tesamorelin',             cat:'Growth Hormone',     spec:'10mg/vial',                       price:20.50, box:205},
+  {code:'H10',  name:'HGH 191AA',               cat:'Growth Hormone',     spec:'10 IU/vial',                      price:5.00,  box:50},
+  {code:'H15',  name:'HGH 191AA',               cat:'Growth Hormone',     spec:'15 IU/vial',                      price:7.50,  box:75},
+  {code:'H24',  name:'HGH 191AA',               cat:'Growth Hormone',     spec:'24 IU/vial',                      price:12.00, box:120},
+  {code:'FR5',  name:'HGH Fragment 176-191',    cat:'Growth Hormone',     spec:'5mg/vial',                        price:10.50, box:105},
+  // Healing & Recovery
+  {code:'BC5',  name:'BPC-157',                 cat:'Healing & Recovery', spec:'5mg/vial',                        price:4.30,  box:43},
+  {code:'BC10', name:'BPC-157',                 cat:'Healing & Recovery', spec:'10mg/vial',                       price:6.80,  box:68},
+  {code:'TB5',  name:'TB-500',                  cat:'Healing & Recovery', spec:'5mg/vial',                        price:8.00,  box:80},
+  {code:'TB10', name:'TB-500',                  cat:'Healing & Recovery', spec:'10mg/vial',                       price:13.50, box:135},
+  {code:'BB10', name:'BPC-157 + TB-500 Combo',  cat:'Healing & Recovery', spec:'BPC 5mg + TB 5mg',                price:10.50, box:105},
+  {code:'BB20', name:'BPC-157 + TB-500 Combo',  cat:'Healing & Recovery', spec:'BPC 10mg + TB 10mg',              price:19.00, box:190},
+  {code:'KPV10',name:'KPV',                     cat:'Healing & Recovery', spec:'10mg/vial',                       price:6.00,  box:60},
+  // Anti-Aging & Immune
+  {code:'CU50', name:'GHK-Cu',                  cat:'Anti-Aging & Immune',spec:'50mg/vial',                       price:3.50,  box:35},
+  {code:'CU100',name:'GHK-Cu',                  cat:'Anti-Aging & Immune',spec:'100mg/vial',                      price:5.00,  box:50},
+  {code:'ET10', name:'Epithalon',               cat:'Anti-Aging & Immune',spec:'10mg/vial',                       price:5.00,  box:50},
+  {code:'ET50', name:'Epithalon',               cat:'Anti-Aging & Immune',spec:'50mg/vial',                       price:15.00, box:150},
+  {code:'TA5',  name:'Thymosin Alpha-1',        cat:'Anti-Aging & Immune',spec:'5mg/vial',                        price:9.00,  box:90},
+  {code:'TA10', name:'Thymosin Alpha-1',        cat:'Anti-Aging & Immune',spec:'10mg/vial',                       price:16.00, box:160},
+  {code:'GTT',  name:'L-Glutathione',           cat:'Anti-Aging & Immune',spec:'1500mg/vial',                     price:8.00,  box:80},
+  {code:'NP810',name:'SNAP-8',                  cat:'Anti-Aging & Immune',spec:'10mg/vial',                       price:5.50,  box:55},
+  {code:'BBG70',name:'GLOW Stack',              cat:'Anti-Aging & Immune',spec:'GHK-Cu 50 + BPC 10 + TB 10mg',    price:21.00, box:210},
+  {code:'BBGK', name:'KLOW Stack',              cat:'Anti-Aging & Immune',spec:'GHK+BPC+TB+KPV combo',            price:22.00, box:220},
+  // Mitochondrial
+  {code:'NJ500', name:'NAD+',                   cat:'Mitochondrial',      spec:'500mg/vial',                      price:6.80,  box:68},
+  {code:'NJ1000',name:'NAD+',                   cat:'Mitochondrial',      spec:'1000mg/vial',                     price:11.50, box:115},
+  {code:'2S10', name:'SS-31',                   cat:'Mitochondrial',      spec:'10mg/vial',                       price:9.80,  box:98},
+  {code:'2S50', name:'SS-31',                   cat:'Mitochondrial',      spec:'50mg/vial',                       price:32.50, box:325},
+  {code:'MS10', name:'MOTS-C',                  cat:'Mitochondrial',      spec:'10mg/vial',                       price:6.80,  box:68},
+  {code:'MS40', name:'MOTS-C',                  cat:'Mitochondrial',      spec:'40mg/vial',                       price:20.00, box:200},
+  {code:'5AM',  name:'5-Amino-1MQ',             cat:'Mitochondrial',      spec:'5mg/vial',                        price:4.50,  box:45},
+  {code:'50AM', name:'5-Amino-1MQ',             cat:'Mitochondrial',      spec:'50mg/vial',                       price:9.00,  box:90},
+  {code:'322',  name:'SLU-PP-332',              cat:'Mitochondrial',      spec:'5mg/vial',                        price:14.50, box:145},
+  // Muscle & IGF
+  {code:'IG01', name:'IGF-1 LR3',              cat:'Muscle & IGF',       spec:'0.1mg/vial',                      price:5.80,  box:58},
+  {code:'IG1',  name:'IGF-1 LR3',              cat:'Muscle & IGF',       spec:'1mg/vial',                        price:20.00, box:200},
+  {code:'IGD',  name:'IGF-1 DES',              cat:'Muscle & IGF',       spec:'1mg/vial',                        price:5.00,  box:50},
+  {code:'G5K',  name:'HCG',                    cat:'Muscle & IGF',       spec:'5,000 IU/vial',                   price:8.50,  box:85},
+  {code:'G10K', name:'HCG',                    cat:'Muscle & IGF',       spec:'10,000 IU/vial',                  price:15.50, box:155},
+  // Hormonal
+  {code:'P41',  name:'PT-141',                  cat:'Hormonal',           spec:'10mg/vial',                       price:6.50,  box:65},
+  {code:'KS5',  name:'Kisspeptin-10',           cat:'Hormonal',           spec:'5mg/vial',                        price:6.00,  box:60},
+  {code:'KS10', name:'Kisspeptin-10',           cat:'Hormonal',           spec:'10mg/vial',                       price:10.00, box:100},
+  {code:'MT1',  name:'Melanotan I',             cat:'Hormonal',           spec:'10mg/vial',                       price:5.00,  box:50},
+  {code:'ML10', name:'Melanotan II',            cat:'Hormonal',           spec:'10mg/vial',                       price:5.00,  box:50},
+  {code:'MT10', name:'Melatonin',               cat:'Hormonal',           spec:'10mg/vial',                       price:5.80,  box:58},
+  // Cognitive
+  {code:'SK5',  name:'Selank',                  cat:'Cognitive',          spec:'5mg/vial',                        price:4.80,  box:48},
+  {code:'SK11', name:'Selank',                  cat:'Cognitive',          spec:'11mg/vial',                       price:7.00,  box:70},
+  {code:'XA5',  name:'Semax',                   cat:'Cognitive',          spec:'5mg/vial',                        price:5.00,  box:50},
+  {code:'XA11', name:'Semax',                   cat:'Cognitive',          spec:'11mg/vial',                       price:6.80,  box:68},
+  {code:'DS5',  name:'DSIP',                    cat:'Cognitive',          spec:'5mg/vial',                        price:4.80,  box:48},
+  {code:'DS10', name:'DSIP',                    cat:'Cognitive',          spec:'10mg/vial',                       price:8.00,  box:80},
+  // Immune
+  {code:'VIP5', name:'VIP',                     cat:'Immune',             spec:'5mg/vial',                        price:9.50,  box:95},
+  {code:'VIP10',name:'VIP',                     cat:'Immune',             spec:'10mg/vial',                       price:15.50, box:155},
+  {code:'375',  name:'LL-37',                   cat:'Immune',             spec:'5mg/vial',                        price:9.50,  box:95},
+  // Reconstitution
+  {code:'WA3',  name:'BAC Water',               cat:'Reconstitution',     spec:'3ml/vial',                        price:0.50,  box:5},
+  {code:'WA10', name:'BAC Water',               cat:'Reconstitution',     spec:'10ml/vial',                       price:1.00,  box:10},
+  {code:'AA',   name:'Acetic Acid Water',       cat:'Reconstitution',     spec:'3ml/vial',                        price:0.50,  box:5},
+];
+const CAT_ORDER=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging & Immune','Mitochondrial','Muscle & IGF','Hormonal','Cognitive','Immune','Reconstitution'];
+const cart={};
+let activeCategory='All';
+
+function buildCatNav(){
+  const cats=['All',...CAT_ORDER];
+  document.getElementById('catNav').innerHTML=cats.map(c=>`<div class="cat-pill ${c===activeCategory?'active':''}" onclick="setCategory('${c}')">${c}</div>`).join('');
+}
+function setCategory(cat){activeCategory=cat;buildCatNav();renderProducts();}
+function filterProducts(){renderProducts();}
+function renderProducts(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase().trim();
+  const filtered=ALL_PRODUCTS.filter(p=>{
+    const matchCat=activeCategory==='All'||p.cat===activeCategory;
+    const matchQ=!q||p.name.toLowerCase().includes(q)||p.code.toLowerCase().includes(q)||p.cat.toLowerCase().includes(q)||p.spec.toLowerCase().includes(q);
+    return matchCat&&matchQ;
+  });
+  const grid=document.getElementById('productGrid');
+  const noRes=document.getElementById('noResults');
+  if(!filtered.length){grid.innerHTML='';noRes.style.display='block';document.getElementById('noResultsQuery').textContent=q||activeCategory;return;}
+  noRes.style.display='none';
+  grid.innerHTML=filtered.map(p=>{
+    const inCart=!!cart[p.code];const qty=inCart?cart[p.code]:0;
+    const btnHtml=inCart
+      ?`<div class="pc-qty-controls"><button class="pc-qty-btn" onclick="changeQty('${p.code}',-1)">−</button><span class="pc-qty-num">${qty}</span><button class="pc-qty-btn" onclick="changeQty('${p.code}',1)">+</button><button class="pc-remove-item" onclick="removeItem('${p.code}')" title="Remove">×</button></div>`
+      :`<div class="pc-btn-row"><button class="pc-add" onclick="addToCart('${p.code}')">+ 1 VIAL</button><button class="pc-add-box" onclick="addBox('${p.code}')" title="Add full box of 10">BOX ×10</button></div>`;
+    return `<div class="product-card ${inCart?'in-cart':''}" id="card-${p.code}">
+      <div class="in-cart-dot"></div>
+      <div class="pc-cat">${p.cat}</div>
+      <div class="pc-code">${p.code}</div>
+      <div class="pc-name">${p.name}</div>
+      <div class="pc-spec">${p.spec}</div>
+      <div class="pc-per-vial">per vial</div>
+      <div class="pc-price">$${p.price.toFixed(2)}</div>
+      <div class="pc-box-price">box of 10: $${p.box}</div>
+      ${btnHtml}
+    </div>`;
+  }).join('');
+}
+function addToCart(code){cart[code]=(cart[code]||0)+1;updateCartUI();renderProducts();}
+function addBox(code){cart[code]=(cart[code]||0)+10;updateCartUI();renderProducts();}
+function changeQty(code,delta){if(!cart[code])return;cart[code]=Math.max(1,cart[code]+delta);updateCartUI();renderProducts();}
+function removeItem(code){delete cart[code];updateCartUI();renderProducts();}
+function clearCartFn(){Object.keys(cart).forEach(k=>delete cart[k]);updateCartUI();renderProducts();closeCart();}
+function cartTotal(){return Object.entries(cart).reduce((s,[c,q])=>{const p=ALL_PRODUCTS.find(p=>p.code===c);return s+(p?p.price*q:0);},0);}
+function cartCount(){return Object.values(cart).reduce((a,b)=>a+b,0);}
+function updateCartUI(){const count=cartCount();const badge=document.getElementById('cartBadge');if(count>0){badge.textContent=count;badge.style.display='flex';}else badge.style.display='none';renderDrawer();}
+function openCart(){renderDrawer();document.getElementById('drawerOverlay').classList.add('open');document.getElementById('cartDrawer').classList.add('open');document.body.style.overflow='hidden';}
+function closeCart(){document.getElementById('drawerOverlay').classList.remove('open');document.getElementById('cartDrawer').classList.remove('open');document.body.style.overflow='';}
+function renderDrawer(){
+  const keys=Object.keys(cart);const body=document.getElementById('drawerBody');const footer=document.getElementById('drawerFooter');
+  if(!keys.length){body.innerHTML=`<div class="cart-empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg><p>TALLY EMPTY<br>ADD COMPOUNDS TO SEE COST</p></div>`;footer.innerHTML='';return;}
+  const total=cartTotal();
+  body.innerHTML=keys.map(code=>{const p=ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="cart-item"><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-spec">${p.code} · ${p.spec}</div><div class="ci-line-price">${qty} vial${qty!==1?'s':''} × $${p.price.toFixed(2)} = $${(p.price*qty).toFixed(2)}</div></div><div class="ci-controls"><button class="qty-btn" onclick="changeQty('${code}',-1)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${code}',1)">+</button><button class="ci-remove" onclick="removeItem('${code}')">×</button></div></div>`;}).join('');
+  footer.innerHTML=`<div class="cart-totals"><div class="ct-row"><span class="ct-label">${cartCount()} vial${cartCount()!==1?'s':''}</span></div><div class="ct-divider"></div><div class="ct-row ct-total"><span class="ct-label">TOTAL SUPPLIER COST</span><span class="ct-value">$${total.toFixed(2)}</span></div></div><button class="share-btn" onclick="shareOrder()">📋 SHARE / SAVE ORDER</button><button class="clear-cart-btn" onclick="clearCartFn()">Clear tally</button>`;
+}
+
+function shareOrder(){
+  const keys=Object.keys(cart);
+  if(!keys.length)return;
+  const total=cartTotal();
+  const date=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const lines=keys.map(code=>{
+    const p=ALL_PRODUCTS.find(p=>p.code===code);
+    const qty=cart[code];
+    return `${p.code}  ${p.name} (${p.spec})  x${qty}  $${(p.price*qty).toFixed(2)}`;
+  });
+  const text=`PSW SUPPLIER ORDER — ${date}\n${'─'.repeat(40)}\n${lines.join('\n')}\n${'─'.repeat(40)}\nTOTAL: $${total.toFixed(2)}`;
+
+  if(navigator.share){
+    navigator.share({title:'PSW Supplier Order',text}).catch(()=>{});
+  } else {
+    // Open a clean printable page
+    const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>PSW Order ${date}</title>
+<style>body{font-family:'Courier New',monospace;padding:32px;max-width:600px;margin:0 auto;color:#0a1628;}
+h2{font-size:18px;margin-bottom:4px;}
+.sub{font-size:12px;color:#7a8fa8;margin-bottom:20px;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;border-bottom:2px solid #0a1628;padding:6px 4px;font-size:11px;letter-spacing:0.06em;}
+td{padding:7px 4px;border-bottom:1px solid #dde3ec;}
+.total-row td{border-top:2px solid #0a1628;border-bottom:none;font-weight:600;font-size:15px;padding-top:10px;}
+.right{text-align:right;}
+@media print{button{display:none}}
+</style></head><body>
+<h2>PSW SUPPLIER ORDER</h2><div class="sub">${date}</div>
+<table><thead><tr><th>CODE</th><th>COMPOUND</th><th>SPEC</th><th class="right">QTY</th><th class="right">UNIT</th><th class="right">TOTAL</th></tr></thead><tbody>
+${keys.map(code=>{const p=ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<tr><td>${p.code}</td><td>${p.name}</td><td>${p.spec}</td><td class="right">${qty}</td><td class="right">$${p.price.toFixed(2)}</td><td class="right">$${(p.price*qty).toFixed(2)}</td></tr>`;}).join('')}
+<tr class="total-row"><td colspan="5">TOTAL SUPPLIER COST</td><td class="right">$${total.toFixed(2)}</td></tr>
+</tbody></table>
+<br><button onclick="window.print()" style="margin-top:16px;padding:10px 24px;background:#1756a9;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer;font-family:inherit;">Print / Save as PDF</button>
+</body></html>`;
+    const w=window.open('','_blank');
+    w.document.write(html);
+    w.document.close();
+  }
+}
+
+buildCatNav();
+renderProducts();
+</script>
+</body>
+</html>

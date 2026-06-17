@@ -377,9 +377,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 // CONFIG
 // ════════════════════════════════════════
 const MARKET_CONFIGS = {
-  cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec', email:'pswcerritos.orders@gmail.com', fulfillTemplate:'template_fo19x6g', paidTemplate:'' },
-  tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com',  fulfillTemplate:'template_frbqrjh', paidTemplate:'' },
-  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com', fulfillTemplate:'template_fp119xp', paidTemplate:'' },
+  cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec', email:'pswcerritos.orders@gmail.com', fulfillTemplate:'template_fo19x6g', paidTemplate:'template_9vcvfg' },
+  tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com',  fulfillTemplate:'template_frbqrjh', paidTemplate:'template_9vcvfg' },
+  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com', fulfillTemplate:'template_fp119xp', paidTemplate:'template_9vcvfg' },
 };
 const _mkt = new URLSearchParams(window.location.search).get('market') || 'cerritos';
 const _cfg = MARKET_CONFIGS[_mkt] || MARKET_CONFIGS.cerritos;

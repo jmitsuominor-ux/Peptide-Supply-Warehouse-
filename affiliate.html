@@ -43,6 +43,10 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .login-error{text-align:center;font-family:var(--mono);font-size:11px;color:var(--red);margin-top:14px;min-height:16px;}
 .login-spinner{display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;}
 .login-spinner.show{display:block;}
+.market-tabs{display:flex;gap:6px;margin-bottom:18px;}
+.market-tab{flex:1;padding:8px 6px;font-family:var(--mono);font-size:11px;font-weight:500;text-align:center;border:1.5px solid var(--border2);border-radius:8px;cursor:pointer;color:var(--text3);background:var(--surface2);transition:all 0.15s;letter-spacing:0.04em;}
+.market-tab:hover{border-color:var(--purple);color:var(--purple);}
+.market-tab.active{background:var(--purple);border-color:var(--purple);color:#fff;}
 
 /* APP */
 #affApp{display:none;position:relative;z-index:1;}
@@ -153,9 +157,14 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="login-brand">Affiliate <span>Portal</span></div>
     </div>
     <div class="login-title">AFFILIATE LOGIN</div>
-    <div class="login-sub">Enter your affiliate promo code</div>
+    <div class="login-sub">Select your market, then enter your code</div>
+    <div class="market-tabs" id="marketTabs">
+      <div class="market-tab" onclick="selectMarketTab('sandiego')">San Diego</div>
+      <div class="market-tab" onclick="selectMarketTab('tijuana')">Tijuana</div>
+      <div class="market-tab" onclick="selectMarketTab('cerritos')">Cerritos</div>
+    </div>
     <div class="code-input-wrap">
-      <input type="text" class="code-input" id="codeInput" placeholder="e.g. JASON10" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" maxlength="32">
+      <input type="text" class="code-input" id="codeInput" placeholder="Your promo code" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" maxlength="32">
     </div>
     <button class="login-btn" id="loginBtn" onclick="doLogin()">
       <span id="loginBtnText">View My Stats</span>
@@ -273,6 +282,17 @@ function showToast(msg, type) {
 // ============================================================
 // LOGIN
 // ============================================================
+let selectedMarketKey = null;
+
+function selectMarketTab(key) {
+  selectedMarketKey = key;
+  document.querySelectorAll('.market-tab').forEach((t, i) => {
+    const keys = ['sandiego','tijuana','cerritos'];
+    t.classList.toggle('active', keys[i] === key);
+  });
+  document.getElementById('loginError').textContent = '';
+}
+
 const codeInput = document.getElementById('codeInput');
 codeInput.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 codeInput.addEventListener('input', () => {
@@ -283,41 +303,26 @@ codeInput.addEventListener('input', () => {
 
 async function doLogin() {
   const code = codeInput.value.trim().toUpperCase();
-  if (!code) {
-    showError('Please enter your affiliate code.');
-    return;
-  }
+  if (!code) { showError('Please enter your affiliate code.'); return; }
+  if (!selectedMarketKey) { showError('Please select a market above.'); return; }
 
   setLoading(true);
 
   try {
-    // Query all three markets in parallel
-    const results = await Promise.all(
-      MARKETS.map(m => apiGet(m.api, 'getAffiliates').then(affs => ({ market: m, affs: Array.isArray(affs) ? affs : [] })))
-    );
+    const market = MARKETS.find(m => m.key === selectedMarketKey);
+    const affs = await apiGet(market.api, 'getAffiliates');
+    const match = Array.isArray(affs) ? affs.find(a => String(a.code).toUpperCase() === code) : null;
 
-    let found = null;
-    for (const { market, affs } of results) {
-      const match = affs.find(a => String(a.code).toUpperCase() === code);
-      if (match) {
-        found = { affiliate: match, market };
-        break;
-      }
-    }
-
-    if (!found) {
+    if (!match) {
       setLoading(false);
-      showError('Code not found. Please check your affiliate code and try again.');
+      showError('Code not found in ' + market.name + '. Check your code or market selection.');
       codeInput.classList.add('error');
       return;
     }
 
-    currentAffiliate = found.affiliate;
-    currentMarket = found.market;
-
-    // Persist session
+    currentAffiliate = match;
+    currentMarket = market;
     sessionStorage.setItem('psw_aff', JSON.stringify({ code: currentAffiliate.code, market: currentMarket.key }));
-
     await loadDashboard();
   } catch(e) {
     setLoading(false);

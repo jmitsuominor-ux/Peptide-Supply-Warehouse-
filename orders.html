@@ -278,7 +278,7 @@ async function lookupOrders() {
     results.forEach(r => { if (r.status === 'fulfilled') all = all.concat(r.value); });
 
     const matched = all.filter(o => {
-      const oe = (o.email || o.customerEmail || '').toLowerCase();
+      const oe = ((o.customer&&o.customer.email) || o.email || o.from_email || o.customerEmail || (o.contact&&o.contact.email) || '').toLowerCase();
       return oe === email;
     });
 

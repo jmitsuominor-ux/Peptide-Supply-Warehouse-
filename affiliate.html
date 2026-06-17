@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PSW Affiliate Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#f0f4f9;--surface:#ffffff;--surface2:#f0f4f9;--surface3:#e4eaf3;
+  --border:#dde3ec;--border2:#c5d0e0;
+  --blue:#1756a9;--blue-dim:rgba(23,86,169,0.08);--blue-glow:rgba(23,86,169,0.2);
+  --green:#0d7377;--green-dim:rgba(13,115,119,0.08);--green-border:rgba(13,115,119,0.3);
+  --amber:#c47a1e;--amber-dim:rgba(196,122,30,0.09);
+  --red:#b83228;--red-dim:rgba(184,50,40,0.08);--red-border:rgba(184,50,40,0.25);
+  --purple:#5c3d9e;--purple-dim:rgba(92,61,158,0.08);
+  --text:#0a1628;--text2:#3a4a5c;--text3:#7a8fa8;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;pointer-events:none;z-index:0;}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:var(--bg);flex-direction:column;}
+.login-card{position:relative;z-index:1;background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:36px 32px 28px;width:100%;max-width:340px;box-shadow:0 4px 24px rgba(10,22,40,0.1);}
+.login-logo{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:28px;}
+.login-mark{width:40px;height:40px;background:var(--purple);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;font-weight:500;color:#fff;}
+.login-brand{font-size:16px;font-weight:600;color:var(--text);}
+.login-brand span{color:var(--purple);}
+.login-title{text-align:center;font-size:11px;color:var(--text3);margin-bottom:6px;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;}
+.login-sub{text-align:center;font-size:12px;color:var(--text3);margin-bottom:24px;}
+.code-input-wrap{position:relative;margin-bottom:16px;}
+.code-input{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);font-family:var(--mono);font-size:18px;font-weight:500;padding:14px 16px;text-align:center;text-transform:uppercase;letter-spacing:0.12em;outline:none;transition:border-color 0.15s;}
+.code-input:focus{border-color:var(--purple);}
+.code-input.error{border-color:var(--red);animation:shake 0.3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+.login-btn{width:100%;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:500;font-family:var(--sans);cursor:pointer;transition:all 0.15s;position:relative;}
+.login-btn:hover{background:#4e3390;}
+.login-btn:active{transform:scale(0.98);}
+.login-btn:disabled{opacity:0.7;cursor:not-allowed;}
+.login-error{text-align:center;font-family:var(--mono);font-size:11px;color:var(--red);margin-top:14px;min-height:16px;}
+.login-spinner{display:none;width:16px;height:16px;border:2px solid rgba(255,255,255,0.35);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto;}
+.login-spinner.show{display:block;}
+
+/* APP */
+#affApp{display:none;position:relative;z-index:1;}
+.aff-bar{background:rgba(255,255,255,0.95);border-bottom:1px solid var(--border);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;padding:0 20px;height:52px;display:flex;align-items:center;gap:12px;}
+.aff-brand{display:flex;align-items:center;gap:9px;}
+.aff-bar-mark{width:26px;height:26px;background:var(--purple);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:9px;font-weight:500;color:#fff;}
+.aff-bar-title{font-size:13px;font-weight:600;color:var(--text);}
+.aff-bar-badge{font-family:var(--mono);font-size:9px;background:var(--purple-dim);color:var(--purple);border:1px solid rgba(92,61,158,0.2);border-radius:4px;padding:2px 7px;letter-spacing:0.06em;}
+.aff-logout-btn{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text3);cursor:pointer;padding:5px 10px;border-radius:5px;transition:all 0.15s;border:1px solid var(--border);}
+.aff-logout-btn:hover{color:var(--red);border-color:var(--red-border);background:var(--red-dim);}
+
+/* CONTENT */
+.aff-content{max-width:720px;margin:0 auto;padding:20px;}
+
+/* PROFILE HEADER */
+.aff-profile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;}
+.aff-profile::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--purple);}
+.aff-avatar{width:48px;height:48px;background:var(--purple-dim);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:18px;font-weight:600;color:var(--purple);flex-shrink:0;}
+.aff-profile-info{flex:1;min-width:0;}
+.aff-profile-name{font-size:18px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.aff-profile-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.aff-code-badge{font-family:var(--mono);font-size:12px;font-weight:600;background:var(--purple-dim);color:var(--purple);border:1px solid rgba(92,61,158,0.2);border-radius:6px;padding:3px 10px;letter-spacing:0.1em;}
+.aff-market-badge{font-family:var(--mono);font-size:10px;background:var(--surface3);color:var(--text3);border-radius:4px;padding:2px 8px;}
+.aff-rate-pills{display:flex;gap:8px;margin-top:8px;}
+.aff-rate-pill{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:5px;font-weight:500;}
+.aff-rate-pill.discount{background:var(--blue-dim);color:var(--blue);}
+.aff-rate-pill.commission{background:var(--purple-dim);color:var(--purple);}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;position:relative;overflow:hidden;transition:box-shadow 0.15s,transform 0.15s;}
+.stat-card:hover{box-shadow:0 2px 12px rgba(10,22,40,0.08);transform:translateY(-1px);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;}
+.stat-card.blue::before{background:var(--blue);}
+.stat-card.green::before{background:var(--green);}
+.stat-card.amber::before{background:var(--amber);}
+.stat-card.purple::before{background:var(--purple);}
+.stat-label{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;}
+.stat-val{font-size:26px;font-weight:600;line-height:1;margin-bottom:3px;}
+.stat-val.blue{color:var(--blue);}
+.stat-val.green{color:var(--green);}
+.stat-val.amber{color:var(--amber);}
+.stat-val.purple{color:var(--purple);}
+.stat-sub{font-family:var(--mono);font-size:9px;color:var(--text3);}
+
+/* SECTION HEADERS */
+.section-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.section-hdr h2{font-size:14px;font-weight:600;color:var(--text);}
+.section-hdr-meta{font-family:var(--mono);font-size:10px;color:var(--text3);margin-left:auto;}
+
+/* PAYMENT HISTORY */
+.pay-table{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.pay-table-hdr{display:grid;grid-template-columns:110px 100px 90px 1fr;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);}
+.pay-table-hdr span{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;}
+.pay-row{display:grid;grid-template-columns:110px 100px 90px 1fr;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background 0.12s;}
+.pay-row:last-child{border-bottom:none;}
+.pay-row:hover{background:var(--surface2);}
+.pay-date{font-family:var(--mono);font-size:11px;color:var(--text3);}
+.pay-amount{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--green);}
+.pay-method{font-family:var(--mono);font-size:10px;background:var(--surface3);color:var(--text2);border-radius:4px;padding:2px 7px;display:inline-block;}
+.pay-note{font-size:12px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text3);font-family:var(--mono);font-size:12px;}
+
+/* ORDERS TABLE */
+.orders-table{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.orders-table-hdr{display:grid;grid-template-columns:1fr 110px 100px 100px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);}
+.orders-table-hdr span{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;}
+.order-row{display:grid;grid-template-columns:1fr 110px 100px 100px;padding:12px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background 0.12s;}
+.order-row:last-child{border-bottom:none;}
+.order-row:hover{background:var(--surface2);}
+.order-id{font-family:var(--mono);font-size:11px;color:var(--blue);font-weight:500;}
+.order-date{font-family:var(--mono);font-size:11px;color:var(--text3);}
+.order-total{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text2);}
+.order-commission{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--purple);}
+.order-status-dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+.order-status-dot.pending{background:var(--amber);}
+.order-status-dot.fulfilled{background:var(--green);}
+.order-status-dot.cancelled{background:var(--red);}
+
+/* LOADING */
+.loading-bar{text-align:center;padding:40px;font-family:var(--mono);font-size:11px;color:var(--text3);}
+.loading-spin{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--purple);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:10px 18px;font-size:13px;font-weight:500;color:var(--text);box-shadow:0 4px 20px rgba(10,22,40,0.12);z-index:9999;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.green{border-color:var(--green-border);color:var(--green);}
+.toast.red{border-color:var(--red-border);color:var(--red);}
+
+::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+@media(max-width:480px){
+  .stat-row{grid-template-columns:1fr 1fr;}
+  .pay-table-hdr,.pay-row{grid-template-columns:90px 90px 1fr;}
+  .pay-table-hdr span:last-child,.pay-note{display:none;}
+  .orders-table-hdr,.order-row{grid-template-columns:1fr 90px 90px;}
+  .orders-table-hdr span:last-child,.order-commission{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-mark">PSW</div>
+      <div class="login-brand">Affiliate <span>Portal</span></div>
+    </div>
+    <div class="login-title">AFFILIATE LOGIN</div>
+    <div class="login-sub">Enter your affiliate promo code</div>
+    <div class="code-input-wrap">
+      <input type="text" class="code-input" id="codeInput" placeholder="e.g. JASON10" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" maxlength="32">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">
+      <span id="loginBtnText">View My Stats</span>
+      <div class="login-spinner" id="loginSpinner"></div>
+    </button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<div id="affApp">
+  <div class="aff-bar">
+    <div class="aff-brand">
+      <div class="aff-bar-mark">PSW</div>
+      <div class="aff-bar-title">Affiliate Portal</div>
+      <div class="aff-bar-badge" id="barBadge">AFFILIATE</div>
+    </div>
+    <div class="aff-logout-btn" onclick="logout()">Sign Out</div>
+  </div>
+
+  <div class="aff-content">
+    <div id="dashboardLoading" class="loading-bar"><div class="loading-spin"></div>Loading your dashboard…</div>
+    <div id="dashboard" style="display:none;">
+
+      <!-- Profile -->
+      <div class="aff-profile" id="affProfile">
+        <div class="aff-avatar" id="affAvatar"></div>
+        <div class="aff-profile-info">
+          <div class="aff-profile-name" id="affName"></div>
+          <div class="aff-profile-meta">
+            <span class="aff-code-badge" id="affCodeBadge"></span>
+            <span class="aff-market-badge" id="affMarketBadge"></span>
+          </div>
+          <div class="aff-rate-pills" id="affRatePills"></div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-row" id="statRow">
+        <div class="stat-card blue"><div class="stat-label">TOTAL ORDERS</div><div class="stat-val blue" id="statOrders">—</div><div class="stat-sub">orders using your code</div></div>
+        <div class="stat-card purple"><div class="stat-label">TOTAL EARNED</div><div class="stat-val purple" id="statEarned">—</div><div class="stat-sub">commission accrued</div></div>
+        <div class="stat-card green"><div class="stat-label">PAID OUT</div><div class="stat-val green" id="statPaid">—</div><div class="stat-sub">total disbursed</div></div>
+        <div class="stat-card amber"><div class="stat-label">NET OWED</div><div class="stat-val amber" id="statOwed">—</div><div class="stat-sub">pending payout</div></div>
+      </div>
+
+      <!-- Payment History -->
+      <div class="section-hdr">
+        <h2>Payment History</h2>
+        <div class="section-hdr-meta" id="payMeta"></div>
+      </div>
+      <div id="paymentSection"></div>
+
+      <!-- Orders -->
+      <div class="section-hdr">
+        <h2>Orders Using Your Code</h2>
+        <div class="section-hdr-meta" id="ordersMeta"></div>
+      </div>
+      <div id="ordersSection"></div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const MARKETS = [
+  { key:'cerritos', name:'Cerritos',  api:'https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec' },
+  { key:'tijuana',  name:'Tijuana',   api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec' },
+  { key:'sandiego', name:'San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec' },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentAffiliate = null;
+let currentMarket = null;
+let currentOrders = [];
+let currentPayments = [];
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function apiGet(api, action) {
+  return new Promise(resolve => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', api + '?action=' + action + '&t=' + Date.now(), true);
+    xhr.onload = () => { try { resolve(JSON.parse(xhr.responseText)); } catch(e) { resolve([]); } };
+    xhr.onerror = () => resolve([]);
+    setTimeout(() => resolve([]), 10000);
+    xhr.send();
+  });
+}
+
+function fmt(n) { return '$' + parseFloat(n || 0).toFixed(2); }
+
+function fmtDate(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  if (isNaN(dt)) return String(d);
+  return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+let toastTimer;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.className = 'toast', 2800);
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+const codeInput = document.getElementById('codeInput');
+codeInput.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+codeInput.addEventListener('input', () => {
+  codeInput.value = codeInput.value.toUpperCase();
+  codeInput.classList.remove('error');
+  document.getElementById('loginError').textContent = '';
+});
+
+async function doLogin() {
+  const code = codeInput.value.trim().toUpperCase();
+  if (!code) {
+    showError('Please enter your affiliate code.');
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    // Query all three markets in parallel
+    const results = await Promise.all(
+      MARKETS.map(m => apiGet(m.api, 'getAffiliates').then(affs => ({ market: m, affs: Array.isArray(affs) ? affs : [] })))
+    );
+
+    let found = null;
+    for (const { market, affs } of results) {
+      const match = affs.find(a => String(a.code).toUpperCase() === code);
+      if (match) {
+        found = { affiliate: match, market };
+        break;
+      }
+    }
+
+    if (!found) {
+      setLoading(false);
+      showError('Code not found. Please check your affiliate code and try again.');
+      codeInput.classList.add('error');
+      return;
+    }
+
+    currentAffiliate = found.affiliate;
+    currentMarket = found.market;
+
+    // Persist session
+    sessionStorage.setItem('psw_aff', JSON.stringify({ code: currentAffiliate.code, market: currentMarket.key }));
+
+    await loadDashboard();
+  } catch(e) {
+    setLoading(false);
+    showError('Connection error. Please try again.');
+  }
+}
+
+function showError(msg) {
+  document.getElementById('loginError').textContent = msg;
+}
+
+function setLoading(on) {
+  const btn = document.getElementById('loginBtn');
+  const txt = document.getElementById('loginBtnText');
+  const spin = document.getElementById('loginSpinner');
+  btn.disabled = on;
+  txt.style.display = on ? 'none' : 'block';
+  spin.className = 'login-spinner' + (on ? ' show' : '');
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+async function loadDashboard() {
+  setLoading(false);
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('affApp').style.display = 'block';
+  document.getElementById('dashboardLoading').style.display = 'block';
+  document.getElementById('dashboard').style.display = 'none';
+
+  try {
+    const [orders, pays] = await Promise.all([
+      apiGet(currentMarket.api, 'getOrders'),
+      apiGet(currentMarket.api, 'getPayments'),
+    ]);
+
+    const aff = currentAffiliate;
+    const code = String(aff.code).toUpperCase();
+
+    currentOrders = (Array.isArray(orders) ? orders : [])
+      .filter(o => o.affiliateCode && String(o.affiliateCode).toUpperCase() === code && o.status !== 'cancelled');
+
+    currentPayments = (Array.isArray(pays) ? pays : [])
+      .filter(p => p.affiliateCode && String(p.affiliateCode).toUpperCase() === code)
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    renderProfile();
+    renderStats();
+    renderPayments();
+    renderOrders();
+
+    document.getElementById('dashboardLoading').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+  } catch(e) {
+    document.getElementById('dashboardLoading').innerHTML = '<div style="text-align:center;padding:40px;font-family:var(--mono);font-size:12px;color:var(--red);">Could not load data. Please refresh.</div>';
+  }
+}
+
+function renderProfile() {
+  const aff = currentAffiliate;
+  const initials = (aff.name || '?').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  document.getElementById('affAvatar').textContent = initials;
+  document.getElementById('affName').textContent = aff.name || aff.code;
+  document.getElementById('affCodeBadge').textContent = aff.code;
+  document.getElementById('affMarketBadge').textContent = 'PSW ' + currentMarket.name;
+  document.getElementById('barBadge').textContent = aff.code;
+
+  const pills = document.getElementById('affRatePills');
+  pills.innerHTML = '';
+  if (aff.customerDiscount) {
+    const d = document.createElement('span');
+    d.className = 'aff-rate-pill discount';
+    d.textContent = 'Customer: ' + aff.customerDiscount + '% off';
+    pills.appendChild(d);
+  }
+  if (aff.commission) {
+    const c = document.createElement('span');
+    c.className = 'aff-rate-pill commission';
+    c.textContent = 'Commission: ' + aff.commission + '%';
+    pills.appendChild(c);
+  }
+}
+
+function calcCommission(order) {
+  const rate = parseFloat(currentAffiliate.commission) || 0;
+  return (parseFloat(order.total) || 0) * rate / 100;
+}
+
+function renderStats() {
+  const totalEarned = currentOrders.reduce((s, o) => s + calcCommission(o), 0);
+  const totalPaid = currentPayments.reduce((s, p) => s + (parseFloat(p.amount) || 0), 0);
+  const netOwed = totalEarned - totalPaid;
+
+  document.getElementById('statOrders').textContent = currentOrders.length;
+  document.getElementById('statEarned').textContent = fmt(totalEarned);
+  document.getElementById('statPaid').textContent = fmt(totalPaid);
+  document.getElementById('statOwed').textContent = fmt(Math.max(0, netOwed));
+
+  // Color net owed card based on whether there's something owed
+  const owedCard = document.querySelector('#statRow .stat-card.amber');
+  if (owedCard) {
+    const val = owedCard.querySelector('.stat-val');
+    if (netOwed <= 0) { val.style.color = 'var(--text3)'; }
+  }
+}
+
+function renderPayments() {
+  const meta = document.getElementById('payMeta');
+  const section = document.getElementById('paymentSection');
+  meta.textContent = currentPayments.length + ' payment' + (currentPayments.length !== 1 ? 's' : '');
+
+  if (!currentPayments.length) {
+    section.innerHTML = '<div class="empty-state">No payouts recorded yet.</div>';
+    return;
+  }
+
+  const rows = currentPayments.map(p => `
+    <div class="pay-row">
+      <span class="pay-date">${fmtDate(p.date)}</span>
+      <span class="pay-amount">${fmt(p.amount)}</span>
+      <span><span class="pay-method">${p.method || '—'}</span></span>
+      <span class="pay-note">${p.note || ''}</span>
+    </div>`).join('');
+
+  section.innerHTML = `
+    <div class="pay-table">
+      <div class="pay-table-hdr">
+        <span>DATE</span>
+        <span>AMOUNT</span>
+        <span>METHOD</span>
+        <span>NOTE</span>
+      </div>
+      ${rows}
+    </div>`;
+}
+
+function renderOrders() {
+  const meta = document.getElementById('ordersMeta');
+  const section = document.getElementById('ordersSection');
+  const sorted = currentOrders.slice().sort((a, b) => new Date(b.date || b.createdAt || 0) - new Date(a.date || a.createdAt || 0));
+  meta.textContent = sorted.length + ' order' + (sorted.length !== 1 ? 's' : '');
+
+  if (!sorted.length) {
+    section.innerHTML = '<div class="empty-state">No orders found using your code yet.</div>';
+    return;
+  }
+
+  const rows = sorted.map(o => {
+    const dateStr = fmtDate(o.date || o.createdAt);
+    const commission = calcCommission(o);
+    const status = o.status || 'pending';
+    return `
+      <div class="order-row">
+        <span class="order-id"><span class="order-status-dot ${status}"></span>${o.id || '—'}</span>
+        <span class="order-date">${dateStr}</span>
+        <span class="order-total">${fmt(o.total)}</span>
+        <span class="order-commission">${fmt(commission)}</span>
+      </div>`;
+  }).join('');
+
+  section.innerHTML = `
+    <div class="orders-table">
+      <div class="orders-table-hdr">
+        <span>ORDER ID</span>
+        <span>DATE</span>
+        <span>TOTAL</span>
+        <span>COMMISSION</span>
+      </div>
+      ${rows}
+    </div>`;
+}
+
+// ============================================================
+// LOGOUT
+// ============================================================
+function logout() {
+  sessionStorage.removeItem('psw_aff');
+  currentAffiliate = null;
+  currentMarket = null;
+  currentOrders = [];
+  currentPayments = [];
+  codeInput.value = '';
+  document.getElementById('loginError').textContent = '';
+  document.getElementById('affApp').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+}
+
+// ============================================================
+// SESSION RESTORE
+// ============================================================
+(async function init() {
+  const saved = sessionStorage.getItem('psw_aff');
+  if (!saved) return;
+  try {
+    const { code, market: marketKey } = JSON.parse(saved);
+    const market = MARKETS.find(m => m.key === marketKey);
+    if (!code || !market) return;
+
+    // Quietly re-validate the code
+    const affs = await apiGet(market.api, 'getAffiliates');
+    const aff = Array.isArray(affs) ? affs.find(a => String(a.code).toUpperCase() === code.toUpperCase()) : null;
+    if (!aff) { sessionStorage.removeItem('psw_aff'); return; }
+
+    currentAffiliate = aff;
+    currentMarket = market;
+    await loadDashboard();
+  } catch(e) {
+    sessionStorage.removeItem('psw_aff');
+  }
+})();
+</script>
+</body>
+</html>

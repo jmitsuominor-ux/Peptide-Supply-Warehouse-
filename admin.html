@@ -229,6 +229,29 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .toast.green{border-color:var(--green-border);color:var(--green);}
 .toast.red{border-color:var(--red-border);color:var(--red);}
 
+/* RESTOCK LIST */
+.restock-section{background:var(--amber-dim);border:1px solid rgba(196,122,30,0.3);border-radius:10px;padding:16px;margin-bottom:16px;display:none;}
+.restock-section.show{display:block;}
+.restock-hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.restock-hdr h3{font-size:13px;font-weight:600;color:var(--amber);flex:1;}
+.restock-clear-btn{font-family:var(--mono);font-size:10px;color:var(--text3);background:transparent;border:1px solid var(--border2);border-radius:5px;padding:4px 10px;cursor:pointer;transition:all 0.15s;}
+.restock-clear-btn:hover{color:var(--red);border-color:var(--red-border);background:var(--red-dim);}
+.restock-email-btn{font-family:var(--sans);font-size:12px;font-weight:500;color:#fff;background:var(--amber);border:none;border-radius:6px;padding:7px 14px;cursor:pointer;transition:all 0.15s;}
+.restock-email-btn:hover{background:#b56c12;}
+.restock-email-btn:active{transform:scale(0.97);}
+.restock-table{width:100%;border-collapse:collapse;font-size:12px;}
+.restock-table th{font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:0.08em;text-transform:uppercase;padding:6px 10px;border-bottom:1px solid rgba(196,122,30,0.25);text-align:left;}
+.restock-table td{padding:8px 10px;border-bottom:1px solid rgba(196,122,30,0.15);color:var(--text2);vertical-align:middle;}
+.restock-table tr:last-child td{border-bottom:none;}
+.restock-qty-input{width:70px;background:var(--surface);border:1px solid rgba(196,122,30,0.3);border-radius:5px;color:var(--text);font-family:var(--mono);font-size:12px;padding:4px 8px;text-align:center;outline:none;transition:border-color 0.15s;}
+.restock-qty-input:focus{border-color:var(--amber);}
+.restock-unflag-btn{background:transparent;border:1px solid rgba(196,122,30,0.3);color:var(--amber);border-radius:4px;padding:3px 8px;font-size:11px;cursor:pointer;transition:all 0.15s;font-family:var(--mono);}
+.restock-unflag-btn:hover{background:var(--red-dim);border-color:var(--red-border);color:var(--red);}
+.flag-btn{width:100%;margin-top:6px;background:transparent;border:1px solid rgba(196,122,30,0.3);color:var(--amber);border-radius:6px;padding:5px;font-size:11px;font-family:var(--mono);cursor:pointer;transition:all 0.15s;letter-spacing:0.03em;}
+.flag-btn:hover{background:var(--amber-dim);border-color:var(--amber);}
+.flag-btn.flagged{background:var(--amber-dim);border-color:var(--amber);color:var(--amber);font-weight:500;}
+.flag-btn:active{transform:scale(0.97);}
+
 ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
 .order-card{animation:fadeUp 0.2s ease forwards;}
@@ -262,7 +285,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="admin-title">Peptide Supply Warehouse</div>
       <div class="admin-badge">ADMIN</div>
     </div>
-    <a href="#" onclick="var m=new URLSearchParams(location.search).get('market');location.href=m==='tijuana'?'tijuana.html':m==='sandiego'?'sandiego.html':'cerritos.html';return false;" class="store-btn">← Store</a>
+    <a href="#" onclick="var m=new URLSearchParams(location.search).get('market');location.href=m==='tijuana'?'/tijuana/':m==='sandiego'?'/':'/mexico/';return false;" class="store-btn">← Store</a>
     <div class="logout-btn" onclick="logout()">Lock →</div>
   </div>
   <div class="admin-nav">
@@ -297,6 +320,17 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   </div>
 
   <div class="admin-page" id="page-inventory">
+    <div class="restock-section" id="restockSection">
+      <div class="restock-hdr">
+        <h3>🔖 RESTOCK LIST</h3>
+        <button class="restock-clear-btn" onclick="clearRestockList()">Clear List</button>
+        <button class="restock-email-btn" onclick="emailRestockList()">📧 Email Restock List</button>
+      </div>
+      <table class="restock-table">
+        <thead><tr><th>Product</th><th>Code</th><th>Current Stock</th><th>Desired Qty</th><th></th></tr></thead>
+        <tbody id="restockTableBody"></tbody>
+      </table>
+    </div>
     <div class="inv-toolbar">
       <input type="text" class="inv-search" id="invSearch" placeholder="Search inventory…" oninput="renderInventory()">
       <button class="add-stock-btn" onclick="openAddStock()">+ Add Item</button>
@@ -377,9 +411,9 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 // CONFIG
 // ════════════════════════════════════════
 const MARKET_CONFIGS = {
-  cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec', email:'pswcerritos.orders@gmail.com', fulfillTemplate:'template_fo19x6g', paidTemplate:'template_9vcvfg' },
-  tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com',  fulfillTemplate:'template_frbqrjh', paidTemplate:'template_9vcvfg' },
-  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com', fulfillTemplate:'template_fp119xp', paidTemplate:'template_9vcvfg' },
+  cerritos: { name:'Peptide Supply Warehouse — Cerritos', api:'https://script.google.com/macros/s/AKfycbxvpLECfo4Vy9GKXzvwHurgKnyK_jusDCX2NOPJrAMSW9doeCxQTIhtVoQMm0f7Y6Qv/exec', email:'pswcerritos.orders@gmail.com', fulfillTemplate:'template_fo19x6g', paidTemplate:'template_9nc8mt3' },
+  tijuana:  { name:'Peptide Supply Warehouse — Tijuana',  api:'https://script.google.com/macros/s/AKfycbxCQp5yYAdFZsBqWjDC_9TrDRHjJFxx4HaMmE15LeVizpbMMzeSjA4DnXNBLTycfHE/exec',  email:'pswtijuana.orders@gmail.com',  fulfillTemplate:'template_frbqrjh', paidTemplate:'template_9nc8mt3' },
+  sandiego: { name:'Peptide Supply Warehouse — San Diego', api:'https://script.google.com/macros/s/AKfycbxeYIWTinJkzindnRHziQTGQFHoU5ZLYM9O8QM5hERFwsVQd51eIPz-C29RPc5NbgNszQ/exec', email:'pswsandiego.orders@gmail.com', fulfillTemplate:'template_fp119xp', paidTemplate:'template_9nc8mt3' },
 };
 const _mkt = new URLSearchParams(window.location.search).get('market') || 'cerritos';
 const _cfg = MARKET_CONFIGS[_mkt] || MARKET_CONFIGS.cerritos;
@@ -390,6 +424,7 @@ const EMAILJS_PUBLIC_KEY  = '8hJqb4uIKB0RP-u4y';
 const EMAILJS_SERVICE_ID  = 'service_x0hxs0b';
 const EMAILJS_TEMPLATE_ID = 'template_bd3i3oh';
 const EMAILJS_FULFILL_ID  = _cfg.fulfillTemplate;
+const RESTOCK_TEMPLATE_ID = '';
 
 window.addEventListener('load', () => {
   if(typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -491,6 +526,7 @@ const PRODUCTS = [
 // ════════════════════════════════════════
 let orders=[];
 let inventory={};
+let restockFlags={};
 let pinBuffer='';
 
 // ════════════════════════════════════════
@@ -682,6 +718,14 @@ document.addEventListener('click', function(e) {
   if(btn) {
     e.stopPropagation();
     const action = btn.dataset.action;
+    // Gray out all action buttons on this card immediately
+    if(action === 'fulfill' || action === 'cancel' || action === 'paidnotify') {
+      card.querySelectorAll('[data-action]').forEach(b => {
+        b.disabled = true;
+        b.style.opacity = '0.45';
+        b.style.cursor = 'not-allowed';
+      });
+    }
     if(action === 'fulfill') fulfillOrder(safeId);
     if(action === 'cancel') cancelOrder(safeId);
     if(action === 'pending') setPendingOrder(safeId);
@@ -773,7 +817,7 @@ async function fulfillOrder(safeId){
         venmo_handle:     '@Mike-Mattarocci',
         cashapp_handle:   '$MichaelMattarocci',
         payment_note:     'Venmo: @Mike-Mattarocci | Cash App: $MichaelMattarocci',
-      });
+      }, EMAILJS_PUBLIC_KEY);
       showToast('✓ Order fulfilled — confirmation email sent to customer','green');
     } else {
       showToast('✓ Order fulfilled','green');
@@ -835,7 +879,7 @@ async function markPaidNotify(safeId){
   const custPhone=(order.customer&&order.customer.phone)||order.phone||'—';
   const custAddr=(order.customer&&order.customer.address)||order.address||'—';
   try{
-    await emailjs.send(_cfg.fulfillTemplate?EMAILJS_SERVICE_ID:EMAILJS_SERVICE_ID, tpl, {
+    await emailjs.send(EMAILJS_SERVICE_ID, tpl, {
       to_email: _cfg.email,
       from_name: custName,
       from_email: custEmail,
@@ -844,7 +888,7 @@ async function markPaidNotify(safeId){
       order_summary: orderSummary,
       order_total: '$'+parseFloat(order.total||0).toFixed(2),
       order_id: order.id,
-    });
+    }, EMAILJS_PUBLIC_KEY);
     order.paidNotified=true;
     await apiPost({action:'updateOrderStatus',id:order.id,paidNotified:true});
     renderPendingOrders();
@@ -886,6 +930,7 @@ function renderInventory(){
   else banner.classList.remove('show');
   const grid=document.getElementById('invGrid');
   if(!keys.length){grid.innerHTML='<div class="empty-state" style="grid-column:1/-1"><p>No inventory items yet — click + Add Item to get started</p></div>';return;}
+  renderRestockSection();
   grid.innerHTML=keys.map(code=>{
     const item=inventory[code];
     const _prod=PRODUCTS.find(p=>p.code===code)||{};
@@ -916,6 +961,7 @@ function renderInventory(){
           <input type="number" step="0.01" min="0" class="stock-input" style="font-size:14px;" value="${price.toFixed(2)}" onchange="savePrice('${code}',this.value)" id="priceInput-${code}">
         </div>
       </div>
+      <button class="flag-btn${restockFlags[code]!==undefined?' flagged':''}" onclick="toggleRestockFlag('${code}')" id="flagBtn-${code}">${restockFlags[code]!==undefined?'🔖 Flagged for Restock':'🔖 Flag for Restock'}</button>
       <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${_name}')">✕ Remove from inventory</button>
     </div>`;
   }).join('');
@@ -994,6 +1040,77 @@ async function saveNewInventoryItem(){
   renderInventory();
   updateCounts();
   showToast('✓ Inventory updated','green');
+}
+
+// ════════════════════════════════════════
+// RESTOCK LIST
+// ════════════════════════════════════════
+function toggleRestockFlag(code){
+  if(restockFlags[code]!==undefined){
+    delete restockFlags[code];
+  }else{
+    restockFlags[code]=0;
+  }
+  renderRestockSection();
+  renderInventory();
+}
+
+function renderRestockSection(){
+  const section=document.getElementById('restockSection');
+  const tbody=document.getElementById('restockTableBody');
+  if(!section||!tbody)return;
+  const flaggedCodes=Object.keys(restockFlags);
+  if(!flaggedCodes.length){section.classList.remove('show');return;}
+  section.classList.add('show');
+  tbody.innerHTML=flaggedCodes.map(code=>{
+    const item=inventory[code]||{};
+    const _prod=PRODUCTS.find(p=>p.code===code)||{};
+    const _name=item.name||_prod.name||code;
+    const stock=item.stock||0;
+    const desiredQty=restockFlags[code]||0;
+    return `<tr>
+      <td style="font-weight:500;color:var(--text);">${_name}<span style="font-family:var(--mono);font-size:9px;color:var(--text3);margin-left:6px;">${item.spec||_prod.spec||''}</span></td>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--text3);">${code}</td>
+      <td style="font-family:var(--mono);font-weight:600;color:${stock===0?'var(--red)':stock<=(item.threshold||5)?'var(--amber)':'var(--green)'};">${stock}</td>
+      <td><input type="number" class="restock-qty-input" value="${desiredQty}" min="0" placeholder="Qty" oninput="restockFlags['${code}']=parseInt(this.value)||0"></td>
+      <td><button class="restock-unflag-btn" onclick="toggleRestockFlag('${code}')">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function clearRestockList(){
+  restockFlags={};
+  renderRestockSection();
+  renderInventory();
+  showToast('Restock list cleared','');
+}
+
+async function emailRestockList(){
+  const flaggedCodes=Object.keys(restockFlags);
+  if(!flaggedCodes.length){showToast('No items in restock list','red');return;}
+  if(!RESTOCK_TEMPLATE_ID){showToast('Set RESTOCK_TEMPLATE_ID in config first','red');return;}
+  const lines=flaggedCodes.map(code=>{
+    const item=inventory[code]||{};
+    const _prod=PRODUCTS.find(p=>p.code===code)||{};
+    const _name=item.name||_prod.name||code;
+    const _spec=item.spec||_prod.spec||'';
+    const stock=item.stock||0;
+    const qty=restockFlags[code]||0;
+    return `${_name} (${_spec}) [${code}] — Current: ${stock} | Reorder: ${qty}`;
+  });
+  const restockList=lines.join('\n');
+  try{
+    if(typeof emailjs==='undefined')throw new Error('EmailJS not loaded');
+    await emailjs.send(EMAILJS_SERVICE_ID,RESTOCK_TEMPLATE_ID,{
+      to_email:_cfg.email,
+      market_name:_cfg.name,
+      restock_list:restockList,
+    });
+    showToast('✓ Restock list emailed to '+_cfg.email,'green');
+  }catch(e){
+    const msg=e&&e.text?e.text:(e&&e.message?e.message:JSON.stringify(e));
+    showToast('Email failed: '+msg,'red');
+  }
 }
 
 // ════════════════════════════════════════

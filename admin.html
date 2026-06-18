@@ -286,7 +286,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
       <div class="admin-title">Peptide Supply Warehouse</div>
       <div class="admin-badge">ADMIN</div>
     </div>
-    <a href="#" onclick="var m=new URLSearchParams(location.search).get('market');location.href=m==='tijuana'?'/tijuana/':m==='sandiego'?'/':'/mexico/';return false;" class="store-btn">← Store</a>
+    <a href="#" onclick="var m=new URLSearchParams(location.search).get('market');location.href=m==='tijuana'?'/tijuana/':m==='mexico'?'/mexico/':'/';return false;" class="store-btn">← Store</a>
     <div class="logout-btn" onclick="logout()">Lock →</div>
   </div>
   <div class="admin-nav">
@@ -527,7 +527,8 @@ const PRODUCTS = [
 // ════════════════════════════════════════
 let orders=[];
 let inventory={};
-let restockFlags={};
+let restockFlags=(function(){try{var s=localStorage.getItem('psw_restock_flags');return s?JSON.parse(s):{};} catch(e){return {};} })();
+function saveRestockFlags(){try{localStorage.setItem('psw_restock_flags',JSON.stringify(restockFlags));}catch(e){}}
 let pinBuffer='';
 
 // ════════════════════════════════════════
@@ -944,11 +945,14 @@ function renderInventory(){
   const lowItems=Object.values(inventory).filter(i=>i.stock<=i.threshold&&i.stock>0);
   const outItems=Object.values(inventory).filter(i=>i.stock===0);
   // auto-flag items at or below threshold
+  let _rfChanged=false;
   Object.entries(inventory).forEach(([code,item])=>{
     if(item.stock<=(item.threshold||5)&&restockFlags[code]===undefined){
-      restockFlags[code]=0;
+      restockFlags[code]=0;_rfChanged=true;
     }
   });
+  if(_rfChanged)saveRestockFlags();
+  renderRestockSection();
   const banner=document.getElementById('lowStockBanner');
   const msgs=[];
   if(outItems.length)msgs.push(outItems.length+' item'+(outItems.length!==1?'s':'')+' out of stock');
@@ -1078,6 +1082,7 @@ function toggleRestockFlag(code){
   }else{
     restockFlags[code]=0;
   }
+  saveRestockFlags();
   renderRestockSection();
   renderInventory();
 }
@@ -1099,7 +1104,7 @@ function renderRestockSection(){
       <td style="font-weight:500;color:var(--text);">${_name}<span style="font-family:var(--mono);font-size:9px;color:var(--text3);margin-left:6px;">${item.spec||_prod.spec||''}</span></td>
       <td style="font-family:var(--mono);font-size:10px;color:var(--text3);">${code}</td>
       <td style="font-family:var(--mono);font-weight:600;color:${stock===0?'var(--red)':stock<=(item.threshold||5)?'var(--amber)':'var(--green)'};">${stock}</td>
-      <td><input type="number" class="restock-qty-input" value="${desiredQty}" min="0" placeholder="Qty" oninput="restockFlags['${code}']=parseInt(this.value)||0"></td>
+      <td><input type="number" class="restock-qty-input" value="${desiredQty}" min="0" placeholder="Qty" oninput="restockFlags['${code}']=parseInt(this.value)||0;saveRestockFlags()"></td>
       <td><button class="restock-unflag-btn" onclick="toggleRestockFlag('${code}')">✕</button></td>
     </tr>`;
   }).join('');
@@ -1107,6 +1112,7 @@ function renderRestockSection(){
 
 function clearRestockList(){
   restockFlags={};
+  saveRestockFlags();
   renderRestockSection();
   renderInventory();
   showToast('Restock list cleared','');
@@ -1315,14 +1321,21 @@ function closeMarkPaid(){
   document.getElementById('markPaidModal').classList.remove('open');
 }
 
+let _paymentSaving=false;
 async function savePayment(){
+  if(_paymentSaving)return;
   const code = document.getElementById('markPaidCode').value;
   const amount = parseFloat(document.getElementById('markPaidAmount').value);
   const method = document.getElementById('markPaidMethod').value;
   const note = document.getElementById('markPaidNote').value.trim();
   if(!amount || amount <= 0){showToast('Enter a valid amount','red');return;}
+  _paymentSaving=true;
+  const btn=document.querySelector('#markPaidModal .modal-save-btn');
+  if(btn){btn.disabled=true;btn.textContent='Saving…';}
   await apiPost({action:'savePayment', affiliateCode:code, amount, method, note});
   await loadAffiliates();
+  _paymentSaving=false;
+  if(btn){btn.disabled=false;btn.textContent='Record Payout';}
   closeMarkPaid();
   renderAffiliates();
   showToast('Payout recorded — $'+amount.toFixed(2)+' via '+method,'green');

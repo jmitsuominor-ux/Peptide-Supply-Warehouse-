@@ -499,7 +499,7 @@ body::after{display:none;}
 var lang='en';
 var exchangeRate=1;
 (function fetchRate(){
-  fetch('https://api.frankfurter.app/latest?from=USD&to=MXN')
+  fetch('https://open.er-api.com/v6/latest/USD')
     .then(r=>r.json()).then(d=>{
       if(d&&d.rates&&d.rates.MXN){exchangeRate=d.rates.MXN;if(Object.keys(inventory).length>0&&lang==='es'){renderProducts();renderDrawer();}}
     }).catch(()=>{});

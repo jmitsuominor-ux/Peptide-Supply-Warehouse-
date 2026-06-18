@@ -426,6 +426,9 @@ body::after{display:none;}
     <div class="loading-spinner"></div>
     <div class="loading-text">LOADING INVENTORY…</div>
   </div>
+  <div id="reloadBanner" style="display:none;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:14px 18px;margin:16px auto;max-width:600px;text-align:center;font-family:var(--mono);font-size:13px;color:#856404;">
+    ⚠ Inventory took too long to load. <button onclick="location.reload()" style="margin-left:10px;background:#ffc107;border:none;border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;color:#333;">↺ Tap to Refresh</button>
+  </div>
   <div class="product-grid" id="productGrid" style="display:none"></div>
   <div class="no-results" id="noResults" style="display:none">No products match "<span id="noResultsQuery"></span>"</div>
 </div>
@@ -1172,6 +1175,9 @@ async function loadInventory(){
     xhr2.send();
   }catch(e){}
   document.getElementById('loadingState').style.display='none';
+  if(!PRODUCTS.length||Object.keys(inventory).length===0){
+    document.getElementById('reloadBanner').style.display='block';
+  }
   document.getElementById('productGrid').style.display='grid';
   buildCatNav();renderProducts();
   if(exchangeRate>1&&lang==='es')renderProducts();

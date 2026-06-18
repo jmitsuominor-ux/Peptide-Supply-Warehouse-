@@ -1174,6 +1174,7 @@ async function loadInventory(){
   document.getElementById('loadingState').style.display='none';
   document.getElementById('productGrid').style.display='grid';
   buildCatNav();renderProducts();
+  if(exchangeRate>1&&lang==='es')renderProducts();
   if(document.getElementById('bysOverlay').classList.contains('open'))bysRenderSelect();
 }
 function buildCatNav(){
@@ -1648,7 +1649,7 @@ window.addEventListener('load',function(){
     var parts=f.split('/');
     var img=new Image();
     img.onload=img.onerror=function(){setTimeout(loadNext,80);};
-    img.src='./'+parts.map(encodeURIComponent).join('/');
+    img.src='../'+parts.map(encodeURIComponent).join('/');
   }
   setTimeout(loadNext,1500);
 });

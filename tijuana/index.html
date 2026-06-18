@@ -1770,7 +1770,7 @@ function vialDisplay(name,cat){
   if(f){
     var parts=f.split('/');
     var encoded=parts.map(encodeURIComponent).join('/');
-    return '<img src="./'+encoded+'" class="cp-vial-photo" alt="'+name+'">';
+    return '<img src="../'+encoded+'" class="cp-vial-photo" alt="'+name+'">';
   }
   return vialSVG(name,cat);
 }

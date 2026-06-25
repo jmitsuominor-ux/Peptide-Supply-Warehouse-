@@ -833,7 +833,8 @@ const CARRIER_URLS = {
 
 function openFulfillModal(safeId){
   document.getElementById('fulfillOrderId').value = safeId;
-  document.getElementById('fulfillCarrier').value = 'USPS';
+  const defaultCarrier = (_mkt === 'sandiego') ? 'USPS' : 'DHL';
+  document.getElementById('fulfillCarrier').value = defaultCarrier;
   document.getElementById('fulfillTracking').value = '';
   document.getElementById('trackingPreviewWrap').style.display = 'none';
   document.getElementById('fulfillSaveBtn').disabled = false;

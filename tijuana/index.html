@@ -1041,6 +1041,35 @@ function bysShowResult(){
     html+='</div></div>';
   });
   html+='</div>';
+
+  // BAC water calculation — 2ml per peptide vial
+  var totalPeptideVials=0;
+  lines.forEach(function(line){if(line.vials&&line.vials.length)line.vials.forEach(function(v){totalPeptideVials+=v.qty;});});
+  if(totalPeptideVials>0){
+    var totalMl=totalPeptideVials*2;
+    var w10=Math.floor(totalMl/10);
+    var rem=totalMl-(w10*10);
+    var w3=rem>0?Math.ceil(rem/3):0;
+    var bacHtml='<div style="border:1px solid rgba(0,180,216,0.25);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:rgba(0,180,216,0.04);">';
+    bacHtml+='<div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--blue);letter-spacing:0.06em;margin-bottom:10px;">💧 BAC WATER NEEDED &nbsp;·&nbsp; '+totalMl+'ml total ('+totalPeptideVials+' vials × 2ml)</div>';
+    var bacRows=[];
+    if(w10>0)bacRows.push({code:'WA10',qty:w10,label:'10ml vial'});
+    if(w3>0)bacRows.push({code:'WA3',qty:w3,label:'3ml vial'});
+    bacRows.forEach(function(r){
+      var inStock=inventory[r.code]&&inventory[r.code].stock>0;
+      var stockNote=inStock?'':' <span style="color:var(--red);font-size:9px;">⚠ check stock</span>';
+      bacHtml+='<div class="bys-item-vial" data-code="'+r.code+'" style="margin-bottom:6px;">';
+      bacHtml+='<button class="bys-vq-btn" onclick="bysAdjQty(this,-1)">&#8722;</button>';
+      bacHtml+='<span class="bys-vial-qty">'+r.qty+'</span>';
+      bacHtml+='<button class="bys-vq-btn" onclick="bysAdjQty(this,1)">+</button>';
+      bacHtml+='<span class="bys-vial-spec">'+r.label+stockNote+'</span>';
+      bacHtml+='<button class="bys-add-btn" data-code="'+r.code+'" data-qty="'+r.qty+'" onclick="bysAddOne(this)">+ Add</button>';
+      bacHtml+='</div>';
+    });
+    bacHtml+='</div>';
+    html+=bacHtml;
+  }
+
   var hasAddable=lines.some(function(l){return l.vials&&l.vials.length;});
   if(hasAddable)html+='<button class="bys-add-all-btn" onclick="bysAddAll(this)">'+T[lang].bysAddAll+'</button>';
   html+='<div class="bys-disclaimer">'+(lang==='es'?'Cantidades estimadas de dosis '+bysTier.toUpperCase()+' x '+bysWeeks+' semanas. Ajusta según tu programa de titulación.':'Quantities estimated from '+bysTier.toUpperCase()+' dose x '+bysWeeks+' weeks. Adjust for your actual titration schedule.')+'</div>';

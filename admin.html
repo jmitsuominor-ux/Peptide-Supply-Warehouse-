@@ -394,6 +394,29 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
   </div>
 </div>
 
+<div class="modal-overlay" id="fulfillModal">
+  <div class="modal-box" style="max-width:440px;">
+    <div class="modal-hdr"><h3>Fulfill Order</h3><div class="modal-x" onclick="closeFulfillModal()">×</div></div>
+    <div class="modal-body-inner">
+      <input type="hidden" id="fulfillOrderId">
+      <div class="mf"><label>CARRIER</label>
+        <select id="fulfillCarrier" onchange="updateTrackingURL()" style="width:100%;padding:9px 10px;border:1px solid var(--border2);border-radius:8px;font-family:var(--mono);font-size:12px;background:var(--surface);color:var(--text);">
+          <option value="USPS">USPS</option>
+          <option value="UPS">UPS</option>
+          <option value="FedEx">FedEx</option>
+          <option value="DHL">DHL</option>
+        </select>
+      </div>
+      <div class="mf"><label>TRACKING NUMBER</label><input type="text" id="fulfillTracking" placeholder="Paste tracking number here" oninput="updateTrackingURL()" style="font-family:var(--mono);"></div>
+      <div class="mf" id="trackingPreviewWrap" style="display:none;">
+        <label>TRACKING LINK PREVIEW</label>
+        <a id="trackingPreviewLink" href="#" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);word-break:break-all;"></a>
+      </div>
+      <button class="modal-save-btn" id="fulfillSaveBtn" onclick="confirmFulfill()">✓ Mark as Fulfilled &amp; Send Email</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="addStockModal">
   <div class="modal-box">
     <div class="modal-hdr"><h3>Add Inventory Item</h3><div class="modal-x" onclick="closeAddStock()">×</div></div>
@@ -738,7 +761,7 @@ document.addEventListener('click', function(e) {
       btn.style.opacity = '0.45';
       btn.style.cursor = 'not-allowed';
     }
-    if(action === 'fulfill') fulfillOrder(safeId);
+    if(action === 'fulfill') openFulfillModal(safeId);
     if(action === 'cancel') cancelOrder(safeId);
     if(action === 'pending') setPendingOrder(safeId);
     if(action === 'paidnotify') markPaidNotify(safeId);
@@ -801,7 +824,55 @@ function renderFulfilledOrders(){
 // ════════════════════════════════════════
 // ORDER ACTIONS
 // ════════════════════════════════════════
-async function fulfillOrder(safeId){
+const CARRIER_URLS = {
+  'USPS':  'https://tools.usps.com/go/TrackConfirmAction?tLabels=',
+  'UPS':   'https://www.ups.com/track?tracknum=',
+  'FedEx': 'https://www.fedex.com/fedextrack/?trknbr=',
+  'DHL':   'https://www.dhl.com/en/express/tracking.html?AWB=',
+};
+
+function openFulfillModal(safeId){
+  document.getElementById('fulfillOrderId').value = safeId;
+  document.getElementById('fulfillCarrier').value = 'USPS';
+  document.getElementById('fulfillTracking').value = '';
+  document.getElementById('trackingPreviewWrap').style.display = 'none';
+  document.getElementById('fulfillSaveBtn').disabled = false;
+  document.getElementById('fulfillSaveBtn').textContent = '✓ Mark as Fulfilled & Send Email';
+  document.getElementById('fulfillModal').classList.add('open');
+}
+
+function closeFulfillModal(){
+  document.getElementById('fulfillModal').classList.remove('open');
+}
+
+function updateTrackingURL(){
+  const carrier = document.getElementById('fulfillCarrier').value;
+  const num = document.getElementById('fulfillTracking').value.trim();
+  const wrap = document.getElementById('trackingPreviewWrap');
+  const link = document.getElementById('trackingPreviewLink');
+  if(num){
+    const url = CARRIER_URLS[carrier] + encodeURIComponent(num);
+    link.href = url;
+    link.textContent = url;
+    wrap.style.display = 'block';
+  } else {
+    wrap.style.display = 'none';
+  }
+}
+
+async function confirmFulfill(){
+  const safeId = document.getElementById('fulfillOrderId').value;
+  const carrier = document.getElementById('fulfillCarrier').value;
+  const trackingNum = document.getElementById('fulfillTracking').value.trim();
+  const trackingURL = trackingNum ? CARRIER_URLS[carrier] + encodeURIComponent(trackingNum) : '';
+  const btn = document.getElementById('fulfillSaveBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+  closeFulfillModal();
+  await fulfillOrder(safeId, carrier, trackingNum, trackingURL);
+}
+
+async function fulfillOrder(safeId, carrier, trackingNum, trackingURL){
   const card=document.getElementById('ocard-'+safeId);
   const originalId=card?card.dataset.orderId:safeId;
   const order=orders.find(o=>o.id===originalId);
@@ -830,6 +901,9 @@ async function fulfillOrder(safeId){
         venmo_handle:     '@Mike-Mattarocci',
         cashapp_handle:   '$MichaelMattarocci',
         payment_note:     'Venmo: @Mike-Mattarocci | Cash App: $MichaelMattarocci',
+        carrier:          carrier||'',
+        tracking_number:  trackingNum||'',
+        tracking_url:     trackingURL||'',
       }, EMAILJS_PUBLIC_KEY);
       showToast('✓ Order fulfilled — confirmation email sent to customer','green');
     } else {

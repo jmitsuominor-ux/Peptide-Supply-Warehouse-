@@ -878,19 +878,26 @@ async function fulfillOrder(safeId, carrier, trackingNum, trackingURL){
   const originalId=card?card.dataset.orderId:safeId;
   const order=orders.find(o=>o.id===originalId);
   if(!order)return;
+
+  // Update UI immediately
   order.status='fulfilled';
-  await apiPost({action:'updateOrderStatus',id:order.id,status:'fulfilled'});
+  const btn=card?card.querySelector('[data-action="fulfill"]'):null;
+  if(btn){btn.textContent='✓ FULFILLED';btn.disabled=true;btn.className='action-btn fulfill-btn-done';btn.style.opacity='0.45';btn.style.cursor='not-allowed';}
+  closeFulfillModal();
+  updateCounts();
+
+  apiPost({action:'updateOrderStatus',id:order.id,status:'fulfilled'});
 
   // Send fulfillment confirmation email to customer
   try{
     const custEmail = (order.customer&&order.customer.email) || order.email || order.from_email || order.customerEmail || (order.contact&&order.contact.email) || '';
-  const custName  = (order.customer&&order.customer.name)  || order.name  || order.from_name  || order.customerName  || 'Customer';
-  const custPhone = (order.customer&&order.customer.phone) || order.phone || order.from_phone || '';
-  const custAddr  = (order.customer&&order.customer.address) || order.address || order.shipping_address || 'Not provided';
-  if(typeof emailjs!=='undefined'&&custEmail){
+    const custName  = (order.customer&&order.customer.name)  || order.name  || order.from_name  || order.customerName  || 'Customer';
+    const custPhone = (order.customer&&order.customer.phone) || order.phone || order.from_phone || '';
+    const custAddr  = (order.customer&&order.customer.address) || order.address || order.shipping_address || 'Not provided';
+    if(typeof emailjs!=='undefined'&&custEmail){
       const items=Array.isArray(order.items)?order.items:[];
       const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${((i.price||0)*(i.qty||0)).toFixed(2)}`).join('\n');
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_FULFILL_ID, {
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_FULFILL_ID, {
         to_email:         custEmail,
         from_name:        custName,
         from_email:       custEmail,
@@ -905,19 +912,20 @@ async function fulfillOrder(safeId, carrier, trackingNum, trackingURL){
         carrier:          carrier||'',
         tracking_number:  trackingNum||'',
         tracking_url:     trackingURL||'',
-      }, EMAILJS_PUBLIC_KEY);
-      showToast('✓ Order fulfilled — confirmation email sent to customer','green');
+      }, EMAILJS_PUBLIC_KEY).then(()=>{
+        showToast('✓ Order fulfilled — confirmation email sent to customer','green');
+      }).catch(e=>{
+        const errMsg=e&&e.text?e.text:(e&&e.message?e.message:JSON.stringify(e));
+        console.warn('Fulfillment email failed:',e);
+        showToast('Email error: '+errMsg,'red');
+      });
     } else {
       showToast('✓ Order fulfilled','green');
     }
   }catch(e){
-    const errMsg=e&&e.text?e.text:(e&&e.message?e.message:JSON.stringify(e));
-    console.warn('Fulfillment email failed:',e);
-    showToast('Email error: '+errMsg,'red');
+    console.warn('Fulfillment email error:',e);
+    showToast('✓ Order fulfilled','green');
   }
-
-  updateCounts();
-  renderPendingOrders();
 }
 
 async function cancelOrder(safeId){
@@ -971,6 +979,12 @@ async function markPaidNotify(safeId){
   if(!order||order.paidNotified)return;
   const tpl=_cfg.paidTemplate;
   if(!tpl){showToast('Paid template not set in MARKET_CONFIGS yet','red');return;}
+  // Update UI immediately
+  order.paidNotified=true;
+  const btn=card?card.querySelector('[data-action="paidnotify"]'):null;
+  if(btn){btn.textContent='✓ PAID';btn.disabled=true;btn.className='action-btn paid-notify-btn-done';btn.style.opacity='0.45';btn.style.cursor='not-allowed';}
+  apiPost({action:'updateOrderStatus',id:order.id,paidNotified:true});
+  // Send email in background
   const items=Array.isArray(order.items)?order.items:[];
   const orderSummary=items.map(i=>i.name+' ('+i.spec+') x'+i.qty+' — $'+(i.price*i.qty).toFixed(2)).join('\n');
   const custName=(order.customer&&order.customer.name)||order.name||'Customer';
@@ -988,9 +1002,6 @@ async function markPaidNotify(safeId){
       order_total: '$'+parseFloat(order.total||0).toFixed(2),
       order_id: order.id,
     }, EMAILJS_PUBLIC_KEY);
-    order.paidNotified=true;
-    await apiPost({action:'updateOrderStatus',id:order.id,paidNotified:true});
-    renderPendingOrders();
     showToast('✓ Paid notification sent to '+_cfg.email,'green');
   }catch(e){
     const msg=e&&e.text?e.text:(e&&e.message?e.message:JSON.stringify(e));

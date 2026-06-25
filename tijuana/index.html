@@ -351,8 +351,8 @@ body::after{display:none;}
 </style>
 </head>
 <body>
-<div class="announce-bar" id="announceBar"><span id="announceText">⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500</span><button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇲🇽</button></div>
-<div class="contact-strip"><span class="contact-strip-item cs-name">👤 Geovanny Escamilla</span><span class="contact-strip-item">💬 WhatsApp: +52-664-596-4005</span><span class="contact-strip-item">📱 Mobile: +52-664-596-4005</span><span class="contact-strip-item">📧 geopeptides755@gmail.com</span></div>
+<div class="announce-bar" id="announceBar"><span id="announceText">⚠ Minimum order MX$500 &nbsp;·&nbsp; Free shipping on orders over MX$1,700</span><button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇲🇽</button></div>
+<div class="contact-strip"><span class="contact-strip-item cs-name">👤 Geovanny Escamilla</span><span class="contact-strip-item">💬 WhatsApp / Mobile: +52-664-596-4005</span><span class="contact-strip-item">📧 geopeptides755@gmail.com</span></div>
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand">
@@ -476,8 +476,7 @@ body::after{display:none;}
 <div class="footer">
   <div class="footer-name">Geovanny Escamilla</div>
   <div class="footer-contacts">
-    <div class="footer-contact"><span class="icon">💬</span> WhatsApp: +52-664-596-4005</div>
-    <div class="footer-contact"><span class="icon">📱</span> Mobile: +52-664-596-4005</div>
+    <div class="footer-contact"><span class="icon">💬</span> WhatsApp / Mobile: +52-664-596-4005</div>
     <div class="footer-contact"><span class="icon">📧</span> Email: geopeptides755@gmail.com</div>
   </div>
   <div class="footer-disc" id="footerDisc"><strong>Research Use Only.</strong> All compounds are sold for research purposes only. Not intended for human consumption. Not FDA approved. By placing an order you confirm you are a qualified researcher. Consult a licensed healthcare provider before any use.</div>
@@ -541,23 +540,43 @@ body::after{display:none;}
 <script>
 var lang='en';
 var exchangeRate=1;
+const MIN_ORDER_MXN=500;
+const FREE_SHIP_MXN=1700;
 (function fetchRate(){
   fetch('https://open.er-api.com/v6/latest/USD')
     .then(r=>r.json()).then(d=>{
-      if(d&&d.rates&&d.rates.MXN){exchangeRate=d.rates.MXN;if(Object.keys(inventory).length>0&&lang==='es'){renderProducts();renderDrawer();}}
+      if(d&&d.rates&&d.rates.MXN){
+        exchangeRate=d.rates.MXN;
+        // recalculate USD-equivalent thresholds now that we have the rate
+        updateThresholds();
+        if(Object.keys(inventory).length>0){renderProducts();renderDrawer();}
+      }
     }).catch(()=>{});
 })();
+function updateThresholds(){
+  if(exchangeRate>1){
+    window._MIN_ORDER=MIN_ORDER_MXN/exchangeRate;
+    window._FREE_SHIP=FREE_SHIP_MXN/exchangeRate;
+  } else {
+    window._MIN_ORDER=28;  // ~MX$500 fallback
+    window._FREE_SHIP=95;  // ~MX$1700 fallback
+  }
+}
+updateThresholds();
+function fmtMXN(usd){return 'MX$'+Math.round(usd*exchangeRate).toLocaleString('es-MX');}
 function fmtPrice(usd){
-  if(lang==='es'&&exchangeRate>1)return 'MX$'+Math.round(usd*exchangeRate).toLocaleString('es-MX');
-  return '$'+usd.toFixed(2);
+  if(lang==='es'&&exchangeRate>1)return fmtMXN(usd);
+  const mxn=exchangeRate>1?` (${fmtMXN(usd)})`:'';
+  return '$'+usd.toFixed(2)+mxn;
 }
 function fmtShip(usd){
-  if(lang==='es'&&exchangeRate>1)return 'MX$'+Math.round(usd*exchangeRate).toLocaleString('es-MX');
-  return '$'+usd.toFixed(2);
+  if(lang==='es'&&exchangeRate>1)return fmtMXN(usd);
+  const mxn=exchangeRate>1?` (${fmtMXN(usd)})`:'';
+  return '$'+usd.toFixed(2)+mxn;
 }
 var T={
 en:{
-  announceBar:'⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500',
+  announceBar:'⚠ Minimum order MX$500 &nbsp;·&nbsp; Free shipping on orders over MX$1,700',
   researchCompounds:'Research Compounds',
   searchPlaceholder:'Search compounds, codes…',
   myOrders:'MY ORDERS',
@@ -572,8 +591,8 @@ en:{
   cats:{'Weight Loss':'Weight Loss','Growth Hormone':'Growth Hormone','Healing & Recovery':'Healing & Recovery','Anti-Aging & Immune':'Anti-Aging & Immune','Mitochondrial':'Mitochondrial','Muscle & IGF':'Muscle & IGF','Hormonal':'Hormonal','Cognitive':'Cognitive','Immune':'Immune','Reconstitution':'Reconstitution'},
   inStock:'in stock',lowStock:'left — Low Stock',outOfStock:'Out of Stock',outOfStockBtn:'OUT OF STOCK',addToOrder:'+ ADD TO ORDER',
   yourOrder:'YOUR ORDER',orderEmpty:'ORDER LIST EMPTY',addBelow:'ADD COMPOUNDS BELOW',
-  subtotal:'Subtotal',shipping:'Shipping',orderTotal:'ORDER TOTAL',freeOver500:'FREE (Over $500)',freeLocalPickup:'FREE (Local Pickup)',
-  freeShipUnlocked:'✓ FREE SHIPPING UNLOCKED',minMet:'✓ $250 MINIMUM MET',orderMin:'ORDER MINIMUM',
+  subtotal:'Subtotal',shipping:'Shipping',orderTotal:'ORDER TOTAL',freeOver500:'FREE (Over MX$1,700)',freeLocalPickup:'FREE (Local Pickup)',
+  freeShipUnlocked:'✓ FREE SHIPPING UNLOCKED',minMet:'✓ MX$500 MINIMUM MET',orderMin:'ORDER MINIMUM',
   proceedCheckout:'PROCEED TO CHECKOUT →',clearOrder:'Clear order',
   completeOrder:'COMPLETE ORDER',orderSummary:'Order Summary',yourInfo:'Your Information',
   fullName:'Full Name',emailAddress:'Email Address',phoneNumber:'Phone Number',
@@ -595,7 +614,7 @@ en:{
   refTiles:{'Weight Loss':'Weight Loss','Growth Hormone':'Growth Hormone','Healing & Recovery':'Healing & Recovery','Anti-Aging & Immune':'Anti-Aging & Immune','Mitochondrial':'Mitochondrial','Muscle & IGF':'Muscle & IGF','Hormonal':'Hormonal','Cognitive':'Cognitive','Immune':'Immune','Reconstitution':'Reconstitution'}
 },
 es:{
-  announceBar:'⚠ Pedido mínimo $250 &nbsp;·&nbsp; Envío gratis en pedidos sobre $500',
+  announceBar:'⚠ Pedido mínimo MX$500 &nbsp;·&nbsp; Envío gratis en pedidos sobre MX$1,700',
   researchCompounds:'Compuestos de Investigación',
   searchPlaceholder:'Buscar compuestos, códigos…',
   myOrders:'MIS PEDIDOS',
@@ -610,8 +629,8 @@ es:{
   cats:{'Weight Loss':'Pérdida de Peso','Growth Hormone':'Hormona de Crecimiento','Healing & Recovery':'Sanación y Recuperación','Anti-Aging & Immune':'Anti-Envejecimiento','Mitochondrial':'Mitocondrial','Muscle & IGF':'Músculo e IGF','Hormonal':'Hormonal','Cognitive':'Cognitivo','Immune':'Inmune','Reconstitution':'Reconstitución'},
   inStock:'en stock',lowStock:'restantes — Stock Bajo',outOfStock:'Agotado',outOfStockBtn:'AGOTADO',addToOrder:'+ AGREGAR AL PEDIDO',
   yourOrder:'TU PEDIDO',orderEmpty:'PEDIDO VACÍO',addBelow:'AGREGA COMPUESTOS ABAJO',
-  subtotal:'Subtotal',shipping:'Envío',orderTotal:'TOTAL DEL PEDIDO',freeOver500:'GRATIS (Más de $500)',freeLocalPickup:'GRATIS (Recoger en Local)',
-  freeShipUnlocked:'✓ ENVÍO GRATIS DESBLOQUEADO',minMet:'✓ MÍNIMO CUMPLIDO',orderMin:'PEDIDO MÍNIMO',
+  subtotal:'Subtotal',shipping:'Envío',orderTotal:'TOTAL DEL PEDIDO',freeOver500:'GRATIS (Más de MX$1,700)',freeLocalPickup:'GRATIS (Recoger en Local)',
+  freeShipUnlocked:'✓ ENVÍO GRATIS DESBLOQUEADO',minMet:'✓ MÍNIMO MX$500 CUMPLIDO',orderMin:'PEDIDO MÍNIMO',
   proceedCheckout:'CONTINUAR AL PAGO →',clearOrder:'Limpiar pedido',
   completeOrder:'COMPLETAR PEDIDO',orderSummary:'Resumen del Pedido',yourInfo:'Tu Información',
   fullName:'Nombre Completo',emailAddress:'Correo Electrónico',phoneNumber:'Número de Teléfono',
@@ -1196,8 +1215,9 @@ function saveCart(){try{localStorage.setItem('psw_cart_tijuana',JSON.stringify(c
 function loadSavedCart(){try{var s=localStorage.getItem('psw_cart_tijuana');if(s){var d=JSON.parse(s);Object.assign(cart,d);}}catch(e){}}
 const cart={};
 loadSavedCart();
-const MIN_ORDER=250;
-const FREE_SHIP_THRESHOLD=500;
+// thresholds are MXN-based and set dynamically in updateThresholds()
+Object.defineProperty(window,'MIN_ORDER',{get:function(){return window._MIN_ORDER||28;}});
+Object.defineProperty(window,'FREE_SHIP_THRESHOLD',{get:function(){return window._FREE_SHIP||95;}});
 let activeCategory='All';
 let inventory={};
 let affiliates=[];
@@ -1389,7 +1409,14 @@ function updateStorefrontProgress(){
   fill.className='sf-progress-fill2'+(met?' met':'');
   if(freeShip){label.textContent=T[lang].freeShipUnlocked;label.style.color='var(--green)';}
   else if(met){label.textContent=T[lang].minMet;label.style.color='var(--green)';}
-  else{const rem=(MIN_ORDER-total).toFixed(2);label.textContent='$'+total.toFixed(2)+(lang==='es'?' de ':' of ')+'$'+MIN_ORDER+' · $'+rem+(lang==='es'?' para desbloquear':' to go');label.style.color='var(--text2)';}
+  else{
+    const minMXN='MX$'+Math.round(MIN_ORDER_MXN).toLocaleString('es-MX');
+    const curMXN=exchangeRate>1?'MX$'+Math.round(total*exchangeRate).toLocaleString('es-MX'):'$'+total.toFixed(2);
+    const remMXN=exchangeRate>1?'MX$'+Math.round((MIN_ORDER-total)*exchangeRate).toLocaleString('es-MX'):'$'+(MIN_ORDER-total).toFixed(2);
+    if(lang==='es'){label.textContent=curMXN+' de '+minMXN+' · '+remMXN+' para desbloquear';}
+    else{label.textContent=fmtPrice(total)+' of '+minMXN+' · '+remMXN+' to go';}
+    label.style.color='var(--text2)';
+  }
 }
 function updateCartUI(){const count=cartCount();const badge=document.getElementById('cartBadge');if(count>0){badge.textContent=count;badge.style.display='flex';}else badge.style.display='none';updateStorefrontProgress();renderDrawer();}
 function openCart(){renderDrawer();document.getElementById('drawerOverlay').classList.add('open');document.getElementById('cartDrawer').classList.add('open');document.body.style.overflow='hidden';}
@@ -1407,7 +1434,7 @@ function openCheckout(){
   closeCart();const subtotal=cartTotal();const keys=Object.keys(cart);
   const checkoutShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
   const orderRows=keys.map(code=>{const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="or-item"><span class="or-name">${p.name} <span style="color:var(--text3);font-size:10px;">${p.spec}</span></span><span class="or-qty">×${qty}</span><span class="or-price">${fmtPrice(p.price*qty)}</span></div>`;}).join('');
-  document.getElementById('modalContent').innerHTML=`<div class="modal-header"><div class="modal-title">${T[lang].completeOrder}</div><div class="modal-close" onclick="closeCheckout()">×</div></div><div class="modal-body"><div class="modal-section-title">${T[lang].orderSummary}</div><div class="order-review">${orderRows}<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">${fmtPrice(subtotal)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>${T[lang].shipping}</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?T[lang].freeOver500:fmtShip(checkoutShipping)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">${fmtPrice(subtotal+checkoutShipping)}</span></div></div><div class="modal-section-title">Your Information</div><div class="form-field"><label class="form-label">${T[lang].fullName} <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="${T[lang].namePlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].emailAddress} <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="${T[lang].emailPlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].phoneNumber} <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="${T[lang].phonePlaceholder}"></div><div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">${T[lang].localPickup}</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes ${fmtShip(checkoutShipping)} shipping)</span>`:''}</label></div><div class="form-field" id="addressField"><label class="form-label">${T[lang].shippingAddress} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custAddress" placeholder="${T[lang].addressPlaceholder}"></textarea></div><div class="form-field"><label class="form-label">${T[lang].additionalNotes} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custNotes" placeholder="${T[lang].notesPlaceholder}" style="min-height:60px;"></textarea></div><div class="form-field"><label class="form-label">${T[lang].promoCode} <span class="opt">${T[lang].optional}</span></label><input type="text" class="form-input" id="promoCode" placeholder="${T[lang].promoPlaceholder}" style="text-transform:uppercase;width:100%;" oninput="this.value=this.value.toUpperCase();autoApplyPromo()"><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div><div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">${lang==='es'?'📧 Te contactaremos dentro de 24 horas para confirmar y coordinar el envío. ¿Preguntas? WhatsApp +1-310-683-0049':'📧 We\'ll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +1-310-683-0049'}</div><button class="submit-btn" id="submitBtn" onclick="submitOrder()">${T[lang].placeOrder}</button></div>`;
+  document.getElementById('modalContent').innerHTML=`<div class="modal-header"><div class="modal-title">${T[lang].completeOrder}</div><div class="modal-close" onclick="closeCheckout()">×</div></div><div class="modal-body"><div class="modal-section-title">${T[lang].orderSummary}</div><div class="order-review">${orderRows}<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">${fmtPrice(subtotal)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>${T[lang].shipping}</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?T[lang].freeOver500:fmtShip(checkoutShipping)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">${fmtPrice(subtotal+checkoutShipping)}</span></div></div><div class="modal-section-title">Your Information</div><div class="form-field"><label class="form-label">${T[lang].fullName} <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="${T[lang].namePlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].emailAddress} <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="${T[lang].emailPlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].phoneNumber} <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="${T[lang].phonePlaceholder}"></div><div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">${T[lang].localPickup}</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes ${fmtShip(checkoutShipping)} shipping)</span>`:''}</label></div><div class="form-field" id="addressField"><label class="form-label">${T[lang].shippingAddress} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custAddress" placeholder="${T[lang].addressPlaceholder}"></textarea></div><div class="form-field"><label class="form-label">${T[lang].additionalNotes} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custNotes" placeholder="${T[lang].notesPlaceholder}" style="min-height:60px;"></textarea></div><div class="form-field"><label class="form-label">${T[lang].promoCode} <span class="opt">${T[lang].optional}</span></label><input type="text" class="form-input" id="promoCode" placeholder="${T[lang].promoPlaceholder}" style="text-transform:uppercase;width:100%;" oninput="this.value=this.value.toUpperCase();autoApplyPromo()"><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div><div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">${lang==='es'?'📧 Te contactaremos dentro de 24 horas para confirmar y coordinar el envío. ¿Preguntas? WhatsApp +52-664-596-4005':'📧 We\'ll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +52-664-596-4005'}</div><button class="submit-btn" id="submitBtn" onclick="submitOrder()">${T[lang].placeOrder}</button></div>`;
   document.getElementById('checkoutModal').classList.add('open');document.body.style.overflow='hidden';
 }
 function togglePickup(){

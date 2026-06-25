@@ -407,7 +407,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
           <option value="DHL">DHL</option>
         </select>
       </div>
-      <div class="mf"><label>TRACKING NUMBER</label><input type="text" id="fulfillTracking" placeholder="Paste tracking number here" oninput="updateTrackingURL()" style="font-family:var(--mono);"></div>
+      <div class="mf" id="fulfillTrackingRow"><label>TRACKING NUMBER</label><input type="text" id="fulfillTracking" placeholder="Paste tracking number here" oninput="updateTrackingURL()" style="font-family:var(--mono);"></div>
       <div class="mf" id="trackingPreviewWrap" style="display:none;">
         <label>TRACKING LINK PREVIEW</label>
         <a id="trackingPreviewLink" href="#" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);word-break:break-all;"></a>
@@ -842,19 +842,32 @@ function openFulfillModal(safeId){
   const defaultCarrier = (_mkt === 'sandiego') ? 'USPS' : 'DHL';
   document.getElementById('fulfillCarrier').value = defaultCarrier;
 
+  const isTJ = (_mkt === 'tijuana');
   const carrierRow = document.getElementById('fulfillCarrierRow');
-  if(isPickup){
+  const trackingRow = document.getElementById('fulfillTrackingRow');
+
+  if(isTJ){
+    // TJ is local delivery — no carrier or tracking needed
+    if(carrierRow) carrierRow.style.display = 'none';
+    if(trackingRow) trackingRow.style.display = 'none';
+    document.getElementById('fulfillTracking').value = 'Entrega Local';
+    document.getElementById('trackingPreviewWrap').style.display = 'none';
+    document.getElementById('fulfillSaveBtn').textContent = '✓ Marcar como Entregado y Enviar Email';
+  } else if(isPickup){
     document.getElementById('fulfillTracking').value = 'Local Pickup';
     if(carrierRow) carrierRow.style.display = 'none';
+    if(trackingRow) trackingRow.style.display = '';
     document.getElementById('trackingPreviewWrap').style.display = 'none';
+    document.getElementById('fulfillSaveBtn').textContent = '✓ Mark as Fulfilled & Send Email';
   } else {
     document.getElementById('fulfillTracking').value = '';
     if(carrierRow) carrierRow.style.display = '';
+    if(trackingRow) trackingRow.style.display = '';
     document.getElementById('trackingPreviewWrap').style.display = 'none';
+    document.getElementById('fulfillSaveBtn').textContent = '✓ Mark as Fulfilled & Send Email';
   }
 
   document.getElementById('fulfillSaveBtn').disabled = false;
-  document.getElementById('fulfillSaveBtn').textContent = '✓ Mark as Fulfilled & Send Email';
   document.getElementById('fulfillModal').classList.add('open');
 }
 
@@ -913,21 +926,22 @@ async function fulfillOrder(safeId, carrier, trackingNum, trackingURL){
     if(typeof emailjs!=='undefined'&&custEmail){
       const items=Array.isArray(order.items)?order.items:[];
       const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${((i.price||0)*(i.qty||0)).toFixed(2)}`).join('\n');
+      const isTJMarket = (_mkt === 'tijuana');
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_FULFILL_ID, {
         to_email:         custEmail,
         from_name:        custName,
         from_email:       custEmail,
         from_phone:       custPhone,
         shipping_address: custAddr,
-        customer_notes:   'Great news! Your order has been fulfilled and will ship on the same business day.',
+        customer_notes:   isTJMarket ? '¡Tu pedido está en camino! Te contactaremos para coordinar la entrega en 60–90 minutos.' : 'Great news! Your order has been fulfilled and will ship on the same business day.',
         order_summary:    orderSummary,
         order_total:      '$'+parseFloat(order.total||0).toFixed(2),
         venmo_handle:     '@Mike-Mattarocci',
         cashapp_handle:   '$MichaelMattarocci',
         payment_note:     'Venmo: @Mike-Mattarocci | Cash App: $MichaelMattarocci',
-        carrier:          carrier||'',
-        tracking_number:  trackingNum||'',
-        tracking_url:     trackingURL||'',
+        carrier:          isTJMarket ? 'Entrega Local' : (carrier||''),
+        tracking_number:  isTJMarket ? '' : (trackingNum||''),
+        tracking_url:     isTJMarket ? '' : (trackingURL||''),
       }, EMAILJS_PUBLIC_KEY).then(()=>{
         showToast('✓ Order fulfilled — confirmation email sent to customer','green');
       }).catch(e=>{

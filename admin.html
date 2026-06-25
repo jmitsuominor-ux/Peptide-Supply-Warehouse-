@@ -399,7 +399,7 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
     <div class="modal-hdr"><h3>Fulfill Order</h3><div class="modal-x" onclick="closeFulfillModal()">×</div></div>
     <div class="modal-body-inner">
       <input type="hidden" id="fulfillOrderId">
-      <div class="mf"><label>CARRIER</label>
+      <div class="mf" id="fulfillCarrierRow"><label>CARRIER</label>
         <select id="fulfillCarrier" onchange="updateTrackingURL()" style="width:100%;padding:9px 10px;border:1px solid var(--border2);border-radius:8px;font-family:var(--mono);font-size:12px;background:var(--surface);color:var(--text);">
           <option value="USPS">USPS</option>
           <option value="UPS">UPS</option>
@@ -832,11 +832,27 @@ const CARRIER_URLS = {
 };
 
 function openFulfillModal(safeId){
+  const card = document.getElementById('ocard-'+safeId);
+  const originalId = card ? card.dataset.orderId : safeId;
+  const order = orders.find(o=>o.id===originalId);
+  const addr = (order&&((order.customer&&order.customer.address)||order.address||order.shipping_address||'')).toUpperCase();
+  const isPickup = addr.includes('LOCAL PICKUP') || addr.includes('PICKUP');
+
   document.getElementById('fulfillOrderId').value = safeId;
   const defaultCarrier = (_mkt === 'sandiego') ? 'USPS' : 'DHL';
   document.getElementById('fulfillCarrier').value = defaultCarrier;
-  document.getElementById('fulfillTracking').value = '';
-  document.getElementById('trackingPreviewWrap').style.display = 'none';
+
+  const carrierRow = document.getElementById('fulfillCarrierRow');
+  if(isPickup){
+    document.getElementById('fulfillTracking').value = 'Local Pickup';
+    if(carrierRow) carrierRow.style.display = 'none';
+    document.getElementById('trackingPreviewWrap').style.display = 'none';
+  } else {
+    document.getElementById('fulfillTracking').value = '';
+    if(carrierRow) carrierRow.style.display = '';
+    document.getElementById('trackingPreviewWrap').style.display = 'none';
+  }
+
   document.getElementById('fulfillSaveBtn').disabled = false;
   document.getElementById('fulfillSaveBtn').textContent = '✓ Mark as Fulfilled & Send Email';
   document.getElementById('fulfillModal').classList.add('open');
@@ -851,7 +867,7 @@ function updateTrackingURL(){
   const num = document.getElementById('fulfillTracking').value.trim();
   const wrap = document.getElementById('trackingPreviewWrap');
   const link = document.getElementById('trackingPreviewLink');
-  if(num){
+  if(num && num.toLowerCase() !== 'local pickup'){
     const url = CARRIER_URLS[carrier] + encodeURIComponent(num);
     link.href = url;
     link.textContent = url;

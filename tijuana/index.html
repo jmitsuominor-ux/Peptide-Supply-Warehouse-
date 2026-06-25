@@ -1255,6 +1255,21 @@ const EMAILJS_AFFILIATE_ID='';// Add your affiliate notification template ID her
 const CREDIT_CODE='STAFFCREDIT';
 let PRODUCTS=[];
 let shippingRate=30;
+const DELIVERY_ZONES=[
+  {key:'tijuana',   label:'Tijuana',           usd:5,  mxn:80},
+  {key:'rosarito',  label:'Rosarito',           usd:7,  mxn:125},
+  {key:'ensenada',  label:'Ensenada',           usd:10, mxn:170},
+  {key:'valleguadalupe', label:'Valle de Guadalupe', usd:10, mxn:170},
+  {key:'tecate',    label:'Tecate',             usd:10, mxn:170},
+  {key:'mexicali',  label:'Mexicali',           usd:13, mxn:225},
+];
+function getDeliveryZone(){
+  const sel=document.getElementById('deliveryZone');
+  return sel?DELIVERY_ZONES.find(z=>z.key===sel.value)||DELIVERY_ZONES[0]:DELIVERY_ZONES[0];
+}
+function fmtZoneLabel(z){
+  return z.label+' — MX$'+z.mxn+(exchangeRate>1?' (~$'+z.usd+' USD)':'');
+}
 
 // ════════════════════════════════════════
 // HIDDEN ADMIN TRIGGER
@@ -1456,26 +1471,30 @@ function renderDrawer(){
   const total=cartTotal();
   body.innerHTML=keys.map(code=>{const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="cart-item"><div class="ci-info"><div class="ci-name">${p.name}</div><div class="ci-spec">${p.code} · ${p.spec}</div><div class="ci-line-price">${fmtPrice(p.price*qty)}</div></div><div class="ci-controls"><button class="qty-btn" onclick="event.stopPropagation();changeQty('${code}',-1)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="event.stopPropagation();changeQty('${code}',1)">+</button><button class="ci-remove" onclick="event.stopPropagation();removeItem('${code}')">×</button></div></div>`;}).join('');
   const remaining=Math.max(0,MIN_ORDER-total);const pct=Math.min(100,(total/MIN_ORDER)*100);const met=total>=MIN_ORDER;
-  const effectiveShipping=total>=FREE_SHIP_THRESHOLD?0:shippingRate;
-  footer.innerHTML=`<div class="cart-totals"><div class="ct-row"><span class="ct-label">${cartCount()} ${cartCount()!==1?T[lang].items:T[lang].item}</span></div><div class="ct-divider"></div><div class="ct-row"><span class="ct-label">${T[lang].subtotal}</span><span class="ct-value">${fmtPrice(total)}</span></div><div class="ct-row"><span class="ct-label">${T[lang].shipping}</span><span class="ct-value">${effectiveShipping===0?'<span style="color:var(--green);font-weight:500;">'+T[lang].freeOver500+'</span>':fmtShip(effectiveShipping)}</span></div><div class="ct-divider"></div><div class="ct-row ct-total"><span class="ct-label">${T[lang].orderTotal}</span><span class="ct-value">${fmtPrice(total+effectiveShipping)}</span></div><div class="min-progress"><div class="min-progress-header"><span>${met?T[lang].minMet:T[lang].orderMin}</span><span>${fmtPrice(total)} / ${fmtPrice(MIN_ORDER)}</span></div><div class="min-progress-track"><div class="min-progress-fill${met?' met':''}" style="width:${pct}%"></div></div>${!met?`<div class="min-progress-msg">${lang==='es'?'Agrega '+fmtPrice(remaining)+' más para desbloquear el pago':'Add '+fmtPrice(remaining)+' more to unlock checkout'}</div>`:''}</div></div><button class="checkout-btn${met?'':' locked'}" ${met?'':'disabled'} onclick="${met?'openCheckout()':''}">` + T[lang].proceedCheckout + `</button><button class="clear-cart-btn" onclick="clearCartFn()">${T[lang].clearOrder}</button>`;
+  const effectiveShipping=total>=FREE_SHIP_THRESHOLD?0:DELIVERY_ZONES[0].usd;
+  footer.innerHTML=`<div class="cart-totals"><div class="ct-row"><span class="ct-label">${cartCount()} ${cartCount()!==1?T[lang].items:T[lang].item}</span></div><div class="ct-divider"></div><div class="ct-row"><span class="ct-label">${T[lang].subtotal}</span><span class="ct-value">${fmtPrice(total)}</span></div><div class="ct-row"><span class="ct-label">Entrega (desde)</span><span class="ct-value">${effectiveShipping===0?'<span style="color:var(--green);font-weight:500;">'+T[lang].freeOver500+'</span>':fmtShip(effectiveShipping)}</span></div><div class="ct-divider"></div><div class="ct-row ct-total"><span class="ct-label">${T[lang].orderTotal}</span><span class="ct-value">${fmtPrice(total+effectiveShipping)}</span></div><div class="min-progress"><div class="min-progress-header"><span>${met?T[lang].minMet:T[lang].orderMin}</span><span>${fmtPrice(total)} / ${fmtPrice(MIN_ORDER)}</span></div><div class="min-progress-track"><div class="min-progress-fill${met?' met':''}" style="width:${pct}%"></div></div>${!met?`<div class="min-progress-msg">${lang==='es'?'Agrega '+fmtPrice(remaining)+' más para desbloquear el pago':'Add '+fmtPrice(remaining)+' more to unlock checkout'}</div>`:''}</div></div><button class="checkout-btn${met?'':' locked'}" ${met?'':'disabled'} onclick="${met?'openCheckout()':''}">` + T[lang].proceedCheckout + `</button><button class="clear-cart-btn" onclick="clearCartFn()">${T[lang].clearOrder}</button>`;
 }
 function openCheckout(){
   closeCart();const subtotal=cartTotal();const keys=Object.keys(cart);
-  const checkoutShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
+  const defaultZone=DELIVERY_ZONES[0];
+  const freeDelivery=subtotal>=FREE_SHIP_THRESHOLD;
+  const initDeliveryCost=freeDelivery?0:defaultZone.usd;
+  const zoneOptions=DELIVERY_ZONES.map(z=>`<option value="${z.key}">${fmtZoneLabel(z)}</option>`).join('');
   const orderRows=keys.map(code=>{const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="or-item"><span class="or-name">${p.name} <span style="color:var(--text3);font-size:10px;">${p.spec}</span></span><span class="or-qty">×${qty}</span><span class="or-price">${fmtPrice(p.price*qty)}</span></div>`;}).join('');
-  document.getElementById('modalContent').innerHTML=`<div class="modal-header"><div class="modal-title">${T[lang].completeOrder}</div><div class="modal-close" onclick="closeCheckout()">×</div></div><div class="modal-body"><div class="modal-section-title">${T[lang].orderSummary}</div><div class="order-review">${orderRows}<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">${fmtPrice(subtotal)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>${T[lang].shipping}</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?T[lang].freeOver500:fmtShip(checkoutShipping)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">${fmtPrice(subtotal+checkoutShipping)}</span></div></div><div class="modal-section-title">Your Information</div><div class="form-field"><label class="form-label">${T[lang].fullName} <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="${T[lang].namePlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].emailAddress} <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="${T[lang].emailPlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].phoneNumber} <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="${T[lang].phonePlaceholder}"></div><div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">${T[lang].localPickup}</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes ${fmtShip(checkoutShipping)} shipping)</span>`:''}</label></div><div class="form-field" id="addressField"><label class="form-label">${T[lang].shippingAddress} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custAddress" placeholder="${T[lang].addressPlaceholder}"></textarea></div><div class="form-field"><label class="form-label">${T[lang].additionalNotes} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custNotes" placeholder="${T[lang].notesPlaceholder}" style="min-height:60px;"></textarea></div><div class="form-field"><label class="form-label">${T[lang].promoCode} <span class="opt">${T[lang].optional}</span></label><input type="text" class="form-input" id="promoCode" placeholder="${T[lang].promoPlaceholder}" style="text-transform:uppercase;width:100%;" oninput="this.value=this.value.toUpperCase();autoApplyPromo()"><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div><div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">${lang==='es'?'📧 Te contactaremos dentro de 24 horas para confirmar y coordinar el envío. ¿Preguntas? WhatsApp +52-664-596-4005':'📧 We\'ll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +52-664-596-4005'}</div><button class="submit-btn" id="submitBtn" onclick="submitOrder()">${T[lang].placeOrder}</button></div>`;
+  document.getElementById('modalContent').innerHTML=`<div class="modal-header"><div class="modal-title">${T[lang].completeOrder}</div><div class="modal-close" onclick="closeCheckout()">×</div></div><div class="modal-body"><div class="modal-section-title">${T[lang].orderSummary}</div><div class="order-review">${orderRows}<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">${fmtPrice(subtotal)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>Entrega</span><span style="font-family:var(--mono);color:${freeDelivery?'var(--green)':'inherit'};" id="shippingVal">${freeDelivery?T[lang].freeOver500:fmtPrice(initDeliveryCost)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Descuento</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">${fmtPrice(subtotal+initDeliveryCost)}</span></div></div><div class="modal-section-title">Tu Información</div><div class="form-field"><label class="form-label">Nombre Completo <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="Nombre y apellido"></div><div class="form-field"><label class="form-label">Correo Electrónico <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="tucorreo@email.com"></div><div class="form-field"><label class="form-label">Teléfono / WhatsApp <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="+52 664 000 0000"></div><div class="form-field"><label class="form-label">Opciones de Entrega <span class="req">*</span></label><select class="form-input" id="deliveryZone" onchange="updateDeliveryZone()" style="font-family:var(--mono);font-size:12px;">${zoneOptions}</select></div><div class="form-field"><label class="form-label">Dirección de Entrega <span class="req">*</span></label><textarea class="form-textarea" id="custAddress" placeholder="Calle, Colonia, Ciudad"></textarea></div><div class="form-field"><label class="form-label">Notas Adicionales <span class="opt">(opcional)</span></label><textarea class="form-textarea" id="custNotes" placeholder="Instrucciones especiales…" style="min-height:60px;"></textarea></div><div class="form-field"><label class="form-label">Código Promocional <span class="opt">(opcional)</span></label><input type="text" class="form-input" id="promoCode" placeholder="Ingresa código" style="text-transform:uppercase;width:100%;" oninput="this.value=this.value.toUpperCase();autoApplyPromo()"><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div><div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">🛵 Te contactaremos para coordinar la entrega en <strong>60–90 minutos</strong>. ¿Preguntas? WhatsApp <strong>+52-664-596-4005</strong></div><button class="submit-btn" id="submitBtn" onclick="submitOrder()">REALIZAR PEDIDO →</button></div>`;
   document.getElementById('checkoutModal').classList.add('open');document.body.style.overflow='hidden';
 }
-function togglePickup(){
-  const pickup=document.getElementById('localPickup').checked;
+function updateDeliveryZone(){
   const subtotal=cartTotal();
-  const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
-  const shipping=pickup?0:baseShipping;
-  document.getElementById('shippingVal').textContent=pickup?T[lang].freeLocalPickup:(baseShipping===0?T[lang].freeOver500:fmtShip(baseShipping));
-  document.getElementById('shippingVal').style.color=(shipping===0)?'var(--green)':'inherit';
-  document.getElementById('checkoutTotal').textContent=fmtPrice(subtotal+shipping);
-  const addrField=document.getElementById('addressField');
-  if(addrField)addrField.style.display=pickup?'none':'block';
+  const freeDelivery=subtotal>=FREE_SHIP_THRESHOLD;
+  const zone=getDeliveryZone();
+  const cost=freeDelivery?0:zone.usd;
+  const shippingEl=document.getElementById('shippingVal');
+  const totalEl=document.getElementById('checkoutTotal');
+  if(shippingEl){shippingEl.textContent=freeDelivery?T[lang].freeOver500:fmtPrice(cost);shippingEl.style.color=cost===0?'var(--green)':'inherit';}
+  const discountPct=appliedAffiliate?parseFloat(appliedAffiliate.customerDiscount)||0:0;
+  const discountAmt=subtotal*(discountPct/100);
+  if(totalEl)totalEl.textContent=fmtPrice(subtotal-discountAmt+cost);
 }
 function closeCheckout(){document.getElementById('checkoutModal').classList.remove('open');document.body.style.overflow='';appliedAffiliate=null;}
 let _promoDebounce=null;
@@ -1496,11 +1515,10 @@ function applyPromo(){
   if(code===CREDIT_CODE){
     appliedAffiliate={code:CREDIT_CODE,customerDiscount:100,commission:0,isCreditOrder:true,name:'Staff Credit'};
     const subtotal=cartTotal();
-    const pickup=(document.getElementById('localPickup')||{}).checked||false;
-    const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
-    const shipping=pickup?0:baseShipping;
+    const zone=getDeliveryZone();
+    const shipping=subtotal>=FREE_SHIP_THRESHOLD?0:zone.usd;
     const originalTotal=subtotal+shipping;
-    msg.innerHTML='<span style="color:var(--green);font-size:11px;">✓ Staff credit applied — order is on the house!</span>';
+    msg.innerHTML='<span style="color:var(--green);font-size:11px;">✓ Crédito de staff aplicado — ¡el pedido es gratis!</span>';
     const totalEl=document.getElementById('checkoutTotal');
     if(totalEl)totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--text3);font-size:12px;">'+fmtPrice(originalTotal)+'</span> <span style="color:var(--green);font-weight:600;">'+fmtPrice(0)+'</span>';
     const discountRow=document.getElementById('discountRow');
@@ -1515,9 +1533,8 @@ function applyPromo(){
   const discount=parseFloat(aff.customerDiscount)||0;
   msg.innerHTML='<span style="color:var(--green);font-size:11px;">'+(lang==='es'?'✓ Código aplicado — ¡'+discount+'% de descuento!':'✓ Code applied — '+discount+'% off your order!')+'</span>';
   const subtotal=cartTotal();
-  const pickup=(document.getElementById('localPickup')||{}).checked||false;
-  const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
-  const shipping=pickup?0:baseShipping;
+  const zone=getDeliveryZone();
+  const shipping=subtotal>=FREE_SHIP_THRESHOLD?0:zone.usd;
   const discountAmt=subtotal*(discount/100);
   const newTotal=subtotal-discountAmt+shipping;
   const totalEl=document.getElementById('checkoutTotal');
@@ -1562,22 +1579,25 @@ async function checkLowStock(orderedItems) {
 }
 async function submitOrder(){
   const name=document.getElementById('custName').value.trim();const email=document.getElementById('custEmail').value.trim();const phone=document.getElementById('custPhone').value.trim();const address=document.getElementById('custAddress').value.trim();const notes=document.getElementById('custNotes').value.trim();
-  if(!name){flash('custName',T[lang].enterName);return;}if(!email||!email.includes('@')){flash('custEmail',T[lang].enterEmail);return;}if(!phone){flash('custPhone',T[lang].enterPhone);return;}
-  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> '+T[lang].sending;
-  const pickup=(document.getElementById('localPickup')||{}).checked||false;
+  if(!name){flash('custName','Por favor ingresa tu nombre.');return;}if(!email||!email.includes('@')){flash('custEmail','Por favor ingresa un correo válido.');return;}if(!phone){flash('custPhone','Por favor ingresa tu teléfono.');return;}if(!address){flash('custAddress','Por favor ingresa tu dirección de entrega.');return;}
+  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<div class="spinner"></div> Enviando…';
+  const zone=getDeliveryZone();
   const items=Object.entries(cart).map(([code,qty])=>{const p=PRODUCTS.find(p=>p.code===code);return{code,name:p?p.name:code,spec:p?p.spec:'',qty,price:p?p.price:0};});
-  const subtotal=cartTotal();const effectiveShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;const shipping=pickup?0:effectiveShipping;
+  const subtotal=cartTotal();
+  const freeDelivery=subtotal>=FREE_SHIP_THRESHOLD;
+  const shipping=freeDelivery?0:zone.usd;
   const discountPct=appliedAffiliate?parseFloat(appliedAffiliate.customerDiscount)||0:0;
   const discountAmt=subtotal*(discountPct/100);
   const total=subtotal-discountAmt+shipping;
-  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+(discountAmt>0?'\nDiscount ('+discountPct+'% off): -$'+discountAmt.toFixed(2):'')+'\nShipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2));
+  const deliveryLabel=zone.label+' (MX$'+zone.mxn+')';
+  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+(discountAmt>0?'\nDescuento ('+discountPct+'%): -$'+discountAmt.toFixed(2):'')+'\nEntrega ('+deliveryLabel+'): $'+shipping.toFixed(2);
   const isCreditOrder=!!(appliedAffiliate&&appliedAffiliate.isCreditOrder);
-  const order={id:'ORD-'+Date.now(),status:'pending',createdAt:Date.now(),subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',creditOrder:isCreditOrder,shippingMethod:pickup?'pickup':'delivery',total,customer:{name,email,phone,address:pickup?'LOCAL PICKUP':address,notes},items};
+  const order={id:'ORD-'+Date.now(),status:'pending',createdAt:Date.now(),subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',creditOrder:isCreditOrder,deliveryZone:zone.key,shippingMethod:'delivery',total,customer:{name,email,phone,address:address,notes},items};
   try{const saveURL=API+'?action=saveOrder&order='+encodeURIComponent(JSON.stringify(order));await new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('GET',saveURL,true);xhr.onload=()=>{try{const r=JSON.parse(xhr.responseText);if(r&&r.error)console.error('saveOrder error:',r.error);}catch(e){}resolve();};xhr.onerror=()=>{console.error('saveOrder network error');resolve();};xhr.send();setTimeout(()=>resolve(),10000);});}catch(e){console.error('Could not save to sheets:',e);}
   try{const deductURL=API+'?action=deductInventory&items='+encodeURIComponent(JSON.stringify(items))+'&t='+Date.now();await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',deductURL,true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();setTimeout(()=>resolve(),8000);});}catch(e){console.warn('Inventory deduct failed:',e);}
   loadInventory();
   if(!isCreditOrder){
-    const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:pickup?'LOCAL PICKUP':(address||'Not provided'),customer_notes:notes||'None',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
+    const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:address+'\nZona de entrega: '+deliveryLabel,customer_notes:notes||'Ninguna',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
     try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);}catch(e){console.error('EmailJS customer send failed:',e);}
     try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));}catch(e){console.error('EmailJS fulfiller send failed:',e);}
     if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
@@ -1588,7 +1608,7 @@ async function submitOrder(){
   }
   appliedAffiliate=null;
   Object.keys(cart).forEach(k=>delete cart[k]);saveCart();updateCartUI();renderProducts();
-  document.getElementById('modalContent').innerHTML=`<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">${T[lang].orderReceived}</div><div class="success-sub">${lang==='es'?'Gracias, '+name+'. Tu pedido ha sido enviado.':'Thank you, '+name+'. Your order has been submitted.'}</div><div class="success-note">${lang==='es'?'Te contactaremos en <strong>24 horas</strong> para confirmar y coordinar el envío.<br>¿Preguntas? WhatsApp <strong>+1-310-683-0049</strong>':'We\'ll reach out within <strong>24 hours</strong> to confirm and arrange fulfillment.<br>Questions? WhatsApp <strong>+1-310-683-0049</strong>'}</div><button class="success-done-btn" onclick="closeCheckout()">${T[lang].backToCatalog}</button></div>`;
+  document.getElementById('modalContent').innerHTML=`<div class="success-screen"><div class="success-icon">✓</div><div class="success-title">¡PEDIDO RECIBIDO!</div><div class="success-sub">Gracias, ${name}. Tu pedido ha sido enviado.</div><div class="success-note">Te contactaremos para coordinar la entrega en <strong>60–90 minutos</strong>.<br>¿Preguntas? WhatsApp <strong>+52-664-596-4005</strong></div><button class="success-done-btn" onclick="closeCheckout()">← Volver al Catálogo</button></div>`;
   checkLowStock(items).catch(() => {});
 }
 function flash(id,msg){const el=document.getElementById(id);el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);}

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Peptide Supply Warehouse – Cerritos</title>
+<title>Peptide Supply Warehouse – Mexico</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <style>
@@ -1386,7 +1386,7 @@ async function checkLowStock(orderedItems){
     const lowItems=orderedItems.filter(i=>{const s=invMap[i.code];return s&&s.stock<=LOW_STOCK_THRESHOLD&&s.stock>0;});
     if(!lowItems.length)return;
     const lowStockText=lowItems.map(i=>{const s=invMap[i.code];return i.name+' ('+i.code+') — '+s.stock+' units remaining';}).join('\n');
-    await emailjs.send(EMAILJS_SERVICE_ID,LOW_STOCK_TEMPLATE_ID,{to_email:FULFILLER_EMAIL,market_name:'PSW Cerritos',low_stock_items:lowStockText,item_count:lowItems.length});
+    await emailjs.send(EMAILJS_SERVICE_ID,LOW_STOCK_TEMPLATE_ID,{to_email:FULFILLER_EMAIL,market_name:'PSW Mexico',low_stock_items:lowStockText,item_count:lowItems.length});
   }catch(e){console.warn('Low stock check failed:',e);}
 }
 async function submitOrder(){

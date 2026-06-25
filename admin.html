@@ -925,8 +925,14 @@ async function fulfillOrder(safeId, carrier, trackingNum, trackingURL){
     const custAddr  = (order.customer&&order.customer.address) || order.address || order.shipping_address || 'Not provided';
     if(typeof emailjs!=='undefined'&&custEmail){
       const items=Array.isArray(order.items)?order.items:[];
-      const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${((i.price||0)*(i.qty||0)).toFixed(2)}`).join('\n');
       const isTJMarket = (_mkt === 'tijuana');
+      const shippingCost=parseFloat(order.shipping||0);
+      const deliveryZone=order.deliveryZone||'';
+      const deliveryLabel=deliveryZone?deliveryZone.charAt(0).toUpperCase()+deliveryZone.slice(1):'Entrega';
+      const shippingLine=isTJMarket?'\nEntrega ('+deliveryLabel+'): $'+shippingCost.toFixed(2):(shippingCost>0?'\nShipping: $'+shippingCost.toFixed(2):'\nShipping: Free');
+      const discountAmt=parseFloat(order.discount||0);
+      const discountLine=discountAmt>0?'\nDiscount: -$'+discountAmt.toFixed(2):'';
+      const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${((i.price||0)*(i.qty||0)).toFixed(2)}`).join('\n')+discountLine+shippingLine;
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_FULFILL_ID, {
         to_email:         custEmail,
         from_name:        custName,

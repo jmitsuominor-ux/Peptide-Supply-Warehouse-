@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Peptide Supply Warehouse – San Diego</title>
+<title>Peptide Supply Warehouse – US</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <style>
@@ -1476,7 +1476,7 @@ async function checkLowStock(orderedItems) {
     }).join('\n');
     await emailjs.send(EMAILJS_SERVICE_ID, LOW_STOCK_TEMPLATE_ID, {
       to_email: FULFILLER_EMAIL,
-      market_name: 'PSW San Diego',
+      market_name: 'PSW US',
       low_stock_items: lowStockText,
       item_count: lowItems.length,
     });

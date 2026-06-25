@@ -890,7 +890,7 @@ async function fulfillOrder(safeId, carrier, trackingNum, trackingURL){
 
   // Send fulfillment confirmation email to customer
   try{
-    const custEmail = (order.customer&&order.customer.email) || order.email || order.from_email || order.customerEmail || (order.contact&&order.contact.email) || '';
+    const custEmail = ((order.customer&&order.customer.email) || order.email || order.from_email || order.customerEmail || (order.contact&&order.contact.email) || '').replace(/[^a-zA-Z0-9._%+\-@]/g,'');
     const custName  = (order.customer&&order.customer.name)  || order.name  || order.from_name  || order.customerName  || 'Customer';
     const custPhone = (order.customer&&order.customer.phone) || order.phone || order.from_phone || '';
     const custAddr  = (order.customer&&order.customer.address) || order.address || order.shipping_address || 'Not provided';
@@ -988,7 +988,7 @@ async function markPaidNotify(safeId){
   const items=Array.isArray(order.items)?order.items:[];
   const orderSummary=items.map(i=>i.name+' ('+i.spec+') x'+i.qty+' — $'+(i.price*i.qty).toFixed(2)).join('\n');
   const custName=(order.customer&&order.customer.name)||order.name||'Customer';
-  const custEmail=(order.customer&&order.customer.email)||order.email||'';
+  const custEmail=((order.customer&&order.customer.email)||order.email||'').replace(/[^a-zA-Z0-9._%+\-@]/g,'');
   const custPhone=(order.customer&&order.customer.phone)||order.phone||'—';
   const custAddr=(order.customer&&order.customer.address)||order.address||'—';
   try{

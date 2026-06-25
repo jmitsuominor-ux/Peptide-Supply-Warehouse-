@@ -351,7 +351,7 @@ body::after{display:none;}
 </style>
 </head>
 <body>
-<div class="announce-bar" id="announceBar"><span id="announceText">⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500</span><button class="lang-toggle" id="langToggle" onclick="toggleLang()">🇲🇽</button></div>
+<div class="announce-bar" id="announceBar"><span id="announceText">⚠ Minimum order $250 &nbsp;·&nbsp; Free shipping on orders over $500</span></div>
 <div class="contact-strip"><span class="contact-strip-item cs-name">👤 Michael John</span><span class="contact-strip-item">💬 WhatsApp: +1-310-683-0049</span><span class="contact-strip-item">📱 Mobile: +52-55-2446-9745</span></div>
 <div class="topbar">
   <div class="topbar-inner">
@@ -593,42 +593,6 @@ es:{
   refTiles:{'Weight Loss':'Pérdida de Peso','Growth Hormone':'Hormona de Crecimiento','Healing & Recovery':'Sanación y Recuperación','Anti-Aging & Immune':'Anti-Envejecimiento','Mitochondrial':'Mitocondrial','Muscle & IGF':'Músculo e IGF','Hormonal':'Hormonal','Cognitive':'Cognitivo','Immune':'Inmune','Reconstitution':'Reconstitución'}
 }
 };
-function toggleLang(){setLang(lang==='en'?'es':'en');}
-function setLang(l){
-  lang=l;
-  var btn=document.getElementById('langToggle');
-  if(btn)btn.innerHTML=l==='en'?'🇲🇽':'🇺🇸';
-  applyTranslations();
-}
-function applyTranslations(){
-  var t=T[lang];
-  var el;
-  el=document.getElementById('announceText');if(el)el.innerHTML=t.announceBar;
-  el=document.getElementById('heroEyebrow');if(el)el.textContent=t.heroEyebrow;
-  el=document.getElementById('heroTagline');if(el)el.textContent=t.heroTagline;
-  el=document.getElementById('heroSub');if(el)el.textContent=t.heroSub;
-  el=document.getElementById('refHeading');if(el)el.textContent=t.refHeading;
-  el=document.getElementById('bysBannerTitle');if(el)el.textContent=t.bysTitle;
-  el=document.getElementById('bysModalTitle');if(el)el.textContent='🧬 '+t.bysTitle;
-  el=document.getElementById('bysBannerSub');if(el)el.textContent=t.bysSub;
-  el=document.getElementById('footerDisc');if(el)el.innerHTML=t.footerDisc;
-  el=document.getElementById('cartBtnText');if(el)el.textContent=t.checkout;
-  el=document.getElementById('ordersNavBtn');if(el)el.textContent=t.myOrders;
-  el=document.getElementById('ordersMobileBtn');if(el)el.textContent='📋 '+t.myOrders;
-  el=document.getElementById('drawerTitle');if(el)el.textContent=t.yourOrder;
-  el=document.getElementById('searchInput');if(el)el.placeholder=t.searchPlaceholder;
-  // update ref tile names
-  var refNames=document.querySelectorAll('.ref-tile-name');
-  var enNames=['Weight Loss','Growth Hormone','Healing & Recovery','Anti-Aging & Immune','Mitochondrial','Muscle & IGF','Hormonal','Cognitive','Immune','Reconstitution'];
-  refNames.forEach(function(el){
-    var en=enNames.find(function(n){return el.textContent.trim()===n||el.textContent.trim()===T.en.refTiles[n];});
-    if(en&&t.refTiles[en])el.textContent=t.refTiles[en];
-  });
-  if(typeof buildCatNav==='function')buildCatNav();
-  if(typeof renderProducts==='function')renderProducts();
-  if(typeof renderDrawer==='function')renderDrawer();
-  if(typeof updateStorefrontProgress==='function')updateStorefrontProgress();
-}
 </script>
 <script>
 (function(){

@@ -1597,7 +1597,7 @@ async function submitOrder(){
   try{const deductURL=API+'?action=deductInventory&items='+encodeURIComponent(JSON.stringify(items))+'&t='+Date.now();await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',deductURL,true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();setTimeout(()=>resolve(),8000);});}catch(e){console.warn('Inventory deduct failed:',e);}
   loadInventory();
   if(!isCreditOrder){
-    const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:address+'\nZona de entrega: '+deliveryLabel,customer_notes:notes||'Ninguna',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
+    const emailParams={to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:address+'\nZona de entrega: '+deliveryLabel,customer_notes:notes||'Ninguna',order_summary:orderSummary,order_total:'$'+total.toFixed(2),order_id:order.id};
     try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);}catch(e){console.error('EmailJS customer send failed:',e);}
     try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));}catch(e){console.error('EmailJS fulfiller send failed:',e);}
     if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){

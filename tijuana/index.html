@@ -1256,12 +1256,14 @@ const CREDIT_CODE='STAFFCREDIT';
 let PRODUCTS=[];
 let shippingRate=30;
 const DELIVERY_ZONES=[
-  {key:'tijuana',   label:'Tijuana',           usd:5,  mxn:80},
-  {key:'rosarito',  label:'Rosarito',           usd:7,  mxn:125},
-  {key:'ensenada',  label:'Ensenada',           usd:10, mxn:170},
-  {key:'valleguadalupe', label:'Valle de Guadalupe', usd:10, mxn:170},
-  {key:'tecate',    label:'Tecate',             usd:10, mxn:170},
-  {key:'mexicali',  label:'Mexicali',           usd:13, mxn:225},
+  {key:'tijuana',      label:'Tijuana',                              usd:5,  mxn:80},
+  {key:'rosarito',     label:'Rosarito',                             usd:7,  mxn:125},
+  {key:'ensenada',     label:'Ensenada',                             usd:10, mxn:170},
+  {key:'valleguadalupe',label:'Valle de Guadalupe',                  usd:10, mxn:170},
+  {key:'tecate',       label:'Tecate',                               usd:10, mxn:170},
+  {key:'mexicali',     label:'Mexicali',                             usd:13, mxn:225},
+  {key:'localpickup',  label:'Recogida Local / Local Pickup',        usd:0,  mxn:0},
+  {key:'other',        label:'Otro — Contactar a Geo: +52-664-596-4005', usd:0, mxn:0},
 ];
 function getDeliveryZone(){
   const sel=document.getElementById('deliveryZone');

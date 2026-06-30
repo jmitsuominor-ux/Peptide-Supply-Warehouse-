@@ -1764,9 +1764,9 @@ var VIAL_IMG={
   'Tirzepatide.png':             'Tirzepatide',
   'VIP.png':                     'VIP',
 };
-// Build reverse lookup: compound name -> file path
+// Build reverse lookup: compound name (lowercased) -> file path
 var VIAL_IMG_BY_NAME={};
-Object.keys(VIAL_IMG).forEach(function(f){VIAL_IMG_BY_NAME[VIAL_IMG[f]]=f;});
+Object.keys(VIAL_IMG).forEach(function(f){VIAL_IMG_BY_NAME[VIAL_IMG[f].toLowerCase()]=f;});
 // Silently preload all vial images after page load so taps feel instant
 window.addEventListener('load',function(){
   var files=Object.keys(VIAL_IMG);
@@ -1782,7 +1782,7 @@ window.addEventListener('load',function(){
   setTimeout(loadNext,1500);
 });
 function vialDisplay(name,cat){
-  var f=VIAL_IMG_BY_NAME[name];
+  var f=VIAL_IMG_BY_NAME[name.toLowerCase()];
   if(f){
     var parts=f.split('/');
     var encoded=parts.map(encodeURIComponent).join('/');

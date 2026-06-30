@@ -1868,7 +1868,7 @@ document.getElementById('cpCartFooter').addEventListener('click',function(e){
   else if(a==='plus')cpQty(1);
 });
 
-var COA_MAP={'MOTS-C':'mots-c'};
+var COA_MAP={'MOTS-C':'mots-c','BPC-157':'BPC-157','GHK-Cu':'GHK-CU','KPV':'KPV','PT-141':'PT-141','Retatrutide':'RETATRUTIDE','SS-31':'SS-31','TB-500':'TB-500'};
 function openCOA(name,e){if(e)e.stopPropagation();var key=COA_MAP[name];if(!key)return;document.getElementById('coaImage').src='./coa/'+key+'.jpg';document.getElementById('coaModal').classList.add('open');document.body.style.overflow='hidden';}
 function closeCOA(){document.getElementById('coaModal').classList.remove('open');document.body.style.overflow='';}
 

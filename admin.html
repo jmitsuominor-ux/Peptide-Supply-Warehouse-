@@ -1075,7 +1075,7 @@ function renderInventory(){
   // auto-flag items at or below threshold
   let _rfChanged=false;
   Object.entries(inventory).forEach(([code,item])=>{
-    if(item.stock<=(item.threshold||5)&&restockFlags[code]===undefined){
+    if(item.stock<=(item.threshold||5)&&restockFlags[code]===undefined&&restockFlags[code]!==false){
       restockFlags[code]=0;_rfChanged=true;
     }
   });
@@ -1120,7 +1120,7 @@ function renderInventory(){
           <input type="number" step="0.01" min="0" class="stock-input" style="font-size:14px;" value="${price.toFixed(2)}" onchange="savePrice('${code}',this.value)" id="priceInput-${code}">
         </div>
       </div>
-      <button class="flag-btn${restockFlags[code]!==undefined?' flagged':''}" onclick="toggleRestockFlag('${code}')" id="flagBtn-${code}">${restockFlags[code]!==undefined?'🔖 Flagged for Restock':'🔖 Flag for Restock'}</button>
+      <button class="flag-btn${restockFlags[code]!==undefined&&restockFlags[code]!==false?' flagged':''}" onclick="toggleRestockFlag('${code}')" id="flagBtn-${code}">${restockFlags[code]!==undefined&&restockFlags[code]!==false?'🔖 Flagged for Restock':'🔖 Flag for Restock'}</button>
       <button class="delete-item-btn" onclick="deleteInventoryItem('${code}','${_name}')">✕ Remove from inventory</button>
     </div>`;
   }).join('');
@@ -1205,8 +1205,8 @@ async function saveNewInventoryItem(){
 // RESTOCK LIST
 // ════════════════════════════════════════
 function toggleRestockFlag(code){
-  if(restockFlags[code]!==undefined){
-    delete restockFlags[code];
+  if(restockFlags[code]!==undefined&&restockFlags[code]!==false){
+    restockFlags[code]=false;
   }else{
     restockFlags[code]=0;
   }
@@ -1219,7 +1219,7 @@ function renderRestockSection(){
   const section=document.getElementById('restockSection');
   const tbody=document.getElementById('restockTableBody');
   if(!section||!tbody)return;
-  const flaggedCodes=Object.keys(restockFlags);
+  const flaggedCodes=Object.keys(restockFlags).filter(c=>restockFlags[c]!==false);
   if(!flaggedCodes.length){section.classList.remove('show');return;}
   section.classList.add('show');
   tbody.innerHTML=flaggedCodes.map(code=>{

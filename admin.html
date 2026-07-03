@@ -1341,7 +1341,7 @@ function renderAffiliates(){
     const count = affOrderCount(a);
     const history = affPayments(a);
     const historyHtml = history.length ? history.map(p=>{
-      const dateStr = p.date ? (()=>{const d=new Date(isNaN(p.date)?p.date:Number(p.date));return isNaN(d)?new Date(String(p.date).replace(/(\d{4})(\d{2})(\d{2})/,'$1-$2-$3')).toLocaleDateString()||'—':d.toLocaleDateString();})() : '—';
+      const dateStr = p.date || '—';
       const methodTag = p.method ? '<span style="font-family:var(--mono);font-size:9px;background:var(--surface3);border-radius:4px;padding:1px 5px;color:var(--text2);">'+p.method+'</span>' : '';
       const noteTag = p.note ? '<span class="aff-pay-note">'+p.note+'</span>' : '';
       const safeDate = encodeURIComponent(p.date||'');
@@ -1497,7 +1497,7 @@ async function savePayment(){
   if(editDate){
     await apiPost({action:'deletePayment', affiliateCode:code, date:editDate});
   }
-  await apiPost({action:'savePayment', affiliateCode:code, amount, method, note, date: Date.now()});
+  await apiPost({action:'savePayment', affiliateCode:code, amount, method, note, date: new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'})});
   await loadAffiliates();
   _paymentSaving=false;
   if(btn){btn.disabled=false;btn.textContent=origLabel;}

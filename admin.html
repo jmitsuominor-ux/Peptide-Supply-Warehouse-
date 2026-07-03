@@ -1341,7 +1341,8 @@ function renderAffiliates(){
     const count = affOrderCount(a);
     const history = affPayments(a);
     const historyHtml = history.length ? history.map(p=>{
-      const dateStr = p.date || '—';
+      const _d=p.date;let dateStr='—';
+      if(_d){const _t=new Date(_d);dateStr=isNaN(_t)?String(_d):_t.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
       const methodTag = p.method ? '<span style="font-family:var(--mono);font-size:9px;background:var(--surface3);border-radius:4px;padding:1px 5px;color:var(--text2);">'+p.method+'</span>' : '';
       const noteTag = p.note ? '<span class="aff-pay-note">'+p.note+'</span>' : '';
       const safeDate = encodeURIComponent(p.date||'');

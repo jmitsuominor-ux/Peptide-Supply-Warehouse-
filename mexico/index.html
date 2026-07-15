@@ -425,13 +425,13 @@ body::after{display:none;}
 <div class="main">
   <div class="loading-state" id="loadingState">
     <div class="loading-spinner"></div>
-    <div class="loading-text">LOADING INVENTORY…</div>
+    <div class="loading-text" id="loadingText">CARGANDO INVENTARIO…</div>
   </div>
   <div id="reloadBanner" style="display:none;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:14px 18px;margin:16px auto;max-width:600px;text-align:center;font-family:var(--mono);font-size:13px;color:#856404;">
-    ⚠ Inventory took too long to load. <button onclick="location.reload()" style="margin-left:10px;background:#ffc107;border:none;border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;color:#333;">↺ Tap to Refresh</button>
+    ⚠ El inventario tardó demasiado en cargar. <button onclick="location.reload()" style="margin-left:10px;background:#ffc107;border:none;border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;color:#333;">↺ Toca para Recargar</button>
   </div>
   <div class="product-grid" id="productGrid" style="display:none"></div>
-  <div class="no-results" id="noResults" style="display:none">No products match "<span id="noResultsQuery"></span>"</div>
+  <div class="no-results" id="noResults" style="display:none">Ningún producto coincide con "<span id="noResultsQuery"></span>"</div>
 </div>
 
 <div class="footer">
@@ -550,7 +550,7 @@ en:{
   bysTierLo:'LO DOSE',bysTierMid:'MID DOSE',bysTierHi:'HI DOSE',
   bysCycle:'Cycle:',bysWks:'wks',bysBackToStacks:'← Back to stacks',
   bysAddAll:'Add All Items to Order',bysAdded:'✓ Added to Order',
-  bysOutOfStock:'Out of stock',bysNotInCatalog:'Not in current catalog',bysDeduped:'✓ deduped across stacks',
+  bysOutOfStock:'Out of stock',bysNotInCatalog:'Not in current catalog',bysDeduped:'✓ deduped across stacks',item:'item',items:'items',
   bysNote:'Tap a card to select · tap <strong>ⓘ</strong> to see dose details · If two stacks share a compound, only the higher quantity is ordered — you won’t be charged twice.',
   bysDoseGuide:'Dose Guide',bysCycleLength:'APPROX. CYCLE LENGTH',bysCompound:'Compound',
   refTiles:{'Weight Loss':'Weight Loss','Growth Hormone':'Growth Hormone','Healing & Recovery':'Healing & Recovery','Anti-Aging & Immune':'Anti-Aging & Immune','Mitochondrial':'Mitochondrial','Muscle & IGF':'Muscle & IGF','Hormonal':'Hormonal','Cognitive':'Cognitive','Immune':'Immune','Reconstitution':'Reconstitution'}
@@ -588,7 +588,7 @@ es:{
   bysTierLo:'DOSIS BAJA',bysTierMid:'DOSIS MEDIA',bysTierHi:'DOSIS ALTA',
   bysCycle:'Ciclo:',bysWks:'sem',bysBackToStacks:'← Volver a los stacks',
   bysAddAll:'Agregar Todo al Pedido',bysAdded:'✓ Agregado al Pedido',
-  bysOutOfStock:'Agotado',bysNotInCatalog:'No disponible en catálogo',bysDeduped:'✓ deduplicado entre stacks',
+  bysOutOfStock:'Agotado',bysNotInCatalog:'No disponible en catálogo',bysDeduped:'✓ deduplicado entre stacks',item:'artículo',items:'artículos',
   bysNote:'Toca una tarjeta para seleccionar · toca <strong>ⓘ</strong> para ver detalles de dosis · Si dos stacks comparten un compuesto, solo se pide la mayor cantidad — no se te cobra dos veces.',
   bysDoseGuide:'Guía de Dosis',bysCycleLength:'DURACIÓN APROX. DEL CICLO',bysCompound:'Compuesto',
   refTiles:{'Weight Loss':'Pérdida de Peso','Growth Hormone':'Hormona de Crecimiento','Healing & Recovery':'Sanación y Recuperación','Anti-Aging & Immune':'Anti-Envejecimiento','Mitochondrial':'Mitocondrial','Muscle & IGF':'Músculo e IGF','Hormonal':'Hormonal','Cognitive':'Cognitivo','Immune':'Inmune','Reconstitution':'Reconstitución'}
@@ -932,7 +932,7 @@ function bysShowResult(){
     else if(line.manual){html+='<div class="bys-item-note">'+line.dose+'</div>';}
     else if(!line.vials||!line.vials.length){html+='<div class="bys-item-note">'+T[lang].bysOutOfStock+'</div>';}
     else{
-      if(!line.stockOk)html+='<div class="bys-item-warn">&#9888; Verify stock availability</div>';
+      if(!line.stockOk)html+='<div class="bys-item-warn">&#9888; '+(lang==='es'?'Verificar disponibilidad de stock':'Verify stock availability')+'</div>';
       line.vials.forEach(function(v){
         var prod=typeof ALL_PRODUCTS!=='undefined'?ALL_PRODUCTS.find(function(p){return p.code===v.code;}):null;
         var spec=prod?prod.spec:v.code;
@@ -957,13 +957,13 @@ function bysShowResult(){
     var rem=totalMl-(w10*10);
     var w3=rem>0?Math.ceil(rem/3):0;
     var bacHtml='<div style="border:1px solid rgba(0,180,216,0.25);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:rgba(0,180,216,0.04);">';
-    bacHtml+='<div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--blue);letter-spacing:0.06em;margin-bottom:10px;">💧 BAC WATER NEEDED &nbsp;·&nbsp; '+totalMl+'ml total ('+totalPeptideVials+' vials × 2ml)</div>';
+    bacHtml+='<div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--blue);letter-spacing:0.06em;margin-bottom:10px;">'+(lang==='es'?'💧 AGUA BAC NECESARIA':'💧 BAC WATER NEEDED')+' &nbsp;·&nbsp; '+totalMl+'ml total ('+totalPeptideVials+' vials × 2ml)</div>';
     var bacRows=[];
     if(w10>0)bacRows.push({code:'WA10',qty:w10,label:'10ml vial'});
     if(w3>0)bacRows.push({code:'WA3',qty:w3,label:'3ml vial'});
     bacRows.forEach(function(r){
       var inStock=inventory[r.code]&&inventory[r.code].stock>0;
-      var stockNote=inStock?'':' <span style="color:var(--red);font-size:9px;">⚠ check stock</span>';
+      var stockNote=inStock?'':' <span style="color:var(--red);font-size:9px;">'+(lang==='es'?'⚠ verificar stock':'⚠ check stock')+'</span>';
       bacHtml+='<div class="bys-item-vial" data-code="'+r.code+'" style="margin-bottom:6px;">';
       bacHtml+='<button class="bys-vq-btn" onclick="bysAdjQty(this,-1)">&#8722;</button>';
       bacHtml+='<span class="bys-vial-qty">'+r.qty+'</span>';
@@ -1308,7 +1308,7 @@ function openCheckout(){
   closeCart();const subtotal=cartTotal();const keys=Object.keys(cart);
   const checkoutShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
   const orderRows=keys.map(code=>{const p=PRODUCTS.find(p=>p.code===code)||ALL_PRODUCTS.find(p=>p.code===code);const qty=cart[code];return `<div class="or-item"><span class="or-name">${p.name} <span style="color:var(--text3);font-size:10px;">${p.spec}</span></span><span class="or-qty">×${qty}</span><span class="or-price">${fmtPrice(p.price*qty)}</span></div>`;}).join('');
-  document.getElementById('modalContent').innerHTML=`<div class="modal-header"><div class="modal-title">${T[lang].completeOrder}</div><div class="modal-close" onclick="closeCheckout()">×</div></div><div class="modal-body"><div class="modal-section-title">${T[lang].orderSummary}</div><div class="order-review">${orderRows}<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">${fmtPrice(subtotal)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>${T[lang].shipping}</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?T[lang].freeOver500:fmtShip(checkoutShipping)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>Discount</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">${fmtPrice(subtotal+checkoutShipping)}</span></div></div><div class="modal-section-title">Your Information</div><div class="form-field"><label class="form-label">${T[lang].fullName} <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="${T[lang].namePlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].emailAddress} <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="${T[lang].emailPlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].phoneNumber} <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="${T[lang].phonePlaceholder}"></div><div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">${T[lang].localPickup}</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">(removes ${fmtShip(checkoutShipping)} shipping)</span>`:''}</label></div><div class="form-field" id="addressField"><label class="form-label">${T[lang].shippingAddress} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custAddress" placeholder="${T[lang].addressPlaceholder}"></textarea></div><div class="form-field"><label class="form-label">${T[lang].additionalNotes} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custNotes" placeholder="${T[lang].notesPlaceholder}" style="min-height:60px;"></textarea></div><div class="form-field"><label class="form-label">${T[lang].promoCode} <span class="opt">${T[lang].optional}</span></label><input type="text" class="form-input" id="promoCode" placeholder="${T[lang].promoPlaceholder}" style="text-transform:uppercase;width:100%;" oninput="this.value=this.value.toUpperCase();autoApplyPromo()"><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div><div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">${lang==='es'?'📧 Te contactaremos dentro de 24 horas para confirmar y coordinar el envío. ¿Preguntas? WhatsApp +1-310-683-0049':'📧 We\'ll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +1-310-683-0049'}</div><button class="submit-btn" id="submitBtn" onclick="submitOrder()">${T[lang].placeOrder}</button></div>`;
+  document.getElementById('modalContent').innerHTML=`<div class="modal-header"><div class="modal-title">${T[lang].completeOrder}</div><div class="modal-close" onclick="closeCheckout()">×</div></div><div class="modal-body"><div class="modal-section-title">${T[lang].orderSummary}</div><div class="order-review">${orderRows}<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:12px;color:var(--text2);border-top:1px solid var(--border);margin-top:4px;"><span>${T[lang].subtotal}</span><span style="font-family:var(--mono);">${fmtPrice(subtotal)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--text2);"><span>${T[lang].shipping}</span><span style="font-family:var(--mono);color:${checkoutShipping===0?'var(--green)':'inherit'};" id="shippingVal">${checkoutShipping===0?T[lang].freeOver500:fmtShip(checkoutShipping)}</span></div><div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--green);display:none;" id="discountRow"><span>${T[lang].discountLabel}</span><span style="font-family:var(--mono);" id="discountVal"></span></div><div class="or-total"><span class="or-total-label">${T[lang].orderTotal}</span><span class="or-total-val" id="checkoutTotal">${fmtPrice(subtotal+checkoutShipping)}</span></div></div><div class="modal-section-title">${T[lang].yourInfo}</div><div class="form-field"><label class="form-label">${T[lang].fullName} <span class="req">*</span></label><input type="text" class="form-input" id="custName" placeholder="${T[lang].namePlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].emailAddress} <span class="req">*</span></label><input type="email" class="form-input" id="custEmail" placeholder="${T[lang].emailPlaceholder}"></div><div class="form-field"><label class="form-label">${T[lang].phoneNumber} <span class="req">*</span></label><input type="tel" class="form-input" id="custPhone" placeholder="${T[lang].phonePlaceholder}"></div><div class="form-field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer;"><input type="checkbox" id="localPickup" onchange="togglePickup()" style="width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;"><span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text2);">${T[lang].localPickup}</span>${checkoutShipping>0?`<span style="font-family:var(--mono);font-size:10px;color:var(--green);">`+(lang==='es'?`(elimina ${fmtShip(checkoutShipping)} de envío)`:`(removes ${fmtShip(checkoutShipping)} shipping)`)+`</span>`:''}</label></div><div class="form-field" id="addressField"><label class="form-label">${T[lang].shippingAddress} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custAddress" placeholder="${T[lang].addressPlaceholder}"></textarea></div><div class="form-field"><label class="form-label">${T[lang].additionalNotes} <span class="opt">${T[lang].optional}</span></label><textarea class="form-textarea" id="custNotes" placeholder="${T[lang].notesPlaceholder}" style="min-height:60px;"></textarea></div><div class="form-field"><label class="form-label">${T[lang].promoCode} <span class="opt">${T[lang].optional}</span></label><input type="text" class="form-input" id="promoCode" placeholder="${T[lang].promoPlaceholder}" style="text-transform:uppercase;width:100%;" oninput="this.value=this.value.toUpperCase();autoApplyPromo()"><div id="promoMsg" style="margin-top:5px;min-height:16px;"></div></div><div style="background:rgba(33,150,243,0.06);border:1px solid rgba(33,150,243,0.15);border-radius:8px;padding:10px 13px;font-size:11px;color:var(--text2);line-height:1.6;margin-top:12px;">${lang==='es'?'📧 Te contactaremos dentro de 24 horas para confirmar y coordinar el envío. ¿Preguntas? WhatsApp +1-310-683-0049':'📧 We\'ll contact you within 24 hours to confirm and arrange fulfillment. Questions? WhatsApp +1-310-683-0049'}</div><button class="submit-btn" id="submitBtn" onclick="submitOrder()">${T[lang].placeOrder}</button></div>`;
   document.getElementById('checkoutModal').classList.add('open');document.body.style.overflow='hidden';
 }
 function togglePickup(){
@@ -1334,7 +1334,7 @@ function autoApplyPromo(){
   },400);
 }
 function applyPromo(){
-  if(appliedAffiliate){document.getElementById('promoMsg').innerHTML='<span style="color:var(--green);font-size:11px;">✓ Code already applied.</span>';return;}
+  if(appliedAffiliate){document.getElementById('promoMsg').innerHTML='<span style="color:var(--green);font-size:11px;">'+(lang==='es'?'✓ Código ya aplicado.':'✓ Code already applied.')+'</span>';return;}
   const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
   const msg=document.getElementById('promoMsg');
   if(!code){msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoEnterFirst+'</span>';return;}
@@ -1345,7 +1345,7 @@ function applyPromo(){
     const baseShipping=subtotal>=FREE_SHIP_THRESHOLD?0:shippingRate;
     const shipping=pickup?0:baseShipping;
     const originalTotal=subtotal+shipping;
-    msg.innerHTML='<span style="color:var(--green);font-size:11px;">✓ Staff credit applied — order is on the house!</span>';
+    msg.innerHTML='<span style="color:var(--green);font-size:11px;">'+(lang==='es'?'✓ Crédito de staff aplicado — ¡el pedido es gratis!':'✓ Staff credit applied — order is on the house!')+'</span>';
     const totalEl=document.getElementById('checkoutTotal');
     if(totalEl)totalEl.innerHTML='<span style="text-decoration:line-through;color:var(--text3);font-size:12px;">'+fmtPrice(originalTotal)+'</span> <span style="color:var(--green);font-weight:600;">'+fmtPrice(0)+'</span>';
     const discountRow=document.getElementById('discountRow');
@@ -1393,14 +1393,14 @@ async function submitOrder(){
   const discountPct=appliedAffiliate?parseFloat(appliedAffiliate.customerDiscount)||0:0;
   const discountAmt=subtotal*(discountPct/100);
   const total=subtotal-discountAmt+shipping;
-  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+(discountAmt>0?'\nDiscount ('+discountPct+'% off): -$'+discountAmt.toFixed(2):'')+'\nShipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2));
+  const orderSummary=items.map(i=>`${i.name} (${i.spec}) x${i.qty} — $${(i.price*i.qty).toFixed(2)}`).join('\n')+(discountAmt>0?'\n'+(lang==='es'?'Descuento ('+discountPct+'% de descuento)':'Discount ('+discountPct+'% off)')+': -$'+discountAmt.toFixed(2):'')+'\n'+(lang==='es'?'Envío: '+(pickup?'Recoger en Local':'$'+shipping.toFixed(2)):'Shipping: '+(pickup?'Local Pickup':'$'+shipping.toFixed(2)));
   const isCreditOrder=!!(appliedAffiliate&&appliedAffiliate.isCreditOrder);
-  const order={id:'ORD-'+Date.now(),status:'pending',createdAt:Date.now(),subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',creditOrder:isCreditOrder,shippingMethod:pickup?'pickup':'delivery',total,customer:{name,email,phone,address:pickup?'LOCAL PICKUP':address,notes},items};
+  const order={id:'ORD-'+Date.now(),status:'pending',createdAt:Date.now(),subtotal,shipping,discount:discountAmt,affiliateCode:appliedAffiliate?appliedAffiliate.code:'',creditOrder:isCreditOrder,shippingMethod:pickup?'pickup':'delivery',total,customer:{name,email,phone,address:pickup?(lang==='es'?'RECOGER EN LOCAL':'LOCAL PICKUP'):address,notes},items};
   try{const saveURL=API+'?action=saveOrder&order='+encodeURIComponent(JSON.stringify(order));await new Promise((resolve,reject)=>{const xhr=new XMLHttpRequest();xhr.open('GET',saveURL,true);xhr.onload=()=>{try{const r=JSON.parse(xhr.responseText);if(r&&r.error)console.error('saveOrder error:',r.error);}catch(e){}resolve();};xhr.onerror=()=>{console.error('saveOrder network error');resolve();};xhr.send();setTimeout(()=>resolve(),10000);});}catch(e){console.error('Could not save to sheets:',e);}
   try{const deductURL=API+'?action=deductInventory&items='+encodeURIComponent(JSON.stringify(items))+'&t='+Date.now();await new Promise((resolve)=>{const xhr=new XMLHttpRequest();xhr.open('GET',deductURL,true);xhr.onload=xhr.onerror=()=>resolve();xhr.send();setTimeout(()=>resolve(),8000);});}catch(e){console.warn('Inventory deduct failed:',e);}
   loadInventory();
   if(!isCreditOrder){
-    const emailParams={order_id:order.id,to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:pickup?'LOCAL PICKUP':(address||'Not provided'),customer_notes:notes||'None',order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
+    const emailParams={order_id:order.id,to_email:email,from_name:name,from_email:email,from_phone:phone,shipping_address:pickup?(lang==='es'?'RECOGER EN LOCAL':'LOCAL PICKUP'):(address||(lang==='es'?'No proporcionada':'Not provided')),customer_notes:notes||(lang==='es'?'Ninguna':'None'),order_summary:orderSummary,order_total:'$'+total.toFixed(2)};
     try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,emailParams);}catch(e){console.error('EmailJS customer send failed:',e);}
     try{await emailjs.send(EMAILJS_SERVICE_ID,EMAILJS_TEMPLATE_ID,Object.assign({},emailParams,{to_email:FULFILLER_EMAIL}));}catch(e){console.error('EmailJS fulfiller send failed:',e);}
     if(appliedAffiliate&&EMAILJS_AFFILIATE_ID){
@@ -1688,7 +1688,7 @@ function openCPPanel(code){
   var body='';
   // Dosing
   if(info.lo||info.mid||info.hi){
-    body+='<div class="cp-section-title">Dosing</div>';
+    body+='<div class="cp-section-title">'+(lang==='es'?'Dosificación':'Dosing')+'</div>';
     body+='<table class="cp-dose-table"><thead><tr><th>Tier</th><th>Dose</th></tr></thead><tbody>';
     if(info.lo)body+='<tr><td class="t-lo">LOW</td><td>'+info.lo+'</td></tr>';
     if(info.mid)body+='<tr><td class="t-mid">STD</td><td>'+info.mid+'</td></tr>';
@@ -1697,19 +1697,19 @@ function openCPPanel(code){
   }
   // Schedule & cycle
   if(info.schedule){
-    body+='<div class="cp-section-title">Schedule</div><div class="cp-schedule">'+info.schedule+(info.cycle?' &nbsp;·&nbsp; Cycle: '+info.cycle:'')+'</div>';
+    body+='<div class="cp-section-title">'+(lang==='es'?'Protocolo':'Schedule')+'</div><div class="cp-schedule">'+info.schedule+(info.cycle?' &nbsp;·&nbsp; '+(lang==='es'?'Ciclo:':'Cycle:')+' '+info.cycle:'')+'</div>';
   }
   // Benefits
   if(info.benefits&&info.benefits.length){
-    body+='<div class="cp-section-title">Benefits</div>';
+    body+='<div class="cp-section-title">'+(lang==='es'?'Beneficios':'Benefits')+'</div>';
     info.benefits.forEach(function(b){body+='<div class="cp-benefit">'+b+'</div>';});
   }
   // COA
   if(COA_MAP[p.name]){
-    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'" onclick="openCOA(this.dataset.compound,event)">🔬 Purity Verified &nbsp;·&nbsp; View Lab Certificate</button>';
+    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'" onclick="openCOA(this.dataset.compound,event)">'+(lang==='es'?'🔬 Pureza Verificada &nbsp;·&nbsp; Ver Certificado de Laboratorio':'🔬 Purity Verified &nbsp;·&nbsp; View Lab Certificate')+'</button>';
   }
   // PR link
-  body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=cerritos" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">Full Reference →</a></div>';
+  body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=cerritos" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">'+(lang==='es'?'Referencia Completa →':'Full Reference →')+'</a></div>';
   document.getElementById('cpBody').innerHTML=body;
   // Add to cart button
   renderCPCartBtn(code);
@@ -1729,7 +1729,7 @@ function renderCPCartBtn(code){
   if(qty>0){
     div.innerHTML='<div class="cp-qty-row"><button data-cp-action="minus">&#8722;</button><span>'+qty+'</span><button data-cp-action="plus">+</button></div>';
   } else {
-    div.innerHTML='<button class="cp-add-btn" data-cp-action="add">+ ADD TO ORDER</button>';
+    div.innerHTML='<button class="cp-add-btn" data-cp-action="add">'+T[lang].addToOrder+'</button>';
   }
   footer.appendChild(div);
 }

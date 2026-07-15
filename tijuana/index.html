@@ -465,13 +465,13 @@ body::after{display:none;}
 <div class="main">
   <div class="loading-state" id="loadingState">
     <div class="loading-spinner"></div>
-    <div class="loading-text">LOADING INVENTORY…</div>
+    <div class="loading-text" id="loadingText">CARGANDO INVENTARIO…</div>
   </div>
   <div id="reloadBanner" style="display:none;background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:14px 18px;margin:16px auto;max-width:600px;text-align:center;font-family:var(--mono);font-size:13px;color:#856404;">
-    ⚠ Inventory took too long to load. <button onclick="location.reload()" style="margin-left:10px;background:#ffc107;border:none;border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;color:#333;">↺ Tap to Refresh</button>
+    ⚠ El inventario tardó demasiado en cargar. <button onclick="location.reload()" style="margin-left:10px;background:#ffc107;border:none;border-radius:6px;padding:6px 14px;font-family:var(--mono);font-size:12px;font-weight:700;cursor:pointer;color:#333;">↺ Toca para Recargar</button>
   </div>
   <div class="product-grid" id="productGrid" style="display:none"></div>
-  <div class="no-results" id="noResults" style="display:none">No products match "<span id="noResultsQuery"></span>"</div>
+  <div class="no-results" id="noResults" style="display:none">Ningún producto coincide con "<span id="noResultsQuery"></span>"</div>
 </div>
 
 <div class="footer">
@@ -609,7 +609,7 @@ en:{
   bysTierLo:'LO DOSE',bysTierMid:'MID DOSE',bysTierHi:'HI DOSE',
   bysCycle:'Cycle:',bysWks:'wks',bysBackToStacks:'← Back to stacks',
   bysAddAll:'Add All Items to Order',bysAdded:'✓ Added to Order',
-  bysOutOfStock:'Out of stock',bysNotInCatalog:'Not in current catalog',bysDeduped:'✓ deduped across stacks',
+  bysOutOfStock:'Out of stock',bysNotInCatalog:'Not in current catalog',bysDeduped:'✓ deduped across stacks',item:'item',items:'items',
   bysNote:'Tap a card to select · tap <strong>ⓘ</strong> to see dose details · If two stacks share a compound, only the higher quantity is ordered — you won\'t be charged twice.',
   bysDoseGuide:'Dose Guide',bysCycleLength:'APPROX. CYCLE LENGTH',bysCompound:'Compound',
   refTiles:{'Weight Loss':'Weight Loss','Growth Hormone':'Growth Hormone','Healing & Recovery':'Healing & Recovery','Anti-Aging & Immune':'Anti-Aging & Immune','Mitochondrial':'Mitochondrial','Muscle & IGF':'Muscle & IGF','Hormonal':'Hormonal','Cognitive':'Cognitive','Immune':'Immune','Reconstitution':'Reconstitution'}
@@ -647,7 +647,7 @@ es:{
   bysTierLo:'DOSIS BAJA',bysTierMid:'DOSIS MEDIA',bysTierHi:'DOSIS ALTA',
   bysCycle:'Ciclo:',bysWks:'sem',bysBackToStacks:'← Volver a los stacks',
   bysAddAll:'Agregar Todo al Pedido',bysAdded:'✓ Agregado al Pedido',
-  bysOutOfStock:'Agotado',bysNotInCatalog:'No disponible en catálogo',bysDeduped:'✓ deduplicado entre stacks',
+  bysOutOfStock:'Agotado',bysNotInCatalog:'No disponible en catálogo',bysDeduped:'✓ deduplicado entre stacks',item:'artículo',items:'artículos',
   bysNote:'Toca una tarjeta para seleccionar · toca <strong>ⓘ</strong> para ver detalles de dosis · Si dos stacks comparten un compuesto, solo se pide la mayor cantidad — no se te cobra dos veces.',
   bysDoseGuide:'Guía de Dosis',bysCycleLength:'DURACIÓN APROX. DEL CICLO',bysCompound:'Compuesto',
   refTiles:{'Weight Loss':'Pérdida de Peso','Growth Hormone':'Hormona de Crecimiento','Healing & Recovery':'Sanación y Recuperación','Anti-Aging & Immune':'Anti-Envejecimiento','Mitochondrial':'Mitocondrial','Muscle & IGF':'Músculo e IGF','Hormonal':'Hormonal','Cognitive':'Cognitivo','Immune':'Inmune','Reconstitution':'Reconstitución'}
@@ -1027,7 +1027,7 @@ function bysShowResult(){
     else if(line.manual){html+='<div class="bys-item-note">'+line.dose+'</div>';}
     else if(!line.vials||!line.vials.length){html+='<div class="bys-item-note">'+T[lang].bysOutOfStock+'</div>';}
     else{
-      if(!line.stockOk)html+='<div class="bys-item-warn">&#9888; Verify stock availability</div>';
+      if(!line.stockOk)html+='<div class="bys-item-warn">&#9888; '+(lang==='es'?'Verificar disponibilidad de stock':'Verify stock availability')+'</div>';
       line.vials.forEach(function(v){
         var prod=typeof ALL_PRODUCTS!=='undefined'?ALL_PRODUCTS.find(function(p){return p.code===v.code;}):null;
         var spec=prod?prod.spec:v.code;
@@ -1052,13 +1052,13 @@ function bysShowResult(){
     var rem=totalMl-(w10*10);
     var w3=rem>0?Math.ceil(rem/3):0;
     var bacHtml='<div style="border:1px solid rgba(0,180,216,0.25);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:rgba(0,180,216,0.04);">';
-    bacHtml+='<div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--blue);letter-spacing:0.06em;margin-bottom:10px;">💧 BAC WATER NEEDED &nbsp;·&nbsp; '+totalMl+'ml total ('+totalPeptideVials+' vials × 2ml)</div>';
+    bacHtml+='<div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--blue);letter-spacing:0.06em;margin-bottom:10px;">'+(lang==='es'?'💧 AGUA BAC NECESARIA':'💧 BAC WATER NEEDED')+' &nbsp;·&nbsp; '+totalMl+'ml total ('+totalPeptideVials+' vials × 2ml)</div>';
     var bacRows=[];
     if(w10>0)bacRows.push({code:'WA10',qty:w10,label:'10ml vial'});
     if(w3>0)bacRows.push({code:'WA3',qty:w3,label:'3ml vial'});
     bacRows.forEach(function(r){
       var inStock=inventory[r.code]&&inventory[r.code].stock>0;
-      var stockNote=inStock?'':' <span style="color:var(--red);font-size:9px;">⚠ check stock</span>';
+      var stockNote=inStock?'':' <span style="color:var(--red);font-size:9px;">'+(lang==='es'?'⚠ verificar stock':'⚠ check stock')+'</span>';
       bacHtml+='<div class="bys-item-vial" data-code="'+r.code+'" style="margin-bottom:6px;">';
       bacHtml+='<button class="bys-vq-btn" onclick="bysAdjQty(this,-1)">&#8722;</button>';
       bacHtml+='<span class="bys-vial-qty">'+r.qty+'</span>';
@@ -1511,7 +1511,7 @@ function autoApplyPromo(){
   },400);
 }
 function applyPromo(){
-  if(appliedAffiliate){document.getElementById('promoMsg').innerHTML='<span style="color:var(--green);font-size:11px;">✓ Code already applied.</span>';return;}
+  if(appliedAffiliate){document.getElementById('promoMsg').innerHTML='<span style="color:var(--green);font-size:11px;">'+(lang==='es'?'✓ Código ya aplicado.':'✓ Code already applied.')+'</span>';return;}
   const code=(document.getElementById('promoCode').value||'').trim().toUpperCase();
   const msg=document.getElementById('promoMsg');
   if(!code){msg.innerHTML='<span style="color:var(--red);font-size:11px;">'+T[lang].promoEnterFirst+'</span>';return;}
@@ -1883,7 +1883,7 @@ function openCPPanel(code){
   document.getElementById('cpVialContainer').innerHTML=vialDisplay(p.name,info.category||p.cat||'');
   var body='';
   if(info.lo||info.mid||info.hi){
-    body+='<div class="cp-section-title">Dosing</div>';
+    body+='<div class="cp-section-title">'+(lang==='es'?'Dosificación':'Dosing')+'</div>';
     body+='<table class="cp-dose-table"><thead><tr><th>Tier</th><th>Dose</th></tr></thead><tbody>';
     if(info.lo)body+='<tr><td class="t-lo">LOW</td><td>'+info.lo+'</td></tr>';
     if(info.mid)body+='<tr><td class="t-mid">STD</td><td>'+info.mid+'</td></tr>';
@@ -1891,16 +1891,16 @@ function openCPPanel(code){
     body+='</tbody></table>';
   }
   if(info.schedule){
-    body+='<div class="cp-section-title">Schedule</div><div class="cp-schedule">'+info.schedule+(info.cycle?' &nbsp;·&nbsp; Cycle: '+info.cycle:'')+'</div>';
+    body+='<div class="cp-section-title">'+(lang==='es'?'Protocolo':'Schedule')+'</div><div class="cp-schedule">'+info.schedule+(info.cycle?' &nbsp;·&nbsp; '+(lang==='es'?'Ciclo:':'Cycle:')+' '+info.cycle:'')+'</div>';
   }
   if(info.benefits&&info.benefits.length){
-    body+='<div class="cp-section-title">Benefits</div>';
+    body+='<div class="cp-section-title">'+(lang==='es'?'Beneficios':'Benefits')+'</div>';
     info.benefits.forEach(function(b){body+='<div class="cp-benefit">'+b+'</div>';});
   }
   if(COA_MAP[p.name]){
-    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'" onclick="openCOA(this.dataset.compound,event)">🔬 Purity Verified &nbsp;·&nbsp; View Lab Certificate</button>';
+    body+='<button class="cp-coa-btn coa-btn" data-compound="'+p.name+'" onclick="openCOA(this.dataset.compound,event)">'+(lang==='es'?'🔬 Pureza Verificada &nbsp;·&nbsp; Ver Certificado de Laboratorio':'🔬 Purity Verified &nbsp;·&nbsp; View Lab Certificate')+'</button>';
   }
-  body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=tj" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">Full Reference →</a></div>';
+  body+='<div style="margin-top:10px;text-align:right;"><a href="https://jmitsuominor-ux.github.io/peptide-reference/index.html?compound='+encodeURIComponent(prName)+'&store=tj" target="_blank" style="font-family:var(--mono);font-size:11px;color:var(--blue);text-decoration:none;">'+(lang==='es'?'Referencia Completa →':'Full Reference →')+'</a></div>';
   document.getElementById('cpBody').innerHTML=body;
   renderCPCartBtn(code);
   document.getElementById('cpOverlay').classList.add('open');
@@ -1920,7 +1920,7 @@ function renderCPCartBtn(code){
   if(qty>0){
     div.innerHTML='<div class="cp-qty-row"><button data-cp-action="minus">&#8722;</button><span>'+qty+'</span><button data-cp-action="plus">+</button></div>';
   } else {
-    div.innerHTML='<button class="cp-add-btn" data-cp-action="add">+ ADD TO ORDER</button>';
+    div.innerHTML='<button class="cp-add-btn" data-cp-action="add">'+T[lang].addToOrder+'</button>';
   }
   footer.appendChild(div);
 }

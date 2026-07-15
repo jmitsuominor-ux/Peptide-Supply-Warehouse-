@@ -600,77 +600,77 @@ es:{
 'use strict';
 
 var BYS_STACKS=[
-  {name:'FAT STACK (Triple Agonist)',emoji:'🟢',goal:'Maximum weight loss · No plateau · Cardiometabolic',goalEs:'Pérdida de peso máxima · Sin meseta · Cardiometabólico',cycle:'20',
+  {name:'FAT STACK (Triple Agonist)',nameEs:'STACK PÉRDIDA DE GRASA (Triple Agonista)',emoji:'🟢',goal:'Maximum weight loss · No plateau · Cardiometabolic',goalEs:'Pérdida de peso máxima · Sin meseta · Cardiometabólico',cycle:'20',
    peptides:[
      {name:'Retatrutide',lo:'2 mg/wk × 8 wks → 4 mg/wk',mid:'2→4→6→8 mg/wk (6-8 wks per step)',hi:'12 mg/wk maximum'},
      {name:'NAD+',lo:'100 mg/day',mid:'250 mg/day',hi:'500 mg/day'},
      {name:'5-amino-1mq',lo:'25 mg/day',mid:'50 mg/day',hi:'100 mg/day'}]},
-  {name:'FAT STACK LITE (Cagrisa)',emoji:'⚡',goal:'Maximum weight loss — GLP-1 + amylin dual pathway',goalEs:'Pérdida de peso máxima — doble vía GLP-1 + amilina',cycle:'20',
+  {name:'FAT STACK LITE (Cagrisa)',nameEs:'STACK PÉRDIDA DE GRASA LITE (Cagrisa)',emoji:'⚡',goal:'Maximum weight loss — GLP-1 + amylin dual pathway',goalEs:'Pérdida de peso máxima — doble vía GLP-1 + amilina',cycle:'20',
    peptides:[
      {name:'Semaglutide',lo:'0.5 mg/wk',mid:'2.4 mg/wk',hi:'2.4 mg/wk'},
      {name:'Cagrilintide',lo:'0.3 mg/wk',mid:'1.2 mg/wk',hi:'2.4 mg/wk'}]},
-  {name:'BETTER BODY STACK (GH Classic)',emoji:'📈',goal:'GH optimization · Lean muscle · Fat loss · Sleep · Anti-aging',goalEs:'Optimización de GH · Músculo magro · Pérdida de grasa · Sueño · Anti-envejecimiento',cycle:'20',
+  {name:'BETTER BODY STACK (GH Classic)',nameEs:'STACK MEJOR CUERPO (GH Clásico)',emoji:'📈',goal:'GH optimization · Lean muscle · Fat loss · Sleep · Anti-aging',goalEs:'Optimización de GH · Músculo magro · Pérdida de grasa · Sueño · Anti-envejecimiento',cycle:'20',
    peptides:[
      {name:'Tesamorelin',lo:'0.5 mg/day',mid:'1 mg/day',hi:'2 mg/day'},
      {name:'Ipamorelin',lo:'100 mcg/day',mid:'200 mcg/day',hi:'300 mcg/day'}]},
-  {name:'BETTER BODY LITE STACK (GH Lite)',emoji:'🧬',goal:'GH optimization · Entry-level · Lean muscle · Fat loss · Sleep',goalEs:'Optimización de GH · Nivel inicial · Músculo magro · Pérdida de grasa · Sueño',cycle:'12',
+  {name:'BETTER BODY LITE STACK (GH Lite)',nameEs:'STACK MEJOR CUERPO LITE (GH Lite)',emoji:'🧬',goal:'GH optimization · Entry-level · Lean muscle · Fat loss · Sleep',goalEs:'Optimización de GH · Nivel inicial · Músculo magro · Pérdida de grasa · Sueño',cycle:'12',
    peptides:[
      {name:'CJC-1295 (no DAC)',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'}]},
-  {name:'LIGHTS OUT STACK (Sleep Stack)',emoji:'😴',goal:'Deep sleep · Overnight GH pulse · Cortisol reduction · Recovery',goalEs:'Sueño profundo · Pulso nocturno de GH · Reducción de cortisol · Recuperación',cycle:'12',
+  {name:'LIGHTS OUT STACK (Sleep Stack)',nameEs:'STACK SUEÑO PROFUNDO (Stack de Sueño)',emoji:'😴',goal:'Deep sleep · Overnight GH pulse · Cortisol reduction · Recovery',goalEs:'Sueño profundo · Pulso nocturno de GH · Reducción de cortisol · Recuperación',cycle:'12',
    peptides:[
      {name:'Sermorelin',lo:'200 mcg/night',mid:'300 mcg/night',hi:'500 mcg/night'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
      {name:'DSIP',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
      {name:'Melatonin',lo:'0.5 mg/night',mid:'0.8 mg/night',hi:'1 mg/night'}]},
-  {name:'YOUTH STACK (Glow)',emoji:'✨',goal:'Anti-aging · Skin & collagen · Comprehensive regeneration',goalEs:'Anti-envejecimiento · Piel y colágeno · Regeneración integral',cycle:'12',
+  {name:'YOUTH STACK (Glow)',nameEs:'STACK JUVENTUD (Resplandor)',emoji:'✨',goal:'Anti-aging · Skin & collagen · Comprehensive regeneration',goalEs:'Anti-envejecimiento · Piel y colágeno · Regeneración integral',cycle:'12',
    peptides:[
      {name:'GHK-Cu',lo:'1 mg/day',mid:'2 mg/day',hi:'5 mg/day'},
      {name:'BPC-157',lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg 2x/day'},
      {name:'TB-500',lo:'2 mg/wk',mid:'4 mg/wk',hi:'5 mg/wk'}]},
-  {name:'BEAUTY STACK',emoji:'💋',goal:'Skin collagen & elasticity · Hair thickness · Anti-aging · Body composition',goalEs:'Colágeno y elasticidad de la piel · Grosor del cabello · Anti-envejecimiento · Composición corporal',cycle:'12',
+  {name:'BEAUTY STACK',nameEs:'STACK BELLEZA',emoji:'💋',goal:'Skin collagen & elasticity · Hair thickness · Anti-aging · Body composition',goalEs:'Colágeno y elasticidad de la piel · Grosor del cabello · Anti-envejecimiento · Composición corporal',cycle:'12',
    peptides:[
      {name:'GHK-Cu',lo:'1 mg/day',mid:'2 mg/day',hi:'5 mg/day'},
      {name:'CJC-1295 (no DAC)',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'}]},
-  {name:'BENJAMIN BUTTON STACK (NAD+ Longevity)',emoji:'🔋',goal:'Mitochondrial health · Cellular energy · Anti-aging',goalEs:'Salud mitocondrial · Energía celular · Anti-envejecimiento',cycle:'10',
+  {name:'BENJAMIN BUTTON STACK (NAD+ Longevity)',nameEs:'STACK BENJAMIN BUTTON (Longevidad NAD+)',emoji:'🔋',goal:'Mitochondrial health · Cellular energy · Anti-aging',goalEs:'Salud mitocondrial · Energía celular · Anti-envejecimiento',cycle:'10',
    peptides:[
      {name:'NAD+',lo:'100 mg/day',mid:'500 mg/day',hi:'1000 mg/day'},
      {name:'SS-31',lo:'1 mg/day',mid:'5 mg/day',hi:'10 mg/day'},
      {name:'MOTS-c',lo:'2 mg 2x/wk',mid:'5 mg 3x/wk',hi:'10 mg 3x/wk'},
      {name:'5-amino-1mq',lo:'25 mg/day',mid:'50 mg/day',hi:'100 mg/day'}]},
-  {name:'IMMUNITY STACK (Immune Stack)',emoji:'🛡️',goal:'Immune modulation · Longevity · Anti-aging · Post-viral support',goalEs:'Modulación inmune · Longevidad · Anti-envejecimiento · Apoyo post-viral',cycle:'6',
+  {name:'IMMUNITY STACK (Immune Stack)',nameEs:'STACK INMUNIDAD (Stack Inmune)',emoji:'🛡️',goal:'Immune modulation · Longevity · Anti-aging · Post-viral support',goalEs:'Modulación inmune · Longevidad · Anti-envejecimiento · Apoyo post-viral',cycle:'6',
    peptides:[
      {name:'Thymosin Alpha-1',lo:'0.5 mg 2x/wk',mid:'1.0 mg 2x/wk',hi:'1.6 mg 2x/wk'},
      {name:'Epithalon',lo:'5 mg/day × 10 days',mid:'10 mg/day × 10 days',hi:'10 mg/day × 20 days'},
      {name:'BPC-157',lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg 2x/day'}]},
-  {name:'LIMITLESS STACK (Cognitive Stack)',emoji:'🧠',goal:'Focus · Memory · Neuroprotection · Anxiety reduction · BDNF',goalEs:'Enfoque · Memoria · Neuroprotección · Reducción de ansiedad · BDNF',cycle:'6',
+  {name:'LIMITLESS STACK (Cognitive Stack)',nameEs:'STACK SIN LÍMITES (Stack Cognitivo)',emoji:'🧠',goal:'Focus · Memory · Neuroprotection · Anxiety reduction · BDNF',goalEs:'Enfoque · Memoria · Neuroprotección · Reducción de ansiedad · BDNF',cycle:'6',
    peptides:[
      {name:'Semax',lo:'200 mcg/day',mid:'400 mcg/day',hi:'600 mcg/day'},
      {name:'Selank',lo:'250 mcg/day',mid:'500 mcg/day',hi:'750 mcg/day'},
      {name:'NAD+',lo:'100 mg/day',mid:'250 mg/day',hi:'500 mg/day'}]},
-  {name:'INTIMACY STACK (J Stack)',emoji:'🌹',goal:'Libido · Sexual desire · Bonding · Anxiety-free arousal',goalEs:'Libido · Deseo sexual · Vínculo · Excitación sin ansiedad',cycle:'4',
+  {name:'INTIMACY STACK (J Stack)',nameEs:'STACK INTIMIDAD (J Stack)',emoji:'🌹',goal:'Libido · Sexual desire · Bonding · Anxiety-free arousal',goalEs:'Libido · Deseo sexual · Vínculo · Excitación sin ansiedad',cycle:'4',
    peptides:[
      {name:'PT-141',lo:'0.5 mg as needed',mid:'1 mg as needed',hi:'1.75 mg as needed'},
      {name:'Selank',lo:'250 mcg as needed',mid:'500 mcg as needed',hi:'750 mcg as needed'}]},
-  {name:'RESET STACK (Klow)',emoji:'💎',goal:'Ultimate healing · Immune modulation · Gut repair · Chronic inflammation',goalEs:'Sanación total · Modulación inmune · Reparación intestinal · Inflamación crónica',cycle:'12',
+  {name:'RESET STACK (Klow)',nameEs:'STACK RESET (Klow)',emoji:'💎',goal:'Ultimate healing · Immune modulation · Gut repair · Chronic inflammation',goalEs:'Sanación total · Modulación inmune · Reparación intestinal · Inflamación crónica',cycle:'12',
    peptides:[
      {name:'GHK-Cu',lo:'1 mg/day',mid:'2 mg/day',hi:'5 mg/day'},
      {name:'BPC-157',lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg 2x/day'},
      {name:'TB-500',lo:'2 mg/wk',mid:'4 mg/wk',hi:'5 mg/wk'},
      {name:'KPV',lo:'500 mcg/day',mid:'1 mg/day',hi:'2 mg/day'}]},
-  {name:'WOLVERINE STACK',emoji:'🐺',goal:'Injury recovery · Tissue repair · Pain reduction',goalEs:'Recuperación de lesiones · Reparación tisular · Reducción del dolor',cycle:'12',
+  {name:'WOLVERINE STACK',nameEs:'STACK WOLVERINE',emoji:'🐺',goal:'Injury recovery · Tissue repair · Pain reduction',goalEs:'Recuperación de lesiones · Reparación tisular · Reducción del dolor',cycle:'12',
    peptides:[
      {name:'BPC-157',lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg 2x/day'},
      {name:'TB-500',lo:'2 mg/wk',mid:'4 mg/wk',hi:'5 mg/wk'}]},
-  {name:'SUPERMAN STACK',emoji:'🦸',goal:'Maximum muscle growth · Myostatin inhibition · Anabolic signaling',goalEs:'Crecimiento muscular máximo · Inhibición de miostatina · Señalización anabólica',cycle:'12',
+  {name:'SUPERMAN STACK',nameEs:'STACK SUPERMAN',emoji:'🦸',goal:'Maximum muscle growth · Myostatin inhibition · Anabolic signaling',goalEs:'Crecimiento muscular máximo · Inhibición de miostatina · Señalización anabólica',cycle:'12',
    peptides:[
      {name:'IGF-1 LR3',lo:'20 mcg/day',mid:'50 mcg/day',hi:'100 mcg/day'},
      {name:'MGF',lo:'100 mcg/day',mid:'200 mcg/day',hi:'300 mcg/day'},
      {name:'Follistatin 344',lo:'50 mcg/day',mid:'100 mcg/day',hi:'200 mcg/day'},
      {name:'CJC-1295 (with DAC)',lo:'300 mcg/wk',mid:'500 mcg/wk',hi:'1000 mcg/wk'},
      {name:'Ipamorelin',lo:'100 mcg/day',mid:'200 mcg/day',hi:'300 mcg/day'}]},
-  {name:'ULTIMATE STACK',emoji:'💪',goal:'Muscle gain · Longevity · Recovery · Immune support · Mitochondrial',goalEs:'Ganancia muscular · Longevidad · Recuperación · Apoyo inmune · Mitocondrial',cycle:'12',
+  {name:'ULTIMATE STACK',nameEs:'STACK DEFINITIVO',emoji:'💪',goal:'Muscle gain · Longevity · Recovery · Immune support · Mitochondrial',goalEs:'Ganancia muscular · Longevidad · Recuperación · Apoyo inmune · Mitocondrial',cycle:'12',
    peptides:[
      {name:'CJC-1295 (with DAC)',lo:'300 mcg/wk',mid:'1000 mcg/wk',hi:'2000 mcg/wk'},
      {name:'Ipamorelin',lo:'100 mcg/day',mid:'200 mcg/day',hi:'300 mcg/day'},
@@ -680,24 +680,24 @@ var BYS_STACKS=[
      {name:'Thymosin Alpha-1',lo:'0.5 mg 2x/wk',mid:'1 mg 2x/wk',hi:'1.5 mg 2x/wk'},
      {name:'IGF-1 LR3',lo:'20 mcg/day',mid:'50 mcg/day',hi:'100 mcg/day'},
      {name:'SS-31',lo:'1 mg/day',mid:'2.5 mg/day',hi:'5 mg/day'}]},
-  {name:"MEN'S WELLNESS STACK (HPG Testosterone)",emoji:'🔴',goal:'Natural testosterone · HPG axis restoration · Fertility · Libido',goalEs:'Testosterona natural · Restauración del eje HPG · Fertilidad · Libido',cycle:'12',
+  {name:"MEN'S WELLNESS STACK (HPG Testosterone)",nameEs:"STACK BIENESTAR MASCULINO (Testosterona HPG)",emoji:'🔴',goal:'Natural testosterone · HPG axis restoration · Fertility · Libido',goalEs:'Testosterona natural · Restauración del eje HPG · Fertilidad · Libido',cycle:'12',
    peptides:[
      {name:'KissPeptin-10',lo:'50 mcg/day',mid:'100 mcg/day',hi:'200 mcg/day'},
      {name:'CJC-1295 (no DAC)',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'}]},
-  {name:"WOMEN'S WELLNESS STACK",emoji:'🌸',goal:"Hormonal balance · Skin · Libido · Mood · Body composition",goalEs:'Equilibrio hormonal · Piel · Libido · Estado de ánimo · Composición corporal',cycle:'12',
+  {name:"WOMEN'S WELLNESS STACK",nameEs:"STACK BIENESTAR FEMENINO",emoji:'🌸',goal:"Hormonal balance · Skin · Libido · Mood · Body composition",goalEs:'Equilibrio hormonal · Piel · Libido · Estado de ánimo · Composición corporal',cycle:'12',
    peptides:[
      {name:'PT-141',lo:'0.5 mg as needed',mid:'1 mg as needed',hi:'1.75 mg as needed'},
      {name:'GHK-Cu',lo:'1 mg/day',mid:'2 mg/day',hi:'3 mg/day'},
      {name:'CJC-1295 (no DAC)',lo:'100 mcg/night',mid:'150 mcg/night',hi:'200 mcg/night'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'150 mcg/night',hi:'200 mcg/night'}]},
-  {name:'PERI/MENOPAUSE STACK',emoji:'🌿',goal:'Hormonal balance · Muscle preservation · Mood · Brain fog · Longevity',goalEs:'Equilibrio hormonal · Preservación muscular · Estado de ánimo · Niebla mental · Longevidad',cycle:'12',
+  {name:'PERI/MENOPAUSE STACK',nameEs:'STACK PERI/MENOPAUSIA',emoji:'🌿',goal:'Hormonal balance · Muscle preservation · Mood · Brain fog · Longevity',goalEs:'Equilibrio hormonal · Preservación muscular · Estado de ánimo · Niebla mental · Longevidad',cycle:'12',
    peptides:[
      {name:'CJC-1295 (no DAC)',lo:'100 mcg/night',mid:'150 mcg/night',hi:'200 mcg/night'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'150 mcg/night',hi:'200 mcg/night'},
      {name:'BPC-157',lo:'250 mcg/day',mid:'500 mcg/day',hi:'500 mcg/day'},
      {name:'Kisspeptin-10 (perimenopause) / Epithalon (full menopause)',lo:'50 mcg/day',mid:'100 mcg/day',hi:'200 mcg/day'}]},
-  {name:'GOLDEN ERA STACK',emoji:'🏆',goal:'Healthy aging · GH restoration · Cellular repair · Immune vitality',goalEs:'Envejecimiento saludable · Restauración de GH · Reparación celular · Vitalidad inmune',cycle:'12',
+  {name:'GOLDEN ERA STACK',nameEs:'STACK ERA DORADA',emoji:'🏆',goal:'Healthy aging · GH restoration · Cellular repair · Immune vitality',goalEs:'Envejecimiento saludable · Restauración de GH · Reparación celular · Vitalidad inmune',cycle:'12',
    peptides:[
      {name:'Tesamorelin',lo:'0.5 mg/day',mid:'1 mg/day',hi:'2 mg/day'},
      {name:'Ipamorelin',lo:'100 mcg/night',mid:'200 mcg/night',hi:'300 mcg/night'},
@@ -843,7 +843,7 @@ function bysRenderSelect(){
     html+='<div class="bys-stack-card'+(sel?' selected':'')+unavail+'"'+clickHandler+'>';
     html+='<a class="bys-info-btn" href="https://jmitsuominor-ux.github.io/peptide-reference/?stack='+encodeURIComponent(s.name.replace(/\s*\([^)]*\).*$/,'').trim())+'&store=cerritos" target="_blank" onclick="event.stopPropagation()" title="View in PeptideRef">i</a>';
     html+='<div class="bys-stack-emoji">'+s.emoji+'</div>';
-    html+='<div class="bys-stack-name">'+s.name+'</div>';
+    html+='<div class="bys-stack-name">'+(lang==='es'&&s.nameEs?s.nameEs:s.name)+'</div>';
     html+='<div class="bys-stack-goal">'+(lang==='es'&&s.goalEs?s.goalEs:s.goal)+'</div>';
     html+='<div class="bys-stack-cycle">~'+s.cycle+' '+T[lang].bysWks+' default</div>';
     html+='</div>';
@@ -1425,7 +1425,9 @@ var COMPOUND_INFO={
   'BPC-157':{category:'Healing',tagline:'Gastric pentadecapeptide — tissue repair, gut healing, anti-inflammatory',evidence:2,lo:'250 mcg/day (1x AM)',mid:'250 mcg 2x/day (AM + PM) — most common clinical protocol',hi:'500 mcg 2x/day — upper range, significant injuries only',schedule:'Daily SubQ near injury site or abdomen — split AM/PM dosing preferred',cycle:'8–12 weeks on / 4–8 wks off',benefits:['Accelerated tendon and ligament healing','Gut healing and leaky gut repair','Reduced systemic inflammation','Joint pain relief']},
   'TB-500':{category:'Healing',tagline:'Thymosin Beta-4 fragment — systemic tissue repair and flexibility',evidence:2,lo:'2 mg once/week (mild support / maintenance only — no loading phase)',mid:'2 mg 2x/week × 4–6 wks loading, then 2 mg once/week maintenance',hi:'2.5 mg 2x/week × 4–6 wks loading (acute injury), then 2–2.5 mg once/week maintenance. 5mg+ doses are veterinary ranges — not standard for humans.',schedule:'SubQ — loading phase 2x/week (non-consecutive days), then 1x/week maintenance',cycle:'Loading 4–6 wks, then maintenance 4–6 wks. Total 10–12 weeks.',benefits:['Systemic tissue repair','Inflammation reduction throughout body','Improved flexibility and range of motion','Cardiac protection (animal models)']},
   'GHK-Cu':{category:'Anti-Aging',tagline:'Copper tripeptide — skin, collagen, anti-aging, wound healing',evidence:3,lo:'1 mg/day SubQ or 0.1–0.5% topical serum 1x/day',mid:'2 mg/day SubQ or 0.5–1% topical 2x/day',hi:'3–5 mg/day SubQ (experienced) or high-concentration topical 2x/day + SubQ combined',schedule:'SubQ daily (systemic) OR topical daily to target skin area — both routes effective, different targets.',cycle:'12 weeks continuous. Safe for longer ongoing use topically.',benefits:['Skin tightening and wrinkle reduction','Collagen and elastin stimulation','Hair growth activation','Wound healing']},
+  'CJC-1295 Without DAC':{category:'Growth Hormone',tagline:'GHRH analog — preferred for natural pulsatility, daily dosing',evidence:3,lo:'100 mcg/day before bed',mid:'200 mcg/day before bed — standard clinical protocol',hi:'300 mcg/day before bed — upper range',schedule:'Daily SubQ before bed on empty stomach, 2–3 hours after last meal. Some protocols use 5 days/week with weekend break.',cycle:'12 weeks / 4 wks off',benefits:['Increased lean muscle mass','Fat loss via lipolysis stimulation','Improved sleep quality and depth','Faster recovery from training']},
   'CJC-1295 (no DAC)':{category:'Growth Hormone',tagline:'GHRH analog — preferred for natural pulsatility, daily dosing',evidence:3,lo:'100 mcg/day before bed',mid:'200 mcg/day before bed — standard clinical protocol',hi:'300 mcg/day before bed — upper range',schedule:'Daily SubQ before bed on empty stomach, 2–3 hours after last meal. Some protocols use 5 days/week with weekend break.',cycle:'12 weeks / 4 wks off',benefits:['Increased lean muscle mass','Fat loss via lipolysis stimulation','Improved sleep quality and depth','Faster recovery from training']},
+  'CJC-1295 With DAC':{category:'Growth Hormone',tagline:'Long-acting GHRH — once weekly dosing via albumin binding',evidence:3,lo:'300 mcg once/week — conservative start. On a 5mg/2ml vial: pull to 12 units.',mid:'500–1,000 mcg once/week. On a 5mg/2ml vial: pull to 20–40 units.',hi:'1,000–2,000 mcg once/week — JCEM 2006 clinical trial range. On a 5mg/2ml vial: pull to 40–80 units. Do NOT dose daily — half-life is 6–8 days.',schedule:'Once weekly SubQ',cycle:'12 weeks / 4 wks off',benefits:['Once-weekly injection','Sustained GH and IGF-1 elevation','Lean muscle support','Fat loss']},
   'CJC-1295 (with DAC)':{category:'Growth Hormone',tagline:'Long-acting GHRH — once weekly dosing via albumin binding',evidence:3,lo:'300 mcg once/week — conservative start. On a 5mg/2ml vial: pull to 12 units.',mid:'500–1,000 mcg once/week. On a 5mg/2ml vial: pull to 20–40 units.',hi:'1,000–2,000 mcg once/week — JCEM 2006 clinical trial range. On a 5mg/2ml vial: pull to 40–80 units. Do NOT dose daily — half-life is 6–8 days.',schedule:'Once weekly SubQ',cycle:'12 weeks / 4 wks off',benefits:['Once-weekly injection','Sustained GH and IGF-1 elevation','Lean muscle support','Fat loss']},
   'Ipamorelin':{category:'Growth Hormone',tagline:'Cleanest GH secretagogue — selective pulse, no cortisol spike',evidence:3,lo:'100 mcg/day before bed',mid:'200 mcg/day before bed — most common clinical protocol',hi:'300 mcg/day before bed — upper range; 2x/day (AM + bed) advanced only',schedule:'Daily SubQ before bed on empty stomach. 5 days/week (Mon–Fri with weekend break) is an accepted clinical alternative to daily dosing.',cycle:'12–16 weeks / 4 wks off',benefits:['Clean GH pulse without stress hormones','Lean muscle preservation and growth','Fat loss via lipolysis','Deep sleep improvement']},
   'NAD+':{category:'Longevity',tagline:'Master coenzyme — cellular energy, DNA repair, sirtuin activation',evidence:3,lo:'50–100 mg SubQ, 2–3x/week (conservative start)',mid:'100–200 mg/day SubQ (experienced) OR 500 mg IV infusion 1–3x/week (clinical)',hi:'1,000 mg IV infusion 1–3x/week — clinical setting only. 200 mg/day SubQ is the practical self-injection maximum.',schedule:'SubQ daily AM (self-injection protocol) OR IV infusion in clinical setting. Do NOT attempt 500–1000mg SubQ at home — high volumes and flushing risk.',cycle:'10 weeks on / 2 weeks off',benefits:['Cellular ATP energy optimization','Mitochondrial function restoration','DNA repair via PARP activation','Sirtuin longevity activation']},

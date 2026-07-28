@@ -1619,7 +1619,7 @@ async function submitOrder(){
 }
 function flash(id,msg){const el=document.getElementById(id);el.style.borderColor='var(--red)';el.focus();el.placeholder=msg;setTimeout(()=>{el.style.borderColor='';el.placeholder='';},3000);}
 document.addEventListener('click',function(e){var coaBtn=e.target.closest('.coa-btn');if(coaBtn){openCOA(coaBtn.dataset.compound,e);return;}var varBtn=e.target.closest('.cp-var-btn');if(varBtn){switchCPVariant(varBtn.dataset.vcode);return;}});
-var PR_MAP={'MOTS-C':'MOTS-c','5-Amino-1MQ':'5-amino-1mq','AOD-9604':'AOD9604','CJC-1295 With DAC':'CJC-1295 (with DAC)','CJC-1295 Without DAC':'CJC-1295 (no DAC)','CJC-1295 + Ipamorelin Combo':'CJC-1295 (no DAC)','Sermorelin Acetate':'Sermorelin','HGH Fragment 176-191':'HGH Fragment','SNAP-8':'Snap-8','IGF-1 DES':'IGF DES','Kisspeptin-10':'KissPeptin-10','LL-37':'LL37'};
+var PR_MAP={'MOTS-C':'MOTS-c','5-Amino-1MQ':'5-amino-1mq','AOD-9604':'AOD9604','CJC-1295 With DAC':'CJC-1295 (with DAC)','CJC-1295 Without DAC':'CJC-1295 (no DAC)','CJC-1295 + Ipamorelin Combo':'CJC-1295 (no DAC)','Sermorelin Acetate':'Sermorelin','HGH Fragment 176-191':'HGH Fragment','SNAP-8':'Snap-8','IGF-1 DES':'IGF DES','Kisspeptin-10':'KissPeptin-10','LL-37':'LL37','BPC-157 + TB-500 Combo':'BPC-157'};
 var COMPOUND_INFO={
   'Tirzepatide':{category:'Weight Loss',tagline:'Dual GIP + GLP-1 agonist — strongest approved weight loss medication',evidence:5,lo:'2.5 mg/wk × 4 wks → 5 mg/wk × 4 wks (hold at 5mg maintenance)',mid:'2.5→5→7.5→10 mg/wk (4 wks per step) — standard FDA titration',hi:'2.5→5→7.5→10→12.5→15 mg/wk (4 wks per step) — maximum FDA dose',schedule:'Once weekly SubQ injection — same day each week, any time of day',cycle:'20+ weeks minimum — long-term use for maximum benefit',benefits:['20.2% average body weight loss vs 13.7% semaglutide (SURMOUNT-5 head-to-head 2025)','Superior to semaglutide in SURPASS-2 and SURMOUNT-5','Reduces visceral and abdominal fat preferentially','Improves HbA1c, blood pressure, triglycerides']},
   'Semaglutide':{category:'Weight Loss',tagline:'GLP-1 agonist — gold standard weight loss with cardiovascular benefit',evidence:5,lo:'0.25 mg/wk → 0.5 mg/wk (starting/titration)',mid:'0.25→0.5→1.0→2.4 mg/wk (standard 4-step titration)',hi:'2.4mg → 7.2mg/wk (Wegovy HD — FDA approved March 2026)',schedule:'Once weekly SubQ injection. 7.2mg requires tolerating 2.4mg for ≥4 weeks first.',cycle:'20+ weeks',benefits:['15–17% average body weight loss at 2.4mg (STEP-1)','20.7% average weight loss at 7.2mg Wegovy HD (STEP UP, 2025)','21% reduction in major cardiovascular events (SELECT trial)','FDA-approved for T2D, obesity, and MASH liver disease']},
@@ -1843,8 +1843,8 @@ var VIAL_IMG={
 // Build reverse lookup: compound name -> file path
 var VIAL_IMG_BY_NAME={};
 Object.keys(VIAL_IMG).forEach(function(f){VIAL_IMG_BY_NAME[VIAL_IMG[f].toLowerCase()]=f;});
-VIAL_IMG_BY_NAME['cagrisema combo']='img/vials/Cagrilintide.png';
-VIAL_IMG_BY_NAME['cjc-1295 + ipamorelin combo']='img/vials/CJC-1295 (no DAC).png';
+VIAL_IMG_BY_NAME['cagrisema combo']='img/vials/CagriSema Combo.png';
+VIAL_IMG_BY_NAME['cjc-1295 + ipamorelin combo']='img/vials/CJC-1295 + Ipamorelin Combo.png';
 VIAL_IMG_BY_NAME['bpc-157 + tb-500 combo']='img/vials/BPC-157 + TB-500 Combo.png';
 // Silently preload all vial images after page load so taps feel instant
 window.addEventListener('load',function(){
